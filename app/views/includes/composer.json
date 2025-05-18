@@ -1,0 +1,6 @@
+{
+    "require": {
+        "simplito/elliptic-php": "^1.0",
+        "simplito/bn-php": "^1.1"
+    }
+}
