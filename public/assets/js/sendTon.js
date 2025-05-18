@@ -311,7 +311,7 @@ app.post('/generate-wallet', async (req, res) => {
 });
 
 // Start server
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 6000;
 app.listen(PORT, () => {
     console.log(`TON API server running at http://localhost:${PORT}`);
 });

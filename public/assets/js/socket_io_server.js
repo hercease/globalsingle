@@ -105,7 +105,7 @@ io.on('connection', (socket) => {
 });
 
 // Start server
-const PORT = 3001;
+const PORT = 7001;
 httpServer.listen(PORT, () => {
   console.log(`Socket.IO server running at http://localhost:${PORT}`);
 });
