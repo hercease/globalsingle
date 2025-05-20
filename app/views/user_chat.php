@@ -404,7 +404,8 @@
         window.env = {
             NOTIFICATION_ACCESS: "<?php echo $userInfo['notification_access']; ?>",
             VAPID_PUBLIC_KEY: "<?php echo VAPID_PUBLIC_KEY ?>",
-            ENDPOINT: "<?php echo $rootUrl ?>"
+            ENDPOINT: "<?php echo $rootUrl ?>",
+            CHAT_ENDPOINT: "<?php echo CHAT_ENDPOINT ?>"
         };
     </script>
 </head>

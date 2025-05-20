@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize Socket.IO connection
    
-    socket = io('http://localhost:7001', {
+    socket = io(window.env.CHAT_ENDPOINT, {
         withCredentials: true,
         transports: ['websocket'],
         extraHeaders: {

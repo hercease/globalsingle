@@ -258,7 +258,7 @@
     <div class="auth-wrapper v3">
       <div class="auth-form">
         <div class="auth-header">
-          <a href="#"><img width="70" src="<?php echo $rootUrl ?>/public/assets/images/logo-new.png" alt="img"></a>
+          <a href="#"><img width="70" src="<?php echo $rootUrl ?>/public/assets/images/logo_new.png" alt="img"></a>
         </div>
         <div class="card my-5">
         <form name="registration">

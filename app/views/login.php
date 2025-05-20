@@ -264,7 +264,7 @@ body {
     <div class="auth-wrapper v3">
       <div class="auth-form">
         <div class="auth-header">
-          <a href="#"><img width="70" src="<?php echo $rootUrl ?>/public/assets/images/logo-new.png" alt="img" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2))"></a>
+          <a href="#"><img width="70" src="<?php echo $rootUrl ?>/public/assets/images/logo_new.png" alt="img" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2))"></a>
         </div>
         <div class="card my-5" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px);">
         <form name="login">
