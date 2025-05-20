@@ -312,8 +312,12 @@ app.post('/generate-wallet', async (req, res) => {
 
 // Start server
 const PORT = process.env.PORT || 6000;
-app.listen(PORT, () => {
-    console.log(`TON API server running at http://localhost:${PORT}`);
+const bindAddress = process.env.NODE_ENV === 'production' ? '127.0.0.1' : '0.0.0.0';
+
+app.listen(PORT, bindAddress, () => {
+  console.log(`Server running in ${process.env.NODE_ENV} mode`);
+  console.log(`Access: http://${bindAddress}:${PORT}`);
 });
+
 // Compare this snippet from public/assets/js/send-ton.js:
 // // send-ton.js

@@ -1,5 +1,6 @@
 module.exports = {
-  apps: [{
+  apps: [
+    {
     name: "socket-server",
     script: "socket_io_server.js", // Your main server file
     instances: "max",
@@ -13,5 +14,20 @@ module.exports = {
     out_file: "logs/out.log",
     merge_logs: true,
     log_date_format: "YYYY-MM-DD HH:mm:ss"
-  }]
+  },
+
+    {
+        name: "ton-api",
+        script: "sendTon.js", // Your Express entry file
+        instances: 1, // Typically don't cluster Express unless stateless
+        exec_mode: "fork",
+        env: {
+        NODE_ENV: "production",
+        PORT: 6000,
+        },
+        error_file: "logs/api-err.log",
+        out_file: "logs/api-out.log",
+        watch: false // Disable for production
+    }
+]
 }
