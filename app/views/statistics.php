@@ -449,8 +449,10 @@
         
   </style>
    <script>
-        window.env = {
+       window.env = {
             NOTIFICATION_ACCESS: "<?php echo $userInfo['notification_access']; ?>",
+            VAPID_PUBLIC_KEY: "<?php VAPID_PUBLIC_KEY ?>",
+            ENDPOINT: "<?php echo $rootUrl ?>"
         };
     </script>
 </head>

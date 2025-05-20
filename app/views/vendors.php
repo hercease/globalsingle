@@ -564,6 +564,8 @@
     <script>
         window.env = {
             NOTIFICATION_ACCESS: "<?php echo $userInfo['notification_access']; ?>",
+            VAPID_PUBLIC_KEY: "<?php VAPID_PUBLIC_KEY ?>",
+            ENDPOINT: "<?php echo $rootUrl ?>"
         };
     </script>
 </head>
@@ -653,6 +655,10 @@
             </div>
         </div>
     </div>
+
+    <a href="support" class="support-icon">
+      <span><i class="fas fa-headset"></i></span> <!-- Or use an icon (e.g., Font Awesome) -->
+    </a>
 
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="<?php echo $rootUrl ?>/public/assets/js/plugins/jquery.js"></script>

@@ -3,7 +3,7 @@
     <div class="m-header">
       <a href="/" class="b-brand text-primary">
         <!-- ========   Change your logo from here   ============ -->
-        <img width="100" src="<?php echo $rootUrl ?>/public/assets/images/logo-new.png" class="img-fluid" alt="logo">
+        <img width="100" src="<?php echo $rootUrl ?>/public/assets/images/logo_new.png" class="img-fluid" alt="logo">
       </a>
     </div>
     <div class="navbar-content pc-trigger active simplebar-scrollable-y" data-simplebar="init"><div class="simplebar-wrapper" style="margin: -10px 0px;"><div class="simplebar-height-auto-observer-wrapper"><div class="simplebar-height-auto-observer"></div></div><div class="simplebar-mask"><div class="simplebar-offset" style="right: 0px; bottom: 0px;"><div class="simplebar-content-wrapper" tabindex="0" role="region" aria-label="scrollable content" style="height: 100%; overflow: hidden scroll;"><div class="simplebar-content" style="padding: 10px 0px;">

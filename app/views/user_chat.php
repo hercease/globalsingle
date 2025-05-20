@@ -6,18 +6,18 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="title" content="Wallet Transfer | GlobalSingleLine">
+    <meta name="title" content="Chat | GlobalSingleLine">
     <meta name="description" content="The platform for Networkers">
     <meta name="keywords" content="network marketing, single leg networking, referral marketing platform, MLM software, affiliate networking, residual income opportunities, entrepreneurs network, passive income ideas">
     <meta name="author" content="GlobalSingleLine">
     <meta name="robots" content="index, follow">
-    <meta property="og:title" content="Wallet Transfer | GlobalSingleLine">
+    <meta property="og:title" content="Chat | GlobalSingleLine">
     <meta property="og:description" content="The platform for Networkers">
     <meta property="og:image" content="<?php echo $rootUrl ?>/public/assets/images/logo.png">
     <meta property="og:url" content="<?php echo $rootUrl ?>/chat/<?php echo $userdetails['id'] ?>">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Wallet Transfer | GlobalSingleLine">
+    <meta name="twitter:title" content="Chat | GlobalSingleLine">
     <meta name="twitter:description" content="The platform for Networkers">
     <meta name="twitter:image" content="<?php echo $rootUrl ?>/public/assets/images/logo.png">
     <meta name="twitter:site" content="<?php echo $rootUrl ?>/chat/<?php echo $userdetails['id'] ?>">
@@ -403,6 +403,8 @@
     <script>
         window.env = {
             NOTIFICATION_ACCESS: "<?php echo $userInfo['notification_access']; ?>",
+            VAPID_PUBLIC_KEY: "<?php VAPID_PUBLIC_KEY ?>",
+            ENDPOINT: "<?php echo $rootUrl ?>"
         };
     </script>
 </head>

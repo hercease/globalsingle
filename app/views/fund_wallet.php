@@ -1,6 +1,6 @@
 <html><!-- [Head] start -->
 <head>
-    <title>All Users | GlobalSingleLine</title>
+    <title>Fund Wallet | GlobalSingleLine</title>
     <!-- [Meta] -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
@@ -10,18 +10,18 @@
     <meta name="keywords" content="network marketing, single leg networking, referral marketing platform, MLM software, affiliate networking, residual income opportunities, entrepreneurs network, passive income ideas">
     <meta name="author" content="GlobalSingleLine">
     <meta name="robots" content="index, follow">
-    <meta property="og:title" content="All Users | GlobalSingleLine">
+    <meta property="og:title" content="Fund Wallet | GlobalSingleLine">
     <meta property="og:description" content="The platform for Networkers">
     <meta property="og:image" content="<?php echo $rootUrl ?>/public/assets/images/logo.png">
-    <meta property="og:url" content="<?php echo $rootUrl ?>/allusers">
+    <meta property="og:url" content="<?php echo $rootUrl ?>/fund_wallet">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="All Users | GlobalSingleLine">
+    <meta name="twitter:title" content="Fund Wallet | GlobalSingleLine">
     <meta name="twitter:description" content="The platform for Networkers">
     <meta name="twitter:image" content="<?php echo $rootUrl ?>/public/assets/images/logo.png">
     <meta name="twitter:site" content="<?php echo $rootUrl ?>/allusers">
     <meta name="theme-color" content="#0a3a66">
-    <link rel="canonical" href="<?php echo $rootUrl ?>/allusers">
+    <link rel="canonical" href="<?php echo $rootUrl ?>/fund_wallet">
     <link rel="manifest" href="manifest.json">
 
     <!-- [Favicon] icon -->
@@ -280,6 +280,8 @@
     <script>
         window.env = {
             NOTIFICATION_ACCESS: "<?php echo $userInfo['notification_access']; ?>",
+            VAPID_PUBLIC_KEY: "<?php VAPID_PUBLIC_KEY ?>",
+            ENDPOINT: "<?php echo $rootUrl ?>"
         };
     </script>
 </head>
@@ -368,9 +370,9 @@
     </div>
   </div>
 
-    <a href="help" class="support-icon" target="_blank" rel="noopener">
-        <span><i class="fas fa-headset"></i></span> <!-- Or use an icon (e.g., Font Awesome) -->
-    </a>
+  <a href="support" class="support-icon">
+      <span><i class="fas fa-headset"></i></span> <!-- Or use an icon (e.g., Font Awesome) -->
+  </a>
   <!-- [ Main Content ] end -->
   <footer class="pc-footer">
     <div class="footer-wrapper container-fluid">

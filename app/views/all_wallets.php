@@ -247,6 +247,8 @@
     <script>
         window.env = {
             NOTIFICATION_ACCESS: "<?php echo $userInfo['notification_access']; ?>",
+            VAPID_PUBLIC_KEY: "<?php VAPID_PUBLIC_KEY ?>",
+            ENDPOINT: "<?php echo $rootUrl ?>"
         };
     </script>
 </head>
@@ -356,7 +358,6 @@
         </div>
   </div>
 
- 
   <!-- [ Main Content ] end -->
   <footer class="pc-footer">
     <div class="footer-wrapper container-fluid">

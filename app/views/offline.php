@@ -93,6 +93,13 @@
             color: var(--primary-color);
         }
     </style>
+     <script>
+        window.env = {
+            NOTIFICATION_ACCESS: "<?php echo $userInfo['notification_access']; ?>",
+            VAPID_PUBLIC_KEY: "<?php VAPID_PUBLIC_KEY ?>",
+            ENDPOINT: "<?php echo $rootUrl ?>"
+        };
+    </script>
 </head>
 <body>
     <div class="container">
@@ -131,6 +138,10 @@
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="<?php echo $rootUrl ?>/public/assets/js/plugins/popper.min.js"></script>
     <script src="<?php echo $rootUrl ?>/public/assets/js/plugins/bootstrap.min.js"></script>
+    <script src="https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox-window.prod.mjs" type="module"></script>
+    <script src="sw.js"></script>
+    <script src="<?php echo $rootUrl ?>/public/assets/js/app.js"></script>
+    <script src="<?php echo $rootUrl ?>/public/assets/js/workboxreg.js"></script>
     
     <script>
         document.getElementById('retryButton').addEventListener('click', function() {

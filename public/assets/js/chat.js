@@ -56,28 +56,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize Socket.IO connection
    
-    socket = io('http://localhost:3001', {
+    socket = io('http://localhost:7001', {
         withCredentials: true,
+        transports: ['websocket'],
         extraHeaders: {
             "X-User-ID": currentUserId
         }
     });
 
+    // Debug all events
+    /*socket.onAny((event, ...args) => {
+        console.log(`[Socket] ${event}`, args);
+    });*/
+
     // Connection established
     socket.on('connect', () => {
-        console.log('Connected to chat server');
         socket.emit('authenticate', currentUserId);
+        //console.log('Connected to chat server', socket.id);
     });
 
     // Connection error
     socket.on('connect_error', (err) => {
-        console.error('Connection error:', err);
+        //console.error('Connection error:', err);
     });
     
 
     // New message received
     socket.on('new-message', (message) => {
-        console.log(message);
+        //console.log(message);
         if ((message.sender_id === otherUserId && message.receiver_id === currentUserId) || 
             (message.sender_id === currentUserId && message.receiver_id === otherUserId)) {
 
@@ -102,6 +108,28 @@ document.addEventListener('DOMContentLoaded', function() {
           }
     });
 
+    const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+            //console.log("it worked");
+            if (entry.isIntersecting) {
+                const el = entry.target;
+                const messageId = el.dataset.messageId;
+
+                // Prevent multiple triggers
+                if (messageId && el.dataset.isSeen === 'false') {
+                    markAsRead(messageId); // Send to backend/socket
+                    el.dataset.isSeen = 'true'; // Update in UI
+                    obs.unobserve(el); // Stop observing it
+                }
+
+                // Only mark as read if the message is not already read
+            }
+        });
+    }, {
+        root: document.querySelector('.chat-messages'),
+        threshold: 0.5 // Message must be fully in view
+    });
+
     function showChatNotification(message) {
         navigator.serviceWorker.ready.then(registration => {
           registration.showNotification(`New Message `, {
@@ -119,18 +147,6 @@ document.addEventListener('DOMContentLoaded', function() {
     messageInput.addEventListener('input', () => {
         messageInput.style.height = 'auto';
         messageInput.style.height = messageInput.scrollHeight + 'px';
-    });
-
-    document.querySelector('.emoji-btn').addEventListener('click', () => {
-        const emoji = prompt('Enter emoji or pick one: 😊 😍 😂 🐱‍👓'); // Temporary approach
-        if (emoji) {
-            const cursorPos = input.selectionStart;
-            const textBefore = input.value.substring(0, cursorPos);
-            const textAfter = input.value.substring(cursorPos);
-            input.value = textBefore + emoji + textAfter;
-            input.focus();
-            input.dispatchEvent(new Event('input')); // Adjust height
-        }
     });
     
 
@@ -158,7 +174,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Stop typing indicator
     socket.on('message-seen', (data) => {
         const tempElement = document.querySelector(`.message.sent[data-message-id="${data.message_id}"]`);
-        console.log("it runs");
+       // console.log("it runs");
             if (tempElement) {
                 // Update with real database ID
                 
@@ -336,13 +352,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Send to receiver via Socket.IO
                 socket.emit('send-message', message);
             } else {
-                console.error('Failed to save message.');
+                //console.error('Failed to save message.');
                 // Optionally show error state in UI
             }
         })
         .catch(error => {
             messageInput.disabled = false;
-            console.error('Error saving message:', error);
+            //console.error('Error saving message:', error);
         });
 
     }
@@ -383,13 +399,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         })
         .catch(error => {
-            console.error('Error saving message:', error);
+            //console.error('Error saving message:', error);
             // Optionally show error state in UI
         });
     }
 
     // Handle typing detection
     function handleTyping() {
+        //console.log("i'm typing");
         // Notify server that user is typing
         socket.emit('typing', {
             receiverId: otherUserId
@@ -449,30 +466,10 @@ document.addEventListener('DOMContentLoaded', function() {
         //return typingIndicator; // in case you want to reference it later (e.g., to remove it)
     }
 
-    const observer = new IntersectionObserver((entries, obs) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const el = entry.target;
-                const messageId = el.dataset.messageId;
-
-                // Prevent multiple triggers
-                if (messageId && el.dataset.isSeen === 'false') {
-                    markAsRead(messageId); // Send to backend/socket
-                    el.dataset.isSeen = 'true'; // Update in UI
-                    obs.unobserve(el); // Stop observing it
-                }
-
-                // Only mark as read if the message is not already read
-            }
-        });
-    }, {
-        root: document.querySelector('.chat-messages'),
-        threshold: 0.5 // Message must be fully in view
-    });
 
     setTimeout(() => {
         document.querySelectorAll('.message.received[data-is-seen="false"]').forEach(msg => {
-          console.log("Observing:", msg);
+          //console.log("Observing:", msg);
           observer.observe(msg);
         });
       }, 5000);
@@ -538,7 +535,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const chatContainer = document.querySelector('.chat-messages');
         if (!chatContainer) {
-            console.error("Chat container not found.");
+            //console.error("Chat container not found.");
             return;
         }
 
@@ -553,7 +550,7 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch(`${url}/getConversations?user1=${currentUserId}&user2=${otherUserId}&limit=${messageLimit}&offset=${tempOffset}`)
             .then(response => response.json())
             .then(messages => {
-                console.log(messages);
+                //console.log(messages);
                 document.querySelector('.message-loader').remove();
     
                 if (messages.length === 0) {
@@ -574,7 +571,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             })
             .catch(error => {
-                console.error('Error loading older messages:', error);
+                //console.error('Error loading older messages:', error);
                 document.querySelector('.message-loader').remove();
                 isLoadingMessages = false;
             });
@@ -711,7 +708,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 let avatar = message.sender_id === currentUserId ? senderAvatar : receiverAvatar;
 
-                console.log(avatar);
+                //console.log(avatar);
 
                 // Render the actua l message
                 const msgEl = document.createElement('div');

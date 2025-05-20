@@ -134,9 +134,10 @@
   
   // Push Notification System
   class PushNotificationManager {
+
     constructor() {
-      this.VAPID_PUBLIC_KEY = 'BI8m2XY09lAsoDi-jZcUBST-JjkC3lJH3h5Md4vdIOT4PuIvUoaIN6jos_3MM4IR6Tw-zZUmANK8FIIdEkQ1oas';
-      this.BACKEND_ENDPOINT = 'https://globalsingle.local/savesubscription';
+      this.VAPID_PUBLIC_KEY = window.env.VAPID_PUBLIC_KEY;
+      this.BACKEND_ENDPOINT = window.env.ENDPOINT + '/savesubscription';
     }
   
     async init() {

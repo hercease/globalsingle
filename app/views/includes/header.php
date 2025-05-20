@@ -33,7 +33,7 @@
                 <h6 class="mb-1 text-capitalize"><?php echo $userInfo['username']; ?></h6>
                 <span>Stage <?php echo $userInfo['stage']; ?></span>
                 </div>
-                <a href="logout" class="pc-head-link bg-transparent"><i class="ti ti-power text-danger"></i></a>
+                <a href="<?php echo $rootUrl ?>/logout" class="pc-head-link bg-transparent"><i class="ti ti-power text-danger"></i></a>
             </div>
             </div>
         </div>

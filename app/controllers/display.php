@@ -184,8 +184,8 @@ class Display {
             session_start();
         }
         if (isset($_SESSION['global_single_username'])) {
+
             $username = $_SESSION['global_single_username'];
-                
             $userInfo = $this->userModel->getUserInfo($username);
         }
 

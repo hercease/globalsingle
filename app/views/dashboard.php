@@ -485,6 +485,8 @@
    <script>
         window.env = {
             NOTIFICATION_ACCESS: "<?php echo $userInfo['notification_access']; ?>",
+            VAPID_PUBLIC_KEY: "<?php VAPID_PUBLIC_KEY ?>",
+            ENDPOINT: "<?php echo $rootUrl ?>"
         };
     </script>
 </head>
@@ -629,7 +631,7 @@
                 <div class="col-sm-6">
                   <div class="d-flex align-items-center">
                     <div class="flex-grow-1 me-3">
-                      <div class="progress progress-warning" style="height: 10px;">
+                      <div class="progress progress-warning" style="height: 15px;">
                         <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: <?php echo $countdownlinespercentage. '%' ?>" aria-valuenow="<?php echo $countdownlinespercentage ?>" aria-valuemin="0" aria-valuemax="100"><?php echo $countdownlinespercentage. '%' ?></div>
                       </div>
                     </div>
@@ -646,7 +648,7 @@
                 <div class="col-sm-6">
                   <div class="d-flex align-items-center">
                     <div class="flex-grow-1 me-3">
-                      <div class="progress progress-success" style="height: 10px;">
+                      <div class="progress progress-success align-center" style="height: 15px;">
                         <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: <?php echo $globalDownlinespercentage. '%' ?>" aria-valuenow="<?php echo $globalDownlinespercentage ?>" aria-valuemin="0" aria-valuemax="100"><?php echo $globalDownlinespercentage. '%' ?></div>
                       </div>
                     </div>
@@ -729,9 +731,9 @@
     </div>
   </div>
 
-        <a href="help" class="support-icon" target="_blank" rel="noopener">
-            <span><i class="fas fa-headset"></i></span> <!-- Or use an icon (e.g., Font Awesome) -->
-        </a>
+      <a href="support" class="support-icon">
+          <span><i class="fas fa-headset"></i></span> <!-- Or use an icon (e.g., Font Awesome) -->
+      </a>
   <!-- [ Main Content ] end -->
   <footer class="pc-footer">
     <div class="footer-wrapper container-fluid">

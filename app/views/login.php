@@ -236,6 +236,13 @@ body {
         
 
     </style>
+    <script>
+        window.env = {
+            NOTIFICATION_ACCESS: "<?php echo $userInfo['notification_access']; ?>",
+            VAPID_PUBLIC_KEY: "<?php VAPID_PUBLIC_KEY ?>",
+            ENDPOINT: "<?php echo $rootUrl ?>"
+        };
+    </script>
 </head>
 <!-- [Head] end -->
 <!-- [Body] Start -->
@@ -268,11 +275,11 @@ body {
             </div>
             <div class="form-group mb-3">
               <label class="form-label">Username</label>
-              <input type="text" name="username" class="form-control" placeholder="Enter your Username">
+              <input type="text" name="username" required class="form-control" placeholder="Enter your Username">
             </div>
             <div class="form-group mb-3">
               <label class="form-label">Password</label>
-              <input type="password" name="password" class="form-control" placeholder="Enter your Password">
+              <input type="password" name="password" required class="form-control" placeholder="Enter your Password">
             </div>
             <div class="d-flex mt-1 justify-content-between">
               <div class="form-check">
@@ -315,6 +322,10 @@ body {
   <script src="<?php echo $rootUrl ?>/public/assets/js/plugins/feather.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
   <script type="text/javascript" src="<?php echo $rootUrl ?>/public/assets/js/plugins/jquery-validate.js"></script>
+  <script src="https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox-window.prod.mjs" type="module"></script>
+  <script src="sw.js"></script>
+  <script src="<?php echo $rootUrl ?>/public/assets/js/app.js"></script>
+  <script src="<?php echo $rootUrl ?>/public/assets/js/workboxreg.js"></script>
   <script>layout_change('light');</script>
   <script>change_box_container('false');</script>
   <script>layout_rtl_change('false');</script>

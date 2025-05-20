@@ -187,6 +187,8 @@ body {
     <script>
         window.env = {
             NOTIFICATION_ACCESS: "<?php echo $userInfo['notification_access']; ?>",
+            VAPID_PUBLIC_KEY: "<?php VAPID_PUBLIC_KEY ?>",
+            ENDPOINT: "<?php echo $rootUrl ?>"
         };
     </script>
 
@@ -282,6 +284,11 @@ body {
     </div>
   </div>
   <!-- [ Main Content ] end -->
+
+  <a href="support" class="support-icon">
+      <span><i class="fas fa-headset"></i></span> <!-- Or use an icon (e.g., Font Awesome) -->
+  </a>
+
   <footer class="pc-footer">
     <div class="footer-wrapper container-fluid">
       <div class="row">

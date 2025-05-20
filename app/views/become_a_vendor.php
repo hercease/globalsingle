@@ -307,6 +307,8 @@
     <script>
         window.env = {
             NOTIFICATION_ACCESS: "<?php echo $userInfo['notification_access']; ?>",
+            VAPID_PUBLIC_KEY: "<?php VAPID_PUBLIC_KEY ?>",
+            ENDPOINT: "<?php echo $rootUrl ?>"
         };
     </script>
 </head>
@@ -539,9 +541,9 @@
         </div>
 
         <!-- Floating Support Icon -->
-        <a href="help" class="support-icon" target="_blank" rel="noopener">
-            <span><i class="fas fa-headset"></i></span> <!-- Or use an icon (e.g., Font Awesome) -->
-        </a>
+    <a href="support" class="support-icon">
+        <span><i class="fas fa-headset"></i></span> <!-- Or use an icon (e.g., Font Awesome) -->
+    </a>
   <!-- [ Main Content ] end -->
   <footer class="pc-footer">
     <div class="footer-wrapper container-fluid">
