@@ -22,13 +22,13 @@ class usersModel {
         $this->encryption = new EncryptionHelper(ENCRYPTION_KEY);
         $this->pushnotification = new PushNotificationService($this->conn,VAPID_PUBLIC_KEY,VAPID_PRIVATE_KEY);
         $this->stages = [
-            ['stage' => 1, 'downlines' => 2, 'total_downlines' => 15, 'compensation' => 6, 'task_info' => 'In this stage, your task is to personally recruit 2 downlines and accumulate 6 global downlines.'],
-            ['stage' => 2, 'downlines' => 4, 'total_downlines' => 75, 'compensation' => 16, 'task_info' => 'In this stage, your task is to personally recruit 2 downlines and accumulate 30 global downlines.'],
-            ['stage' => 3, 'downlines' => 4, 'total_downlines' => 375, 'compensation' => 39, 'task_info' => 'In this stage, your task is to personally recruit 3 downlines and accumulate 126 global downlines.'],
-            ['stage' => 4, 'downlines' => 6, 'total_downlines' => 1875, 'compensation' => 77, 'task_info' => 'In this stage, your task is to personally recruit 4 downlines and accumulate 510 global downlines.'],
-            ['stage' => 5, 'downlines' => 8, 'total_downlines' => 9375, 'compensation' => 240, 'task_info' => 'In this stage, your task is to personally recruit 5 downlines and accumulate 2046 global downlines.'],
-            ['stage' => 6, 'downlines' => 8, 'total_downlines' => 46875, 'compensation' => 1988, 'task_info' => 'In this stage, your task is to personally recruit 6 downlines and accumulate 8290 global downlines.'],
-            ['stage' => 7, 'downlines' => 18, 'total_downlines' => 33466, 'compensation' => 9986,'task_info'=>'In this stage, your task is to personally recruit 7 downlines and accumulate 33466 global downlines.']
+            ['stage' => 1, 'downlines' => 2, 'total_downlines' => 15, 'compensation' => 6, 'task_info' => 'In this stage, your task is to personally recruit 2 downlines and accumulate 15 global downlines.'],
+            ['stage' => 2, 'downlines' => 4, 'total_downlines' => 75, 'compensation' => 16, 'task_info' => 'In this stage, your task is to personally recruit 4 downlines and accumulate 75 global downlines.'],
+            ['stage' => 3, 'downlines' => 4, 'total_downlines' => 375, 'compensation' => 39, 'task_info' => 'In this stage, your task is to personally recruit 4 downlines and accumulate 375 global downlines.'],
+            ['stage' => 4, 'downlines' => 6, 'total_downlines' => 1875, 'compensation' => 77, 'task_info' => 'In this stage, your task is to personally recruit 6 downlines and accumulate 1875 global downlines.'],
+            ['stage' => 5, 'downlines' => 8, 'total_downlines' => 9375, 'compensation' => 240, 'task_info' => 'In this stage, your task is to personally recruit 8 downlines and accumulate 9375 global downlines.'],
+            ['stage' => 6, 'downlines' => 8, 'total_downlines' => 46875, 'compensation' => 1988, 'task_info' => 'In this stage, your task is to personally recruit 8 downlines and accumulate 46875 global downlines.'],
+            ['stage' => 7, 'downlines' => 18, 'total_downlines' => 234375, 'compensation' => 9986,'task_info'=>'In this stage, your task is to personally recruit 18 downlines and accumulate 234375 global downlines.']
         ];
 
     }
