@@ -426,9 +426,7 @@
     <!-- [ Sidebar Menu ] end --> <!-- [ Header Topbar ] start -->
     <!-- [ Sidebar Menu ] start -->
 
-    <?php include("includes/sidebar.php"); ?>
-    <!-- [ Sidebar Menu ] end --> <!-- [ Header Topbar ] start -->
-    <?php include("includes/header.php"); ?>
+
 
 <div class="pc-container">
     <div class="pc-content">

@@ -1,22 +1,22 @@
 <html><!-- [Head] start -->
 <head>
-    <title>All Users | GlobalSingleLine</title>
+    <title>Become A Vendor | GlobalSingleLine</title>
     <!-- [Meta] -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="title" content="All Users | GlobalSingleLine">
+    <meta name="title" content="Become A Vendor | GlobalSingleLine">
     <meta name="description" content="The platform for Networkers">
     <meta name="keywords" content="network marketing, single leg networking, referral marketing platform, MLM software, affiliate networking, residual income opportunities, entrepreneurs network, passive income ideas">
     <meta name="author" content="GlobalSingleLine">
     <meta name="robots" content="index, follow">
-    <meta property="og:title" content="All Users | GlobalSingleLine">
+    <meta property="og:title" content="Become A Vendor | GlobalSingleLine">
     <meta property="og:description" content="The platform for Networkers">
     <meta property="og:image" content="<?php echo $rootUrl ?>/public/assets/images/logo.png">
     <meta property="og:url" content="<?php echo $rootUrl ?>/allusers">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="All Users | GlobalSingleLine">
+    <meta name="twitter:title" content="Become A Vendor | GlobalSingleLine">
     <meta name="twitter:description" content="The platform for Networkers">
     <meta name="twitter:image" content="<?php echo $rootUrl ?>/public/assets/images/logo.png">
     <meta name="twitter:site" content="<?php echo $rootUrl ?>/allusers">
@@ -452,7 +452,7 @@
                         </div>
                         <div>
                             <h5 class="mb-1">Earn 10% Commission</h5>
-                            <p class="text-muted mb-0">On all registration wallet sales from your network</p>
+                            <p class="text-muted mb-0">On all registration wallet sales globally.</p>
                         </div>
                         </div>
                         
@@ -462,7 +462,7 @@
                         </div>
                         <div>
                             <h5 class="mb-1">First-Class Training</h5>
-                            <p class="text-muted mb-0">Access premium training materials and market insights</p>
+                            <p class="text-muted mb-0">Access premium training, latest update and marketing insight.</p>
                         </div>
                         </div>
                         
@@ -472,7 +472,7 @@
                         </div>
                         <div>
                             <h5 class="mb-1">Marketing Toolkit</h5>
-                            <p class="text-muted mb-0">Professional marketing materials (FREE for vendors)</p>
+                            <p class="text-muted mb-0">Receive FREE Professional marketing materials.</p>
                         </div>
                         </div>
                         
@@ -481,8 +481,8 @@
                             <i class="fas fa-handshake fa-2x"></i>
                         </div>
                         <div>
-                            <h5 class="mb-1">Event Support</h5>
-                            <p class="text-muted mb-0">Company-backed mega-seminars and local events</p>
+                            <h5 class="mb-1">PROMO Privilege</h5>
+                            <p class="text-muted mb-0">You have automatic participation for any PROMOTION Event</p>
                         </div>
                         </div>
                     </div>
@@ -512,7 +512,7 @@
             </div>
             <div class="modal-body p-4">
                 <form id="vendorForm">
-                    <div class="alert alert-info">To Apply to becoming a vendor, its important to note that a $5 non refundable one time fee will be deducted from earning wallet upon successful verification</div>
+                    <div class="alert alert-info">To Apply For Our Vendorship Program, Kindly note that a One Time Fee of $5 will be deducted from your Earning Wallet after Successful Verification.</div>
                 <div class="row g-3">
                     <div class="col-md-12">
                     <label for="fullName" class="form-label">Upload Personal ID card</label>
