@@ -374,7 +374,7 @@
         }
         
         .chat-btn {
-            background: linear-gradient(135deg, #3c64d0, #1d4890);
+            background: linear-gradient(135deg, #475b91, #fdfdfd);
             border: none;
             border-radius: 20px;
             padding: 6px 15px;

@@ -584,9 +584,9 @@
                                 </div>
                             </div>
                             <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                                <button class="btn vendor-btn btn-lg px-4 py-2">
+                                <a href="become_a_vendor" class="btn vendor-btn btn-lg px-4 py-2">
                                     <i class="fas fa-store me-2"></i> Become a Vendor
-                                </button>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -739,7 +739,7 @@
     <div class="footer-wrapper container-fluid">
       <div class="row">
         <div class="colsm my-1">
-          <p class="m-0">Crafted by Team <a>GlobalSingleLine</a></p>
+          <p class="m-0">Crafted By:  <a href="#" >GSL TEAM</a></p>
         </div>
         <div class="col-auto my-1">
           <ul class="list-inline footer-link mb-0">

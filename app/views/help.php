@@ -426,7 +426,7 @@
     <div class="footer-wrapper container-fluid">
       <div class="row">
         <div class="col-sm my-1">
-          <p class="m-0">Crafted by Team <a>GlobalSingleLine</a></p>
+          <p class="m-0">Crafted By:  <a href="#" >GSL TEAM</a></p>
         </div>
       </div>
     </div>

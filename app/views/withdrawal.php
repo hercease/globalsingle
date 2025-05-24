@@ -248,7 +248,7 @@ body {
                 </div>
                 <div class="card-body">
                   <div class="alert alert-secondary"><i class="ti ti-info-circle"></i>
-                  Withdraw fund to your wallet address, ensure you filled in the correct wallet address as we will not be liable for any lose that arises from this. <br> Kindly note that $1 transfer fee will be deducted from your wallet.</div>
+                  Withdraw fund to your wallet address, ensure you filled in the correct wallet address as we will not be liable for any loss that arises from this. <br> Kindly note that $1 transfer fee will be deducted from your wallet.</div>
                   <form name="wallet_withdrawal">
                     
                     <div class="form-group mb-3">
@@ -293,7 +293,7 @@ body {
     <div class="footer-wrapper container-fluid">
       <div class="row">
         <div class="col-sm my-1">
-          <p class="m-0">Crafted by Team <a>GlobalSingleLine</a></p>
+          <p class="m-0">Crafted By:  <a href="#" >GSL TEAM</a></p>
         </div>
       </div>
     </div>

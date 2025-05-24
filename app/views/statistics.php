@@ -561,7 +561,7 @@
     <div class="footer-wrapper container-fluid">
       <div class="row">
         <div class="colsm my-1">
-          <p class="m-0">Crafted by Team <a>GlobalSingleLine</a></p>
+          <p class="m-0">Crafted By:  <a href="#" >GSL TEAM</a></p>
         </div>
         <div class="col-auto my-1">
           <ul class="list-inline footer-link mb-0">
