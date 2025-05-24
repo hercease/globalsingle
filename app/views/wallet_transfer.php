@@ -359,7 +359,7 @@
                                 <label class="form-label">Select Wallet</label>
                                 <select class="form-select" required name="wallet">
                                     <option value="">Select Wallet</option>
-                                    <option value="earning">Earning Wallet - $<?php echo number_format($userInfo['earning_wallet'], 2) ?></option>
+                                    <!--<option value="earning">Earning Wallet - $<?php echo number_format($userInfo['earning_wallet'], 2) ?></option>-->
                                     <option value="registration">Registration Wallet - $<?php echo number_format($userInfo['reg_wallet'], 2) ?></option>
                                 </select>
                             </div>

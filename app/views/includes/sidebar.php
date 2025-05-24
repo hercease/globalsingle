@@ -88,7 +88,7 @@
           <li class="pc-item">
             <a href="<?php echo $rootUrl ?>/vendors" class="pc-link">
               <span class="pc-micon"><i class="ti ti-wallet"></i></span>
-              <span class="pc-mtext">Buy wallet</span>
+              <span class="pc-mtext">Buy Reg wallet</span>
             </a>
           </li>
 

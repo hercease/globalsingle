@@ -535,7 +535,7 @@
       <div class="row">
         <!-- [ sample-page ] start -->
         <div class="col-6 col-xl-3 col-md-3">
-          <div class="card bg-blue-500 shadow rounded border border-light rounded-3">
+          <div class="card bg-green-500 shadow rounded border border-light rounded-3">
             <div class="card-body card-custom-padding">
               <h6 class="mb-2 f-w-400 text-light"><i class="ti ti-wallet"></i> Earning wallet</h6>
               <h5 class="mb-2 text-light">$<?php echo number_format($userInfo['earning_wallet'], 2) ?></h5>
@@ -626,7 +626,7 @@
               </div>
               <div class="row align-items-center mb-3">
                 <div class="col-sm-6 mb-2 mb-sm-0">
-                  <p class="mb-0">Recruited Downlines</p>
+                  <p class="mb-0">Direct Downlines</p>
                 </div>
                 <div class="col-sm-6">
                   <div class="d-flex align-items-center">
@@ -643,7 +643,7 @@
               </div>
               <div class="row align-items-center mb-3">
                 <div class="col-sm-6 mb-2 mb-sm-0">
-                  <p class="mb-0">Global Downlines</p>
+                  <p class="mb-0">Total Downlines</p>
                 </div>
                 <div class="col-sm-6">
                   <div class="d-flex align-items-center">

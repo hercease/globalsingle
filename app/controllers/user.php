@@ -252,7 +252,7 @@
                 $sql->close();
 
                 // Insert Transaction history for indirect sponsor
-                $this->userModel->InsertHistory($indirect_sponsor, $indirect_referral_bonus, 'credit', 'Indirect Referral Bonus for ' . $input['username']);
+                $this->userModel->InsertHistory($indirect_sponsor, $indirect_referral_bonus, 'credit', 'Indirect Bonus for ' . $input['username']);
 
                 $this->pushnotification->sendNotification($indirect_sponsor, 'Credit Alert', 'Dear ' .$input['bonus_username']. ', The sum of $'. $indirect_referral_bonus .' has just been credited into your earning wallet', $this->userModel->getCurrentUrl());
 
@@ -949,7 +949,8 @@
 
         public function getDescription($description){
             if(stripos($description, 'Registration Fee') !== false) return 'Registration Fee';
-            if(stripos($description, 'Referral Bonus') !== false) return 'Referral Bonus';
+            if(stripos($description, 'Referral bonus') !== false) return 'Referral Bonus';
+            if(stripos($description, 'Indirect') !== false) return 'Indirect Bonus';
             if(stripos($description, 'Reward') !== false) return 'Circle out Reward';
             if(stripos($description, 'Wallet transfer') !== false) return 'Wallet transfer';
             if(stripos($description, 'Withdrawal') !== false) return 'Fund Withdrawal';
