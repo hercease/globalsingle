@@ -153,7 +153,7 @@
                                 
                                 /* Fallback for Outlook */
                                 .header-fallback {
-                                    background-color: #198754 !important;
+                                    background-color:rgb(255, 255, 255) !important;
                                 }
                             </style>
                         </head>
