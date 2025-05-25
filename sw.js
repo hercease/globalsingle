@@ -8,10 +8,9 @@ workbox.setConfig({
 });
 
 // Cache name
-const CACHE_NAME = 'globalsingle-cache-v2';
+const CACHE_NAME = 'globalsingle-cache-v1';
 workbox.core.setCacheNameDetails({
   prefix: CACHE_NAME,
-  suffix: 'v2'
 });
 
 // Precaching - Auto-generated if using Workbox build tools

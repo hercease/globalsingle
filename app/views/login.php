@@ -8,18 +8,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="title" content="Login | GlobalSingleLine">
-    <meta name="description" content="The platform for Networkers">
+    <meta name="description" content="Generating Success For Life">
     <meta name="keywords" content="network marketing, single leg networking, referral marketing platform, MLM software, affiliate networking, residual income opportunities, entrepreneurs network, passive income ideas">
     <meta name="author" content="GlobalSingleLine">
     <meta name="robots" content="index, follow">
     <meta property="og:title" content="Login | GlobalSingleLine">
-    <meta property="og:description" content="The platform for Networkers">
+    <meta property="og:description" content="Generating Success For Life">
     <meta property="og:image" content="<?php echo $rootUrl ?>/public/assets/images/logo.png">
     <meta property="og:url" content="<?php echo $rootUrl ?>/login">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Login | GlobalSingleLine">
-    <meta name="twitter:description" content="The platform for Networkers">
+    <meta name="twitter:description" content="Generating Success For Life">
     <meta name="twitter:image" content="<?php echo $rootUrl ?>/public/assets/images/logo.png">
     <meta name="twitter:site" content="<?php echo $rootUrl ?>/login">
     <meta name="theme-color" content="#0a3a66">
@@ -233,12 +233,46 @@ body {
                 0%, 100% { opacity: 1; }
                 50% { opacity: 0; }
             }
+
+            .support-icon {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+                background-color: #3498db; /* Adjust color */
+                color: white;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-decoration: none;
+                font-size: 24px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+                z-index: 9999;
+                transition: transform 0.3s, background-color 0.3s;
+                }
+
+                .support-icon:hover {
+                transform: scale(1.1);
+                background-color: #2980b9; /* Darker shade on hover */
+                }
+
+                /* Optional: Animation */
+                @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.1); }
+                100% { transform: scale(1); }
+                }
+                .support-icon {
+                animation: pulse 2s infinite;
+                }
         
 
     </style>
     <script>
         window.env = {
-            NOTIFICATION_ACCESS: "<?php echo $userInfo['notification_access']; ?>",
+            NOTIFICATION_ACCESS: "<?php echo $userInfo['notification_access'] ?? 1; ?>",
             VAPID_PUBLIC_KEY: "<?php echo VAPID_PUBLIC_KEY ?>",
             ENDPOINT: "<?php echo $rootUrl ?>"
         };
@@ -294,6 +328,9 @@ body {
           </div>
         </form>
         </div>
+
+        
+
         <div class="auth-footer row">
           <!-- <div class=""> -->
             <div class="col my-1">
@@ -311,6 +348,10 @@ body {
       </div>
     </div>
   </div>
+
+  <a href="support" class="support-icon">
+          <span><i class="fas fa-headset"></i></span> <!-- Or use an icon (e.g., Font Awesome) -->
+        </a>
   <!-- [ Main Content ] end -->
   <!-- Required Js -->
   <script src="<?php echo $rootUrl ?>/public/assets/js/plugins/jquery.js"></script>

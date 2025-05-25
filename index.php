@@ -73,12 +73,12 @@ switch ($url) {
             $DisplayController->showMyChatPage($rootUrl);
         }
         break;
-    case (preg_match('/^\/chat\/(\d+)$/', $url, $matches) ? '/chat/' . $matches[1] : null):
-        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            $Id = $matches[1];
-            $DisplayController->showUserChatPage($Id,$rootUrl);
-        }
-        break;
+    case (preg_match('/^\/chat\/(-?\d+)$/', $url, $matches) ? '/chat/' . $matches[1] : null):
+    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        $Id = $matches[1];
+        $DisplayController->showUserChatPage($Id, $rootUrl);
+    }
+    break;
     case '/vendors':
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $DisplayController->showVendorsPage($rootUrl);
@@ -163,6 +163,11 @@ switch ($url) {
     case '/support':
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $DisplayController->showSupportPage($rootUrl);
+        }
+        break;
+    case '/chatsupport':
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $DisplayController->showChatSupport($rootUrl);
         }
         break;
     case '/processRegistration':

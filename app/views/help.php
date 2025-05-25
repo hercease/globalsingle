@@ -1,27 +1,27 @@
 <html><!-- [Head] start -->
 <head>
-    <title>All Users | GlobalSingleLine</title>
+    <title>Support | GlobalSingleLine</title>
     <!-- [Meta] -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="title" content="All Users | GlobalSingleLine">
-    <meta name="description" content="The platform for Networkers">
+    <meta name="title" content="Support | GlobalSingleLine">
+    <meta name="description" content="Generating Success For Life">
     <meta name="keywords" content="network marketing, single leg networking, referral marketing platform, MLM software, affiliate networking, residual income opportunities, entrepreneurs network, passive income ideas">
     <meta name="author" content="GlobalSingleLine">
     <meta name="robots" content="index, follow">
-    <meta property="og:title" content="All Users | GlobalSingleLine">
-    <meta property="og:description" content="The platform for Networkers">
+    <meta property="og:title" content="Support | GlobalSingleLine">
+    <meta property="og:description" content="Generating Success For Life">
     <meta property="og:image" content="<?php echo $rootUrl ?>/public/assets/images/logo.png">
-    <meta property="og:url" content="<?php echo $rootUrl ?>/allusers">
+    <meta property="og:url" content="<?php echo $rootUrl ?>/support">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="All Users | GlobalSingleLine">
-    <meta name="twitter:description" content="The platform for Networkers">
+    <meta name="twitter:title" content="Support | GlobalSingleLine">
+    <meta name="twitter:description" content="Generating Success For Life">
     <meta name="twitter:image" content="<?php echo $rootUrl ?>/public/assets/images/logo.png">
-    <meta name="twitter:site" content="<?php echo $rootUrl ?>/allusers">
+    <meta name="twitter:site" content="<?php echo $rootUrl ?>/support">
     <meta name="theme-color" content="#0a3a66">
-    <link rel="canonical" href="<?php echo $rootUrl ?>/allusers">
+    <link rel="canonical" href="<?php echo $rootUrl ?>/support">
     <link rel="manifest" href="manifest.json">
 
     <!-- [Favicon] icon -->
@@ -308,7 +308,7 @@
     </style>
     <script>
         window.env = {
-            NOTIFICATION_ACCESS: "<?php echo $userInfo['notification_access']; ?>",
+            NOTIFICATION_ACCESS: "<?php echo $userInfo['notification_access'] ?? 1; ?>",
             VAPID_PUBLIC_KEY: "<?php echo VAPID_PUBLIC_KEY ?>",
             ENDPOINT: "<?php echo $rootUrl ?>"
         };
@@ -332,10 +332,13 @@
  <!-- [ Sidebar Menu ] start -->
 <!-- [ Sidebar Menu ] end --> <!-- [ Header Topbar ] start -->
 <!-- [ Sidebar Menu ] start -->
+ <?php if(!empty($userInfo)){ ?>
+
     <?php include("includes/sidebar.php"); ?>
     <!-- [ Sidebar Menu ] end --> <!-- [ Header Topbar ] start -->
     <?php include("includes/header.php"); ?>
 
+<?php } ?>
   <!-- [ Main Content ] start -->
   <div class="pc-container">
     <div class="pc-content">
@@ -381,7 +384,7 @@
                         </div>
                         <div class="ms-3 flex-grow-1">
                             <h6 class="mb-1 text-capitalize"><?php echo $admin['username'] ?></h6>
-                            <p class="text-muted mb-0">How may i help you.....</p>
+                            <p class="text-muted mb-0">For enquiries/Service related matter</p>
                         </div>
                     </div>
 

@@ -6,18 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="title" content="Become A Vendor | GlobalSingleLine">
-    <meta name="description" content="The platform for Networkers">
+    <meta name="description" content="Generating Success For Life">
     <meta name="keywords" content="network marketing, single leg networking, referral marketing platform, MLM software, affiliate networking, residual income opportunities, entrepreneurs network, passive income ideas">
     <meta name="author" content="GlobalSingleLine">
     <meta name="robots" content="index, follow">
     <meta property="og:title" content="Become A Vendor | GlobalSingleLine">
-    <meta property="og:description" content="The platform for Networkers">
+    <meta property="og:description" content="Generating Success For Life">
     <meta property="og:image" content="<?php echo $rootUrl ?>/public/assets/images/logo.png">
     <meta property="og:url" content="<?php echo $rootUrl ?>/allusers">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Become A Vendor | GlobalSingleLine">
-    <meta name="twitter:description" content="The platform for Networkers">
+    <meta name="twitter:description" content="Generating Success For Life">
     <meta name="twitter:image" content="<?php echo $rootUrl ?>/public/assets/images/logo.png">
     <meta name="twitter:site" content="<?php echo $rootUrl ?>/allusers">
     <meta name="theme-color" content="#0a3a66">
