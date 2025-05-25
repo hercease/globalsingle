@@ -20,280 +20,293 @@
 
         public function processRegistration(){
             
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-                return json_encode(["status" => false, "message" => "Invalid request method"]);
-            }
-            
-            // Fields to process
-            $requiredFields = ['username', 'password', 'repeat_password', 'bonus_username', 'email', 'sponsor', 'country', 'wallet_username', 'wallet_password', 'gender'];
-            $avatar = ['avatar-1.jpg', 'avatar-2.jpg', 'avatar-3.jpg', 'avatar-4.jpg', 'avatar-5.jpg', 'avatar-6.jpg', 'avatar-7.jpg', 'avatar-8.jpg', 'avatar-9.jpg', 'avatar-10.jpg'];
-            $input = [];
-            $referral_bonus = 2;
-            $indirect_referral_bonus = 1;
-            $reg_fee = 10;
-            $year = date('Y');
-            $timezone = $this->userModel->sanitizeInput($_POST['timezone'] ?? '');
+                try {
+
+                     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                        throw new Exception("Invalid request method");
+                    }
+                    
+                    // Fields to process
+                    $requiredFields = ['username', 'password', 'repeat_password', 'bonus_username', 'email', 'sponsor', 'country', 'wallet_username', 'wallet_password', 'gender'];
+                    $input = [];
+                    $referral_bonus = 2;
+                    $indirect_referral_bonus = 1;
+                    $reg_fee = 10;
+                    $year = date('Y');
+                    $timezone = $this->userModel->sanitizeInput($_POST['timezone'] ?? '');
     
-            // Sanitize required fields and check if any are empty
-            foreach ($requiredFields as $field) {
-                $input[$field] = $this->userModel->sanitizeInput($_POST[$field] ?? '');
-                if (empty($input[$field])) {
-                    return json_encode(["status" => false, "message" => ucfirst($field) . " is required"]);
+                    // Sanitize required fields and check if any are empty
+                    foreach ($requiredFields as $field) {
+                        $input[$field] = $this->userModel->sanitizeInput($_POST[$field] ?? '');
+                        if (empty($input[$field])) {
+                            throw new Exception(ucfirst($field) . " is required");
+                        }
+                    }
+
+                    date_default_timezone_set($timezone ?? 'Africa/Lagos');
+
+                    //error_log(print_r($input, true));
+                    $avatar = $input['gender'] == 'male' ? 'avatar-1.jpg' : 'avatar-3.jpg';
+
+                    // fetch userinfo
+                    $userInfo = $this->userModel->getUserInfo($input['username']);
+
+                    // fetch sponsor info
+                    $sponsorInfo = $this->userModel->getUserInfo($input['sponsor']);
+
+                    $stageInfo = $this->userModel->getStageInfo($sponsorInfo['stage']);
+
+                    //error_log(print_r($stageInfo, true));
+                    $countdownlines = $this->userModel->countDownlines($input['sponsor'], $sponsorInfo['stage']);
+
+                    //error_log(print_r($countdownlines, true));
+
+                    if ($stageInfo['downlines'] === $countdownlines['total']) {
+                        throw new Exception("Sponsor has reached the maximum number of downlines for their present stage");
+                    }
+
+                    $bonusUserInfo = $this->userModel->getUserInfo($input['bonus_username']);
+                    if (!$bonusUserInfo) {
+                        throw new Exception("Bonus username does not exist");
+                    }
+
+                    // fetch wallet username info
+                    $walletInfo = $this->userModel->getUserInfo($input['wallet_username']);
+                    if (!$walletInfo) {
+                        throw new Exception("Invalid wallet username or password");
+                    }
+
+                    if (!password_verify($input['wallet_password'], $sponsorInfo['wallet_password'])){
+                        throw new Exception("Invalid wallet username or password");
+                    }
+
+                    // check wallet balance if its greater than or equal to the registration fee
+                    if ($walletInfo['reg_wallet'] < $reg_fee) {
+                        throw new Exception("Insufficient registration wallet balance");
+                    }
+
+
+                    if(!preg_match("/^[a-zA-Z0-9_]+$/", $input['username'])){
+                        throw new Exception("Username can only be alpanumeric");
+                    }
+            
+                    // Check if sponsor exists (if provided)
+                    if (!$this->userModel->getUserInfo($input['sponsor'])) {
+                        throw new Exception("Sponsor username does not exist");
+                    }
+            
+                    // Check if username already exists
+                    if ($this->userModel->getUserInfo($input['username'])) {
+                        throw new Exception("Username already exists");
+                    }
+
+                    // Check if email already exists
+                    if ($this->userModel->getUserEmail($input['email'])) {
+                        throw new Exception("Email already exists");
+                    }
+
+                    if(!filter_var($input['email'], FILTER_VALIDATE_EMAIL)) {
+                        throw new Exception("Invalid email format");
+                    }
+    
+                    // Password match check
+                    if ($input['password'] !== $input['repeat_password']) {
+                         throw new Exception("Passwords do not match");
+                    }
+            
+                    // Hash password
+                    $hashedPassword = password_hash($input['password'], PASSWORD_DEFAULT);
+                    $sponsor_stage = $sponsorInfo['stage'];
+                    $stage = 1;
+                    $indirect_sponsor = $this->userModel->fetchSponsor($input['bonus_username'])['sponsor'] ?? null;
+
+                    // Update paying wallet
+                    $sql = $this->db->prepare("UPDATE members SET reg_wallet = reg_wallet - ? WHERE username = ?");
+                    $sql->bind_param("is", $reg_fee, $input['wallet_username']);
+                    $sql->execute();
+                    $sql->close();
+
+                    $activation_link =  $this->userModel->getCurrentUrl() . '/confirmation?user='.$input['username'];
+
+                    $logourl = $this->userModel->getCurrentUrl() . "/public/assets/images/logo_new.png";
+
+                    $message = <<<EMAIL
+                        <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+                        <html xmlns="http://www.w3.org/1999/xhtml">
+                        <head>
+                            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                            <title>Welcome to GlobalSingleLine</title>
+                            <style type="text/css">
+                                /* Client-specific resets */
+                                body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+                                table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+                                img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+                                
+                                /* Main styles */
+                                body {
+                                    font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+                                    background-color: #f5f7fa;
+                                    margin: 0 !important;
+                                    padding: 0 !important;
+                                }
+                                
+                                /* Fallback for Outlook */
+                                .header-fallback {
+                                    background-color: #198754 !important;
+                                }
+                            </style>
+                        </head>
+                        <body style="margin: 0; padding: 0;">
+                            <!--[if (gte mso 9)|(IE)]>
+                            <table width="600" align="center" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                            <td>
+                            <![endif]-->
+                            
+                            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
+                                <!-- Header -->
+                                <tr>
+                                    <td align="center" class="header-fallback" style="padding: 30px 0; background:rgb(245, 245, 245);">
+                                        <img src="{$logourl}" alt="GlobalSingleLine Logo" width="150" style="display: block;">
+                                    </td>
+                                </tr>
+                                
+                                <!-- Content -->
+                                <tr>
+                                    <td bgcolor="#ffffff" style="padding: 30px; font-size: 16px; line-height: 1.6; color: #4a5568;">
+                                        <h1 style="font-size: 24px; color: #2d3748; text-align: center; margin: 0 0 20px 0;">🎉 Welcome to GlobalSingleLine!</h1>
+                                        
+                                        <p style="margin: 0 0 16px 0;">Hi <strong style="color: #198754;">{$input['username']}</strong>,</p>
+                                        
+                                        <p style="margin: 0 0 16px 0;">Congratulations on becoming a SINGLE-LEG-WORLDWIDE NETWORKER! You now have access to:</p>
+                                        
+                                        <ul style="margin: 0 0 16px 0; padding-left: 20px;">
+                                            <li style="margin-bottom: 8px;">Exceptional Fund Rewards.</li>
+                                            <li style="margin-bottom: 8px;">Global networking platform.</li>
+                                            <li style="margin-bottom: 8px;">International Trip And Awards.</li>
+                                            <li style="margin-bottom: 8px;">Special vendor benefits</li>
+                                            <li style="margin-bottom: 8px;">40% Discount On All Our Services.</li>
+                                        </ul>
+                                        
+                                        <p style="margin: 0 0 16px 0;">We're excited to partner with you in building sustainable network marketing through our services and self-generated funds.</p>
+                                        
+                                        <p style="margin: 0 0 24px 0;">We wish you profitable experience and pleasant business transactions throughout your journey with us.</p>
+                                        <p style="margin: 0 0 24px 0;">Your account is currently inactive. To unlock all platform features, please activate your account:</p>
+                                        
+                                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                            <tr>
+                                                <td align="center">
+                                                    <table border="0" cellpadding="0" cellspacing="0">
+                                                        <tr>
+                                                            <td align="center" bgcolor="#198754" style="border-radius: 6px;">
+                                                                <a href="{$activation_link}" style="display: inline-block; padding: 12px 24px; color: #ffffff; font-weight: 600; text-decoration: none;">🔓 Activate Account</a>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        
+                                        <p style="margin: 24px 0 0 0;">We wish you profitable experiences and pleasant business transactions throughout your journey with us.</p>
+                                        
+                                        <p style="margin: 16px 0 0 0;">Best regards,<br>
+                                        <strong>GSL TEAM.</strong><br>
+                                        Generating Success for Life...</p>
+                                    </td>
+                                </tr>
+                                
+                                <!-- Footer -->
+                                <tr>
+                                    <td bgcolor="#f5f7fa" style="padding: 20px; text-align: center; font-size: 14px; color: #718096; border-top: 1px solid #e2e8f0;">
+                                        © {$year} GlobalSingleLine. All rights reserved.
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <!--[if (gte mso 9)|(IE)]>
+                            </td>
+                            </tr>
+                            </table>
+                            <![endif]-->
+                        </body>
+                        </html>
+                    EMAIL;
+
+                    $this->userModel->sendmail($input['email'],$input['username'],$message,"Registration Confirmation");
+
+                    // Insert Transaction history for paying wallet
+                    $this->userModel->InsertHistory($input['wallet_username'], $reg_fee, 'debit', 'Registration Fee for ' . $input['username']);
+
+                    // Update sponsor wallet
+                    $sql = $this->db->prepare("UPDATE members SET earning_wallet = earning_wallet + ? WHERE username = ?");
+                    $sql->bind_param("is", $referral_bonus, $input['bonus_username']);
+                    $sql->execute();
+                    $sql->close();
+
+                    // Insert Transaction history for sponsor
+                    $this->userModel->InsertHistory($input['bonus_username'], $referral_bonus, 'credit', 'Referral Bonus for ' . $input['username']);
+
+            
+                    if(!is_null($indirect_sponsor)){
+
+                        // Update indirect sponsor wallet
+                        $sql = $this->db->prepare("UPDATE members SET earning_wallet = earning_wallet + ? WHERE username = ?");
+                        $sql->bind_param("is", $indirect_referral_bonus, $indirect_sponsor);
+                        $sql->execute();
+                        $sql->close();
+
+                        // Insert Transaction history for indirect sponsor
+                        $this->userModel->InsertHistory($indirect_sponsor, $indirect_referral_bonus, 'credit', 'Indirect Bonus for ' . $input['username']);
+
+                        $this->pushnotification->sendNotification($indirect_sponsor, 'Credit Alert', 'Dear ' .$input['bonus_username']. ', The sum of $'. $indirect_referral_bonus .' has just been credited into your earning wallet', $this->userModel->getCurrentUrl());
+
+                    }
+            
+                    // Insert into referral tree
+                    $sql = $this->db->prepare("INSERT INTO referral_tree (username, sponsor, sponsor_stage, reg_date) VALUES (?, ?, ?, NOW())");
+                    $sql->bind_param("sss", $input['username'], $input['sponsor'], $sponsor_stage);
+                    $sql->execute();
+                    $sql->close();
+            
+                    // Insert user
+                    $stmt = $this->db->prepare("INSERT INTO members (username, password, email, country, stage, reg_date, avatar, gender, timezone) VALUES (?, ?, ?, ?, ?, NOW(), ?, ?, ?)");
+                    $stmt->bind_param("ssssssss", $input['username'], $hashedPassword, $input['email'], $input['country'], $stage, $avatar, $input['gender'], $timezone);
+                    if ($stmt->execute()) {
+
+                        $this->pushnotification->sendCustomNotifications([
+                            [
+                                'username' => $input['wallet_username'], // Upline
+                                'title' => 'Debit Alert!',
+                                'body' => 'Dear ' .$input['wallet_username']. ', The sum of $'. $reg_fee .' has just been deducted from your registration wallet',
+                                'url' => $this->userModel->getCurrentUrl()
+                            ],
+                            [
+                                'username' => $input['bonus_username'], // Upper Upline
+                                'title' => 'Credit Alert',
+                                'body' => 'Dear ' .$input['bonus_username']. ', The sum of $'. $referral_bonus .' has just been credited into your earning wallet',
+                                'url' => $this->userModel->getCurrentUrl()
+                            ],
+                        ]);
+
+                        //$this->userModel->creditWallet(1, 'Rose25');
+                        //$this->userModel->creditWallet(1, 'Richard54');
+                        $this->userModel->creditWallet(0.2, 'globalsingle');
+
+
+                        return json_encode(["status" => true, "message" => "Congratulations, registration was successful, Kindly check your email for verification"]);
+                    }
+                   
+                } catch (Exception $e) {
+
+                    return json_encode([
+                        'status' => false,
+                        'message' => $e->getMessage()
+                    ]);
+
                 }
-            }
-
-            date_default_timezone_set($timezone ?? 'Africa/Lagos');
-
-            //error_log(print_r($input, true));
-            $avatar = $input['gender'] == 'male' ? 'avatar-1.jpg' : 'avatar-3.jpg';
-
-            // fetch userinfo
-            $userInfo = $this->userModel->getUserInfo($input['username']);
-
-            // fetch sponsor info
-            $sponsorInfo = $this->userModel->getUserInfo($input['sponsor']);
-
-            $stageInfo = $this->userModel->getStageInfo($sponsorInfo['stage']);
-
-            //error_log(print_r($stageInfo, true));
-            $countdownlines = $this->userModel->countDownlines($input['sponsor'], $sponsorInfo['stage']);
-
-            error_log(print_r($countdownlines, true));
-
-            if ($stageInfo['downlines'] === $countdownlines['total']) {
-                return json_encode(["status" => false, "message" => "Sponsor has reached the maximum number of downlines for their present stage"]);
-            }
-
-            $bonusUserInfo = $this->userModel->getUserInfo($input['bonus_username']);
-            if (!$bonusUserInfo) {
-                return json_encode(["status" => false, "message" => "Bonus username does not exist"]);
-            }
-
-            // fetch wallet username info
-            $walletInfo = $this->userModel->getUserInfo($input['wallet_username']);
-            if (!$walletInfo) {
-                return json_encode(["status" => false, "message" => "Invalid wallet username or password"]);
-            }
-
-            if (!password_verify($input['wallet_password'], $sponsorInfo['wallet_password'])){
-                return json_encode(["status" => false, "message" => "Invalid wallet username or password"]);
-            }
-
-            // check wallet balance if its greater than or equal to the registration fee
-            if ($walletInfo['reg_wallet'] < $reg_fee) {
-                return json_encode(["status" => false, "message" => "Insufficient registration wallet balance"]);
-            }
-
-
-            if(!preg_match("/^[a-zA-Z0-9_]+$/", $input['username'])){
-                return json_encode(["status" => false, "message" => "Username can only be alpanumeric"]);
-            }
-    
-            // Check if sponsor exists (if provided)
-            if (!$this->userModel->getUserInfo($input['sponsor'])) {
-                return json_encode(["status" => false, "message" => "Sponsor username does not exist"]);
-            }
-    
-            // Check if username already exists
-            if ($this->userModel->getUserInfo($input['username'])) {
-                return json_encode(["status" => false, "message" => "Username already exists"]);
-            }
-
-            // Check if email already exists
-            if ($this->userModel->getUserEmail($input['email'])) {
-                return json_encode(["status" => false, "message" => "Email already exists"]);
-            }
-
-            if(!filter_var($input['email'], FILTER_VALIDATE_EMAIL)) {
-                return json_encode(["status" => false, "message" => "Invalid email format"]);
-            }
-    
-            // Password match check
-            if ($input['password'] !== $input['repeat_password']) {
-                return json_encode(["status" => false, "message" => "Passwords do not match"]);
-            }
-    
-            // Hash password
-            $hashedPassword = password_hash($input['password'], PASSWORD_DEFAULT);
-            $sponsor_stage = $sponsorInfo['stage'];
-            $stage = 1;
-            $indirect_sponsor = $this->userModel->fetchSponsor($input['bonus_username'])['sponsor'] ?? null;
-
-            // Update paying wallet
-            $sql = $this->db->prepare("UPDATE members SET reg_wallet = reg_wallet - ? WHERE username = ?");
-            $sql->bind_param("is", $reg_fee, $input['wallet_username']);
-            $sql->execute();
-            $sql->close();
-
-            $activation_link =  $this->userModel->getCurrentUrl() . '/confirmation?user='.$input['username'];
-
-            $message = <<<EMAIL
-                <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-                <html xmlns="http://www.w3.org/1999/xhtml">
-                <head>
-                    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>Welcome to GlobalSingleLine</title>
-                    <style type="text/css">
-                        /* Client-specific resets */
-                        body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
-                        table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
-                        img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
-                        
-                        /* Main styles */
-                        body {
-                            font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
-                            background-color: #f5f7fa;
-                            margin: 0 !important;
-                            padding: 0 !important;
-                        }
-                        
-                        /* Fallback for Outlook */
-                        .header-fallback {
-                            background-color: #198754 !important;
-                        }
-                    </style>
-                </head>
-                <body style="margin: 0; padding: 0;">
-                    <!--[if (gte mso 9)|(IE)]>
-                    <table width="600" align="center" cellpadding="0" cellspacing="0" border="0">
-                    <tr>
-                    <td>
-                    <![endif]-->
-                    
-                    <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
-                        <!-- Header -->
-                        <tr>
-                            <td align="center" class="header-fallback" style="padding: 30px 0; background: #198754;">
-                                <img src="" alt="GlobalSingleLine Logo" width="150" style="display: block;">
-                            </td>
-                        </tr>
-                        
-                        <!-- Content -->
-                        <tr>
-                            <td bgcolor="#ffffff" style="padding: 30px; font-size: 16px; line-height: 1.6; color: #4a5568;">
-                                <h1 style="font-size: 24px; color: #2d3748; text-align: center; margin: 0 0 20px 0;">🎉 Welcome to GlobalSingleLine!</h1>
-                                
-                                <p style="margin: 0 0 16px 0;">Hi <strong style="color: #198754;">{$input['username']}</strong>,</p>
-                                
-                                <p style="margin: 0 0 16px 0;">Congratulations on becoming a SINGLE-LEG-WORLDWIDE NETWORKER! You now have access to:</p>
-                                
-                                <ul style="margin: 0 0 16px 0; padding-left: 20px;">
-                                    <li style="margin-bottom: 8px;">Exceptional fund rewards</li>
-                                    <li style="margin-bottom: 8px;">Special vendor benefits</li>
-                                    <li style="margin-bottom: 8px;">Our global networking platform</li>
-                                </ul>
-                                
-                                <p style="margin: 0 0 16px 0;">We're excited to partner with you in building sustainable network marketing through our self-generated referral resources.</p>
-                                
-                                <p style="margin: 0 0 24px 0;">Your account is currently inactive. To unlock all platform features, please activate your account:</p>
-                                
-                                <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                                    <tr>
-                                        <td align="center">
-                                            <table border="0" cellpadding="0" cellspacing="0">
-                                                <tr>
-                                                    <td align="center" bgcolor="#198754" style="border-radius: 6px;">
-                                                        <a href="{$activation_link}" style="display: inline-block; padding: 12px 24px; color: #ffffff; font-weight: 600; text-decoration: none;">🔓 Activate Account</a>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                </table>
-                                
-                                <p style="margin: 24px 0 0 0;">We wish you profitable experiences and pleasant business transactions throughout your journey with us.</p>
-                                
-                                <p style="margin: 16px 0 0 0;">Best regards,<br>
-                                <strong>The SINGLE LEG TEAM</strong><br>
-                                Network to the world</p>
-                            </td>
-                        </tr>
-                        
-                        <!-- Footer -->
-                        <tr>
-                            <td bgcolor="#f5f7fa" style="padding: 20px; text-align: center; font-size: 14px; color: #718096; border-top: 1px solid #e2e8f0;">
-                                © {$year} GlobalSingleLine. All rights reserved.
-                            </td>
-                        </tr>
-                    </table>
-                    
-                    <!--[if (gte mso 9)|(IE)]>
-                    </td>
-                    </tr>
-                    </table>
-                    <![endif]-->
-                </body>
-                </html>
-            EMAIL;
-
-            $this->userModel->sendmail($input['email'],$input['username'],$message,"Registration Confirmation");
-
-            // Insert Transaction history for paying wallet
-            $this->userModel->InsertHistory($input['wallet_username'], $reg_fee, 'debit', 'Registration Fee for ' . $input['username']);
-
-            // Update sponsor wallet
-            $sql = $this->db->prepare("UPDATE members SET earning_wallet = earning_wallet + ? WHERE username = ?");
-            $sql->bind_param("is", $referral_bonus, $input['bonus_username']);
-            $sql->execute();
-            $sql->close();
-
-            // Insert Transaction history for sponsor
-            $this->userModel->InsertHistory($input['bonus_username'], $referral_bonus, 'credit', 'Referral Bonus for ' . $input['username']);
-
-            
-            if(!is_null($indirect_sponsor)){
-
-                // Update indirect sponsor wallet
-                $sql = $this->db->prepare("UPDATE members SET earning_wallet = earning_wallet + ? WHERE username = ?");
-                $sql->bind_param("is", $indirect_referral_bonus, $indirect_sponsor);
-                $sql->execute();
-                $sql->close();
-
-                // Insert Transaction history for indirect sponsor
-                $this->userModel->InsertHistory($indirect_sponsor, $indirect_referral_bonus, 'credit', 'Indirect Bonus for ' . $input['username']);
-
-                $this->pushnotification->sendNotification($indirect_sponsor, 'Credit Alert', 'Dear ' .$input['bonus_username']. ', The sum of $'. $indirect_referral_bonus .' has just been credited into your earning wallet', $this->userModel->getCurrentUrl());
-
-            }
-            
-            // Insert into referral tree
-            $sql = $this->db->prepare("INSERT INTO referral_tree (username, sponsor, sponsor_stage, reg_date) VALUES (?, ?, ?, NOW())");
-            $sql->bind_param("sss", $input['username'], $input['sponsor'], $sponsor_stage);
-            $sql->execute();
-            $sql->close();
-            
-            // Insert user
-            $stmt = $this->db->prepare("INSERT INTO members (username, password, email, country, stage, reg_date, avatar, gender, timezone) VALUES (?, ?, ?, ?, ?, NOW(), ?, ?, ?)");
-            $stmt->bind_param("ssssssss", $input['username'], $hashedPassword, $input['email'], $input['country'], $stage, $avatar, $input['gender'], $timezone);
-            if ($stmt->execute()) {
-
-                $this->pushnotification->sendCustomNotifications([
-                    [
-                        'username' => $input['wallet_username'], // Upline
-                        'title' => 'Debit Alert!',
-                        'body' => 'Dear ' .$input['wallet_username']. ', The sum of $'. $reg_fee .' has just been deducted from your registration wallet',
-                        'url' => $this->userModel->getCurrentUrl()
-                    ],
-                    [
-                        'username' => $input['bonus_username'], // Upper Upline
-                        'title' => 'Credit Alert',
-                        'body' => 'Dear ' .$input['bonus_username']. ', The sum of $'. $referral_bonus .' has just been credited into your earning wallet',
-                        'url' => $this->userModel->getCurrentUrl()
-                    ],
-                ]);
-
-                $this->userModel->creditWallet(1, 'Rose25');
-                $this->userModel->creditWallet(1, 'Richard54');
-                $this->userModel->creditWallet(0.2, 'globalsingle');
-
-
-                return json_encode(["status" => true, "message" => "Congratulations, registration was successful, Kindly check your email for verification"]);
-
-            } else {
-                return json_encode(["status" => false, "message" => "Registration failed. Please try again later."]);
-            }
         }
+            
 
         public function processLogin() {
 
