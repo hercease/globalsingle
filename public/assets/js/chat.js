@@ -1,8 +1,8 @@
 // chat.js - Complete Client-Side Implementation
 document.addEventListener('DOMContentLoaded', function() {
     // DOM Elements
-    const chatMessages = document.querySelector('.chat-messages');
-    const messageInput = document.querySelector('.message-input');
+    const chatMessages = document.querySelector('.chat-container');
+    const messageInput = document.querySelector('.chat-input');
     const sendBtn = document.querySelector('.send-btn');
     const chatPartnerName = document.querySelector('.chat-partner-name');
     const chatPartnerStatus = document.querySelector('.chat-partner-status');
@@ -94,9 +94,11 @@ document.addEventListener('DOMContentLoaded', function() {
             /*if (message.receiver_id === currentUserId) {
                 markAsRead(message.id);
             }*/
+
+            loadChats();
         }
 
-        if (document.hidden || message.receiver_id === currentUserId) {
+        if (document.hidden && message.receiver_id === otherUserId) {
             // Request notification permission if not granted
             if (Notification.permission === 'granted') {
               showChatNotification(message);
@@ -126,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }, {
-        root: document.querySelector('.chat-messages'),
+        root: chatMessages,
         threshold: 0.5 // Message must be fully in view
     });
 
@@ -259,6 +261,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
 
     function getCurrentFormattedDate() {
+
         const now = new Date();
     
         const year = now.getFullYear();
@@ -295,7 +298,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         }
 
-        const time = new Date(message.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const time = new Date(message.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' · ' + new Date().getFullYear();
 
         let avatar = message.sender_id === currentUserId ? senderAvatar : receiverAvatar;
 
@@ -304,14 +307,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         messageElement.innerHTML = `
-            <img src="${url}/public/assets/images/user/${avatar}" alt="Sarah" class="message-avatar">
-            <div>
-                <div class="message-bubble">${escapeHtml(message.content)}</div>
+           
+                ${escapeHtml(message.content)}
                 <div class="message-time">
                     ${time}
-                    ${isSent ? `<span class="status-icon">${getStatusIcon(message)}</span>` : ''}
+                    ${isSent ? `<span class="message-status sent status-icon">${getStatusIcon(message)}</span>` : ''}
                 </div>
-            </div>
         `;
 
         //chatMessages.insertBefore(messageElement, typingIndicator);
@@ -385,7 +386,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     ///tempElement.dataset.messageId = data.message_id;
                     
                     // Update status
-                    const statusIcon = tempElement.querySelector('.status-icon');
+                    const statusIcon = tempElement.querySelector('.message-status sent status-icon');
                     if (statusIcon) {
                         statusIcon.innerHTML = getStatusIcon({
                             id: '',
@@ -444,24 +445,30 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function createTypingIndicator() {
-        if (document.querySelector('.chat-messages .typing-indicator')) return;
+
+        if (document.querySelector('.chat-container .typing-indicator')) return;
 
         const typingIndicator = document.createElement('div');
         typingIndicator.className = 'typing-indicator';
-    
-        const dots = document.createElement('span');
-        dots.className = 'typing-dots';
-    
+        typingIndicator.id = 'typingIndicator';
+        typingIndicator.style.display = 'flex'; // Start hidden
+        
+        // Create dots container
+        const typingDots = document.createElement('div');
+        typingDots.className = 'typing-dots';
+        
+        // Create three dots
         for (let i = 0; i < 3; i++) {
-            const dot = document.createElement('span');
-            dot.textContent = '.';
-            dots.appendChild(dot);
+            const dot = document.createElement('div');
+            dot.className = 'typing-dot';
+            typingDots.appendChild(dot);
         }
     
-        typingIndicator.appendChild(dots);
+        typingIndicator.appendChild(typingDots);
     
         // Example: append it to the chat messages container
-        document.querySelector('.chat-messages').appendChild(typingIndicator);
+        chatMessages.appendChild(typingIndicator);
+        scrollToBottom();
     
         //return typingIndicator; // in case you want to reference it later (e.g., to remove it)
     }
@@ -476,7 +483,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     
     function removeTypingIndicator() {
-        const existing = document.querySelector('.chat-messages .typing-indicator');
+        const existing = document.querySelector('.chat-container .typing-indicator');
         if (existing) existing.remove();
     }
     
@@ -529,53 +536,61 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     // Function to load older messages
-    function loadOlderMessages() {
-        if (isLoadingMessages || allMessagesLoaded) return;
-        isLoadingMessages = true;
+        function loadOlderMessages() {
+            if (isLoadingMessages || allMessagesLoaded) return;
+            isLoadingMessages = true;
 
-        const chatContainer = document.querySelector('.chat-messages');
-        if (!chatContainer) {
-            //console.error("Chat container not found.");
-            return;
+            const chatContainer = document.querySelector('.chat-container');
+            if (!chatContainer) return;
+
+            // Show loading indicator
+            const loader = document.createElement('div');
+            loader.className = 'message-loader';
+            loader.innerHTML = 'Loading older messages...';
+            chatContainer.insertBefore(loader, chatContainer.firstChild);
+
+            const tempOffset = messageOffset;
+
+            fetch(`${url}/getConversations?user1=${currentUserId}&user2=${otherUserId}&limit=${messageLimit}&offset=${tempOffset}`)
+                .then(response => response.json())
+                .then(response => {
+                    document.querySelector('.message-loader')?.remove();
+
+                    if (!response.success || !Array.isArray(response.data)) {
+                        console.error('Unexpected response:', response);
+                        isLoadingMessages = false;
+                        return;
+                    }
+
+                    const messages = response.data;
+
+                    if (messages.length === 0) {
+                        allMessagesLoaded = true;
+                        return;
+                    }
+
+                    const oldScrollHeight = chatContainer.scrollHeight;
+
+                    renderMessagesWithDateDivider(messages);
+
+                    const newScrollHeight = chatContainer.scrollHeight;
+                    chatContainer.scrollTop = newScrollHeight - oldScrollHeight;
+
+                    messageOffset = tempOffset;
+                    isLoadingMessages = false;
+
+                    // Set allMessagesLoaded if no more messages
+                    if (response.meta && response.meta.has_more === false) {
+                        allMessagesLoaded = true;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading older messages:', error);
+                    document.querySelector('.message-loader')?.remove();
+                    isLoadingMessages = false;
+                });
         }
 
-        // Show loading indicator
-        const loader = document.createElement('div');
-        loader.className = 'message-loader';
-        loader.innerHTML = 'Loading older messages...';
-        chatContainer.insertBefore(loader, chatContainer.firstChild);
-    
-        const tempOffset = messageOffset + messageLimit;
-    
-        fetch(`${url}/getConversations?user1=${currentUserId}&user2=${otherUserId}&limit=${messageLimit}&offset=${tempOffset}`)
-            .then(response => response.json())
-            .then(messages => {
-                //console.log(messages);
-                document.querySelector('.message-loader').remove();
-    
-                if (messages.length === 0) {
-                    allMessagesLoaded = true;
-                    return;
-                }
-    
-                const oldScrollHeight = chatContainer.scrollHeight;
-                const oldScrollTop = chatContainer.scrollTop;
-                
-                renderMessagesWithDateDivider(messages);
-    
-                const newScrollHeight = chatContainer.scrollHeight;
-                chatContainer.scrollTop = newScrollHeight - oldScrollHeight;
-    
-                messageOffset = tempOffset;
-                isLoadingMessages = false;
-
-            })
-            .catch(error => {
-                //console.error('Error loading older messages:', error);
-                document.querySelector('.message-loader').remove();
-                isLoadingMessages = false;
-            });
-    }
 
     function getDateLabel(dateStr) {
         const messageDate = new Date(dateStr);
@@ -701,12 +716,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     lastDate = dateLabel;
         
                     const divider = document.createElement('div');
-                    divider.className = 'text-center mb-3';
+                    divider.className = 'date-divider';
                     divider.innerHTML = `<span class="badge bg-secondary bg-opacity-10 text-secondary">${dateLabel}</span>`;
                     chatMessages.appendChild(divider);
                 }
                 
-                let avatar = message.sender_id === currentUserId ? senderAvatar : receiverAvatar;
+                //let avatar = message.sender_id === currentUserId ? senderAvatar : receiverAvatar;
 
                 //console.log(avatar);
 
@@ -720,14 +735,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
                 msgEl.innerHTML = `
-                    <img src="${url}/public/assets/images/user/${avatar}" alt="${message.username}" class="message-avatar">
-                    <div>
-                        <div class="message-bubble">${message.content}</div>
-                        <div class="message-time">${new Date(message.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                   
+                        ${message.content}
+                        <div class="message-time">${new Date(message.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} · ${new Date().getFullYear()}
                            
-                           ${message.sender_id === currentUserId ? `<span class="status-icon">${getStatusIcon(message)}</span>` : ''}
+                           ${message.sender_id === currentUserId ? `<span class="message-status sent status-icon">${getStatusIcon(message)}</span>` : ''}
                         </div>
-                    </div>
+                    
                 `;
                 chatMessages.appendChild(msgEl);
             });
