@@ -65,6 +65,25 @@
         </li>
 
         <li class="pc-item pc-caption">
+          <label>Finance</label>
+          <i class="ti ti-news"></i>
+        </li>
+
+        <li class="pc-item">
+          <a href="#" class="pc-link">
+            <span class="pc-micon"><i class="ti ti-transaction-dollar"></i></span>
+            <span class="pc-mtext">Global Fund Transfer</span>
+          </a>
+        </li>
+
+        <li class="pc-item">
+          <a href="#" class="pc-link">
+            <span class="pc-micon"><i class="ti ti-handshake"></i></span>
+            <span class="pc-mtext">Crypto Escrow</span>
+          </a>
+        </li>
+
+        <li class="pc-item pc-caption">
           <label>Transactions</label>
           <i class="ti ti-news"></i>
         </li>
@@ -119,6 +138,13 @@
           <a href="<?php echo $rootUrl ?>/my_chats" class="pc-link">
             <span class="pc-micon"><i class="ti ti-message"></i></span>
             <span class="pc-mtext">My Chats</span>
+          </a>
+        </li>
+
+        <li class="pc-item">
+          <a href="#" class="pc-link">
+            <span class="pc-micon"><i class="ti ti-message"></i></span>
+            <span class="pc-mtext">Chat Room</span>
           </a>
         </li>
 

@@ -7,18 +7,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="title" content="Chat | GlobalSingleLine">
-    <meta name="description" content="The platform for Networkers">
+    <meta name="description" content="Generating Success For Life">
     <meta name="keywords" content="network marketing, single leg networking, referral marketing platform, MLM software, affiliate networking, residual income opportunities, entrepreneurs network, passive income ideas">
     <meta name="author" content="GlobalSingleLine">
     <meta name="robots" content="index, follow">
     <meta property="og:title" content="Chat | GlobalSingleLine">
-    <meta property="og:description" content="The platform for Networkers">
+    <meta property="og:description" content="Generating Success For Life">
     <meta property="og:image" content="<?php echo $rootUrl ?>/public/assets/images/logo.png">
     <meta property="og:url" content="<?php echo $rootUrl ?>/chat/<?php echo $userdetails['id'] ?>">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Chat | GlobalSingleLine">
-    <meta name="twitter:description" content="The platform for Networkers">
+    <meta name="twitter:description" content="Generating Success For Life">
     <meta name="twitter:image" content="<?php echo $rootUrl ?>/public/assets/images/logo.png">
     <meta name="twitter:site" content="<?php echo $rootUrl ?>/chat/<?php echo $userdetails['id'] ?>">
     <meta name="theme-color" content="#0a3a66">
@@ -50,215 +50,13 @@
         }
         
         body {
+            font-family: 'Nunito Sans', sans-serif;
             background: #deebf1;
             background-size: cover;
             background-blend-mode: overlay;
             background-image: url('<?php echo $rootUrl ?>/public/assets/images/background.png'); /* Replace with your image path */
             background-repeat: no-repeat; /* Prevents the image from repeating */
             background-position: center center; /* Centers the image */
-        }
-        
-        .chat-container {
-            height: 80vh;
-            max-width: 800px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        .chat-container {
-            background: 
-                radial-gradient(circle at 10% 20%, rgba(255,255,255,0.9) 0%, rgba(240,242,245,0.9) 90%),
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="25" cy="25" r="2" fill="%23e4e8eb" opacity="0.5"/><circle cx="75" cy="25" r="2" fill="%23e4e8eb" opacity="0.5"/><circle cx="75" cy="75" r="2" fill="%23e4e8eb" opacity="0.5"/><circle cx="25" cy="75" r="2" fill="%23e4e8eb" opacity="0.5"/></svg>');
-            background-size: cover, 60px 60px;
-            border-radius: 12px;
-        }
-        
-        .chat-header {
-            /*background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));*/
-            color: white;
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .recipient-info {
-            display: flex;
-            align-items: center;
-            flex-grow: 1;
-        }
-        
-        .recipient-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-right: 12px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        .recipient-name {
-            font-weight: 600;
-            margin-bottom: 0;
-        }
-        
-        .recipient-status {
-            font-size: 0.75rem;
-            opacity: 0.9;
-        }
-        
-        .chat-messages {
-            height: calc(100% - 120px);
-            overflow-y: auto;
-            padding: 20px;
-            background-color: #f8fafc;
-        }
-        
-        .message {
-            display: flex;
-            margin-bottom: 15px;
-            align-items: flex-end;
-        }
-        
-        .message.received {
-            justify-content: flex-start;
-        }
-        
-        .message.sent {
-            justify-content: flex-end;
-        }
-        
-        .message-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-right: 10px;
-            margin-bottom: 5px;
-        }
-        
-        .message.sent .message-avatar {
-            order: 1;
-            margin-left: 10px;
-            margin-right: 0;
-        }
-        
-        .message-bubble {
-            max-width: 100%;
-            padding: 12px 20px;
-            border-radius: 15px;
-            position: relative;
-            word-wrap: break-word;
-            line-height: 1.4;
-        }
-        
-        .received .message-bubble {
-            background-color: white;
-            color: var(--dark-color);
-            border-bottom-left-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-        
-        .sent .message-bubble {
-            background-color: var(--primary-color);
-            color: white;
-            border-bottom-right-radius: 5px;
-        }
-        
-        .message-time {
-            font-size: 0.7rem;
-            margin-top: 4px;
-        }
-        
-        .received .message-time {
-            color: #6c757d;
-            text-align: left;
-            padding-left: 15px;
-        }
-        
-        .sent .message-time {
-            color: #6c757d;
-            text-align: right;
-            padding-right: 15px;
-        }
-        
-        .chat-input {
-            padding: 5px;
-            background-color: white;
-            border-top: 1px solid #e9ecef;
-        }
-        
-        .typing-indicator {
-            font-size: 0.8rem;
-            color: #6c757d;
-            margin-bottom: 5px;
-            font-style: italic;
-            height: 20px;
-            justify-content: flex-end;
-        }
-        
-        .typing-dots span {
-            animation: bounce 1.4s infinite ease-in-out;
-            display: inline-block;
-        }
-        
-        .typing-dots span:nth-child(1) {
-            animation-delay: 0s;
-        }
-        
-        .typing-dots span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-        
-        .typing-dots span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-        
-        @keyframes bounce {
-            0%, 60%, 100% { transform: translateY(0); }
-            30% { transform: translateY(-3px); }
-        }
-        
-        /* Custom scrollbar */
-        .chat-messages::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        .chat-messages::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-        
-        .chat-messages::-webkit-scrollbar-thumb {
-            background: #ccc;
-            border-radius: 10px;
-        }
-        
-        .chat-messages::-webkit-scrollbar-thumb:hover {
-            background: #aaa;
-        }
-        
-        /* Animation for new messages */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .message {
-            animation: fadeIn 0.3s ease-out;
-        }
-        
-        .header-actions .btn {
-            color: rgba(255, 255, 255, 0.8);
-            padding: 5px 8px;
-        }
-        
-        .header-actions .btn:hover {
-            color: white;
-            background-color: rgba(255, 255, 255, 0.1);
         }
 
         .loader-container {
@@ -274,51 +72,149 @@
             display: flex;
             z-index: 9999;
         }
-
-        /* Bouncing Bars */
-        .bar-loader {
+        
+        .chat-container {
+            height: 70vh;
+            overflow-y: auto;
+            background-color: #f5f5f5;
+        }
+        .message {
+            max-width: 70%;
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            word-wrap: break-word;
+            position: relative;
+        }
+            .received {
+            background-color: #ffffff;
+            border-radius: 15px 15px 15px 0;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+            }
+            .sent {
+            background-color: #0d6efd;
+            color: white;
+            border-radius: 15px 15px 0 15px;
+            margin-left: auto;
+            }
+            .message-time {
+            font-size: 0.75rem;
+            color: #6c757d;
+            margin-top: 5px;
+            text-align: right;
+            }
+            .sent .message-time {
+            color: rgba(255, 255, 255, 0.7);
+            }
+            .date-divider {
+            text-align: center;
+            margin: 20px 0;
+            color: #6c757d;
+            position: relative;
+            }
+            .date-divider::before,
+            .date-divider::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid #dee2e6;
+            margin: auto 10px;
+            }
+            .date-divider span {
+            background-color: #f5f5f5;
+            position: relative;
+            z-index: 1;
+            }
+            .chat-header {
+            background-color: #ffffff;
+            border-bottom: 1px solid #e9ecef;
+            padding: 10px 15px;
             display: flex;
-            gap: 6px;
-            justify-content: center;
-            align-items: end;
+            align-items: center;
+            }
+            .avatar {
+            width: 40px;
             height: 40px;
-        }
-
-        .bar {
-            width: 8px;
-            height: 20px;
-            background-color: #c96d18;
-            border-radius: 4px;
-            animation: bounce 1s infinite ease-in-out;
-        }
-
-        .bar:nth-child(2) {
-            animation-delay: 0.1s;
-            background-color: #faad14;
-        }
-        .bar:nth-child(3) {
-            animation-delay: 0.2s;
-            background-color: #facc4f;
-        }
-        .bar:nth-child(4) {
-            animation-delay: 0.3s;
-            background-color: #fbd97f;
-        }
-        .bar:nth-child(5) {
-            animation-delay: 0.4s;
-            background-color: #ffe8b0;
-        }
-
-        @keyframes bounce {
-            0%, 100% {
-                height: 20px;
-                transform: translateY(0);
+            border-radius: 50%;
+            margin-right: 10px;
             }
-            50% {
-                height: 40px;
-                transform: translateY(-10px);
+            .chat-input {
+            word-break: break-word;
+            white-space: pre-wrap;
+            resize: none;
             }
-        }
+            /* Unread badge */
+            .unread-count {
+            background-color: #dc3545;
+            color: white;
+            border-radius: 50%;
+            font-size: 0.7rem;
+            padding: 3px 6px;
+            margin-left: auto;
+            }
+            /* Last message excerpt */
+            .last-message {
+            font-size: 0.85rem;
+            color: #6c757d;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+            }
+            /* Message status ticks */
+            .message-status {
+            margin-left: 5px;
+            font-size: 0.7rem;
+            }
+            .message-status.sent {
+            color: rgba(255, 255, 255, 0.6);
+            }
+            .message-status.read {
+            color: #53bdeb;
+            }
+            /* Mobile menu button */
+            .mobile-menu-btn {
+            display: none;
+            }
+            @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            }
+
+            .chat-input {
+                resize: none;              /* Prevent manual resizing */
+                overflow-y: auto;          /* Add scrollbar if needed */
+                min-height: 38px;          /* Match input height */
+                max-height: 100px;         /* Optional: limit height */
+                line-height: 1.5;
+            }
+
+            .typing-indicator {
+            background-color: #ffffff;
+            border-radius: 15px 15px 15px 0;
+            padding: 8px 12px;
+            margin-bottom: 5px;
+            width: fit-content;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+            display: none; /* Hidden by default */
+            }
+            .typing-dots {
+            display: flex;
+            gap: 4px;
+            }
+            .typing-dot {
+            width: 6px;
+            height: 6px;
+            background-color: #6c757d;
+            border-radius: 50%;
+            animation: typingAnimation 1.4s infinite ease-in-out;
+            }
+            .typing-dot:nth-child(1) { animation-delay: 0s; }
+            .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+            .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+            @keyframes typingAnimation {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+            }
 
         /* Loading Text */
         .loading-text {
@@ -398,11 +294,49 @@
                 0%, 100% { opacity: 1; }
                 50% { opacity: 0; }
             }
+
+             .back-button {
+                margin-right: 10px;
+                color: #0d6efd;
+                background: none;
+                border: none;
+                font-size: 1.2rem;
+            }
+            @media (min-width: 768px) {
+                
+            }
+
+            .chat-card {
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .chat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .avatar {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        
+        .unread-badge {
+            background-color: var(--primary-color);
+        }
+        
+        .timestamp {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
         
     </style>
     <script>
         window.env = {
-            NOTIFICATION_ACCESS: "<?php echo $userInfo['notification_access']; ?>",
+            NOTIFICATION_ACCESS: "<?php echo $userInfo['notification_access'] ?? 1; ?>",
             VAPID_PUBLIC_KEY: "<?php echo VAPID_PUBLIC_KEY ?>",
             ENDPOINT: "<?php echo $rootUrl ?>",
             CHAT_ENDPOINT: "<?php echo CHAT_ENDPOINT ?>"
@@ -410,109 +344,86 @@
     </script>
 </head>
 
-        <div class="loader-container">
-            <div class="loader-wrapper">
-                <div class="rotating-circle"></div>
-                <img src="<?php echo $rootUrl ?>/public/assets/images/favicon.png" alt="Logo" class="logo">
-            </div>
-            <div class="loading-text"></div>
+     <div class="loader-container">
+        <div class="loader-wrapper">
+            <div class="rotating-circle"></div>
+            <img src="<?php echo $rootUrl ?>/public/assets/images/favicon.png" alt="Logo" class="logo">
         </div>
+        <div class="loading-text"></div>
+    </div>  
+    <?php
+        //print_r($userdetails);
+    ?>
+<body data-pc-theme="light" data-pc-direction="ltr" data-currentUserAvatar="<?php echo htmlspecialchars($userInfo['avatar'] ?? ""); ?>" data-otherUserAvatar="<?php echo htmlspecialchars($userdetails['avatar'] ?? "");  ?>" data-pc-preset="preset-1" data-otherUserId="<?php echo htmlspecialchars($userdetails['id'] ?? ""); ?>" data-currentUserId="<?php echo htmlspecialchars($userInfo['id'] ?? ""); ?>" data-rootUrl="<?php echo htmlspecialchars($rootUrl); ?>" style="font-family: Nunito Sans, sans-serif;">
+
     
-<body data-pc-theme="light" data-pc-direction="ltr" data-currentUserAvatar="<?php echo htmlspecialchars($userInfo['avatar'] ?? ""); ?>" data-otherUserAvatar="<?php echo htmlspecialchars($userdetails['avatar'] ?? "");  ?>" data-pc-preset="preset-1" data-otherUserId="<?php echo htmlspecialchars($userdetails['id'] ?? ""); ?>" data-currentUserId="<?php echo htmlspecialchars($userInfo['id'] ?? ""); ?>" data-rootUrl="<?php echo htmlspecialchars($rootUrl); ?>" style="font-family:Public Sans, sans-serif">
-    <!-- [ Pre-loader ] start -->
 
-    <!-- [ Pre-loader ] End -->
-    <!-- [ Sidebar Menu ] start -->
-    <!-- [ Sidebar Menu ] end --> <!-- [ Header Topbar ] start -->
-    <!-- [ Sidebar Menu ] start -->
-
-    <?php include("includes/sidebar.php"); ?>
-    <!-- [ Sidebar Menu ] end --> <!-- [ Header Topbar ] start -->
-    <?php include("includes/header.php"); ?>
-
-<div class="pc-container">
-    <div class="pc-content">
-     
-        <div class="row justify-content-center">
-            <div class="col-md-10 col-lg-8">
-                <div class="chat-container">
-                    <!-- Chat Header with Recipient Info -->
-                    <div class="chat-header">
-                        <div class="recipient-info">
-                            <img src="<?php echo $rootUrl ?>/public/assets/images/user/<?php echo $userdetails['avatar'] ?>" alt="<?php echo $userdetails['username'] ?>" class="recipient-avatar">
-                            <div>
-                                <h6 class="recipient-name mb-0"><?php echo $userdetails['username']  ?></h6>
-                                <div class="recipient-status text-success d-flex align-items-center">
-                                    <span class="online-dot me-1"></span>
-                                    <span>Online</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="header-actions">
-                            <button class="btn btn-sm rounded-circle">
-                                <i class="fas fa-phone-alt"></i>
-                            </button>
-                            <button class="btn btn-sm rounded-circle">
-                                <i class="fas fa-video"></i>
-                            </button>
-                            <button class="btn btn-sm rounded-circle">
-                                <i class="fas fa-ellipsis-v"></i>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- Chat Messages -->
-                    <div class="chat-messages">
-                        <!-- Date divider 
-                        <div class="text-center mb-3">
-                            <span class="badge bg-secondary bg-opacity-10 text-secondary">Today</span>
-                        </div>-->
-                        
-                        
-                        <!-- Received message
-                        <div class="message received">
-                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sarah" class="message-avatar">
-                            <div>
-                                <div class="message-bubble">
-                                    I'm doing well! Just finished my part of the project. Want to review it together later?
-                                </div>
-                                <div class="message-time">10:34 AM</div>
-                            </div>
-                        </div> -->
-                        
-                        <!-- Typing indicator -->
-                        <!--<div style="display:none" class="typing-indicator">
-                            <span class="typing-dots">
-                                <span>.</span><span>.</span><span>.</span>
-                            </span>
-                        </div>-->
-                    </div>
-                    
-                    <!-- Chat Input -->
-                    <div class="chat-input">
-                        <div class="input-group align-items-end">
-                            <textarea class="form-control message-input" placeholder="Type your message..." rows="1"></textarea>
-                            <button class="btn btn-primary rounded-end-pill send-btn" type="button">
-                                <i class="fas fa-paper-plane"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
+<div class="offcanvas offcanvas-start" tabindex="-1" id="mobileSidebar">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title">Recent Chats</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
     </div>
+    <div class="offcanvas-body p-0">
+        <div id="chat-list" class="list-group">
+                    <!-- Sample Chat Item 1 -->
+        </div>
+      
     </div>
+  </div>
 
-    <footer class="pc-footer">
-        <div class="footer-wrapper container-fluid">
-        <div class="row">
-            <div class="col-sm my-1">
-            <p class="m-0">Crafted By:  <a href="#" >GSL TEAM</a></p>
-            </div>
+    <div class="container-fluid vh-100">
+    <div class="row h-100">
+      <!-- Sidebar (Desktop) -->
+      <div class="col-md-3 bg-light p-3 d-none d-md-block">
+        <h4>Recent Chats</h4>
+        <div id="chat-list" class="list-group">
+                    <!-- Sample Chat Item 1 -->
         </div>
+      </div>
+
+      <!-- Chat Area -->
+      <div class="col-md-9 p-0 d-flex flex-column">
+        <!-- Chat Header (With Mobile Menu Button) -->
+        <div class="chat-header">
+           <button class="back-button" id="backButton">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <!-- Mobile Menu Button (now appears after back button) -->
+            <img src="<?php echo $rootUrl ?>/public/assets/images/user/<?php echo $userdetails['avatar'] ?>" alt="<?php echo $userdetails['username'] ?>" class="avatar">
+          <div>
+            <h5 class="mb-0 text-capitalize"><?php echo $userdetails['username']  ?></h5>
+            <small class="text-muted">Online</small>
+          </div>
+          <div class="ms-auto">
+             <button class="btn mobile-menu-btn me-2" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
+                <i class="fas fa-bars"></i>
+            </button>
+          </div>
         </div>
-  </footer> <!-- Required Js -->
+
+        <!-- Messages Container -->
+        <div class="chat-container p-3 flex-grow-1">
+          <!-- Date Group: Today -->
+          
+
+
+        </div>
+
+        <!-- Message Input -->
+        <div class="p-3 border-top bg-white">
+          <div class="input-group">
+            <textarea class="form-control chat-input" placeholder="Type a message..." rows="1"></textarea>
+            <button class="btn btn-primary send-btn">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    
+
+    <!-- Required Js -->
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="<?php echo $rootUrl ?>/public/assets/js/plugins/jquery.js"></script>
     <script src="<?php echo $rootUrl ?>/public/assets/js/plugins/popper.min.js"></script>
@@ -542,6 +453,87 @@
             setTimeout(() => {
                 preloader.style.display = 'none'; // Hide after fade-out
             }, 500); // Matches the CSS transition duration (if added)
+        });
+
+         document.getElementById('backButton').addEventListener('click', function() {
+            // Replace with your actual dashboard URL or navigation logic
+            window.location.href = '../dashboard'; 
+            // Alternative: history.back() to go to previous page
+        });
+
+        function loadChats() {
+            $.ajax({
+                url: '../fetchchathistory',
+                type: 'POST',
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        renderChats(response.chats);
+                    } else {
+                        console.error('Error loading chats:', response.message);
+                        $('#chat-list').html('<div class="alert alert-danger">Error loading conversations</div>');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX error:', error);
+                    $('#chat-list').html('<div class="alert alert-danger">Connection error</div>');
+                }
+            });
+        }
+
+        // Render chats to the UI
+        function renderChats(chats) {
+            const chatList = $('#chat-list');
+            chatList.empty();
+
+            if (chats.length === 0) {
+                chatList.html('<div class="text-center py-4 text-muted">No conversations yet</div>');
+                return;
+            }
+
+            chats.forEach(chat => {
+                const unreadBadge = chat.unread_count > 0 
+                    ? `<span class="badge bg-primary rounded-pill">${chat.unread_count}</span>`
+                    : '';
+
+                const chatItem = `
+                <a href="#" class="list-group-item list-group-item-action p-3 mb-2 bg-white chat-card" data-user-id="${chat.user_id}">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <img src="<?php echo $rootUrl ?>/public/assets/images/user/${chat.avatar || 'https://via.placeholder.com/50'}" alt="${chat.username}" class="avatar me-3">
+                            <div>
+                                <h6 class="mb-0">${chat.username}</h6>
+                                <p class="mb-0 text-muted small">${chat.last_message || 'No messages yet'}</p>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <span class="timestamp d-block">${formatTime(chat.last_message_time)}</span>
+                            ${unreadBadge}
+                        </div>
+                    </div>
+                </a>
+                `;
+                chatList.append(chatItem);
+            });
+
+            // Add click event to load specific chat
+            $('.chat-card').on('click', function(e) {
+                e.preventDefault();
+                const userId = $(this).data('user-id');
+               window.location.href= `${userId}`
+            });
+        }
+
+        // Format timestamp
+        function formatTime(timestamp) {
+            if (!timestamp) return '';
+            const date = new Date(timestamp);
+            return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        // Initial load
+        $(document).ready(function() {
+            loadChats();
         });
         // Auto-scroll to bottom of chat
         /*const chatMessages = document.querySelector('.chat-messages');

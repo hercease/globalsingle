@@ -7,18 +7,18 @@
     <link rel="icon" href="<?php echo $rootUrl ?>/public/assets/images/favicon.png" type="image/x-icon"> <!-- [Google Font] Family -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="title" content="404 | GlobalSingleLine">
-    <meta name="description" content="The platform for Networkers">
+    <meta name="description" content="Generating Success For Life">
     <meta name="keywords" content="network marketing, single leg networking, referral marketing platform, MLM software, affiliate networking, residual income opportunities, entrepreneurs network, passive income ideas">
     <meta name="author" content="GlobalSingleLine">
     <meta name="robots" content="index, follow">
     <meta property="og:title" content="404 | GlobalSingleLine">
-    <meta property="og:description" content="The platform for Networkers">
+    <meta property="og:description" content="Generating Success For Life">
     <meta property="og:image" content="<?php echo $rootUrl ?>/public/assets/images/logo.png">
     <meta property="og:url" content="<?php echo $rootUrl ?>/404">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="404 | GlobalSingleLine">
-    <meta name="twitter:description" content="The platform for Networkers">
+    <meta name="twitter:description" content="Generating Success For Life">
     <meta name="twitter:image" content="<?php echo $rootUrl ?>/public/assets/images/logo.png">
     <meta name="twitter:site" content="<?php echo $rootUrl ?>/404">
     <meta name="theme-color" content="#0a3a66">
@@ -93,7 +93,7 @@
     </style>
     <script>
         window.env = {
-            NOTIFICATION_ACCESS: "<?php echo $userInfo['notification_access']; ?>",
+            NOTIFICATION_ACCESS: "<?php echo $userInfo['notification_access'] ?? 1; ?>",
             VAPID_PUBLIC_KEY: "<?php echo VAPID_PUBLIC_KEY ?>",
             ENDPOINT: "<?php echo $rootUrl ?>"
         };

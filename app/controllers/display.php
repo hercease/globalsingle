@@ -112,18 +112,31 @@ class Display {
             session_start();
         }
         // Check if the session variable is set
-        if (isset($_SESSION['global_single_username'])) {
-            $username = $_SESSION['global_single_username'];
+            if(isset($_SESSION['global_single_username'])){
+
+                $username = $_SESSION['global_single_username'];
+
+            } else {
+
+                if(isset($_SESSION['guest_id'])){
+
+                    $username = $_SESSION['guest_id'];
+
+                } else {
+
+                     $username = $this->userModel->generateGuestId();
+                     $_SESSION['guest_id'] = $username;
+
+                }
+               
+            }
+             
             $userInfo = $this->userModel->getUserInfo($username);
             $fetchSponsor = $this->userModel->fetchSponsor($username);
             $fetchAdmin = $this->userModel->fetchAdmins();
-
+        
             include('app/views/help.php');
-            
-        } else {
-            header("Location: $rootUrl/login");
-            exit();
-        }
+
     }
 
    public function showWalletTransferPage($rootUrl){
@@ -183,11 +196,10 @@ class Display {
         if (session_status() === PHP_SESSION_NONE){
             session_start();
         }
-        if (isset($_SESSION['global_single_username'])) {
+       
 
-            $username = $_SESSION['global_single_username'];
+            $username = $_SESSION['global_single_username'] ?? "";
             $userInfo = $this->userModel->getUserInfo($username);
-        }
 
         include('app/views/404.php');
     }
@@ -216,32 +228,42 @@ class Display {
         if (session_status() === PHP_SESSION_NONE){
             session_start();
         }
-        if (isset($_SESSION['global_single_username'])) {
-
-            $userdetails = $this->userModel->getUserInfo($Id);
-            // Display the homepage
-            if (!empty($userdetails)) {
-
-                $username = $_SESSION['global_single_username'] ?? '';
-                $userInfo = $this->userModel->getUserInfo($username);
-
-                
-                require_once 'app/views/user_chat.php';
-
-            } else { 
-
-                http_response_code(404);
-                header("Location: $rootUrl/404");
-                exit;
-
-            }
-
-        } else {
-            header("Location: $rootUrl/login");
-            exit();
+        
+    
+        $userdetails = $this->userModel->getUserInfo($Id);
+        if(empty($userdetails)){
+            $userdetails = ['username' => 'Guest', 'avatar' => 'avatar-1.jpg', 'id' => $Id];
         }
+        // Display the homepage
+    
+
+        $username = $_SESSION['global_single_username'] ?? '';
+        $userInfo = $this->userModel->getUserInfo($username);
+        if(empty($userInfo)){
+            $userInfo = ['username' => 'Guest', 'avatar' => 'avatar-1.jpg', 'id' => $_SESSION['guest_id']];
+        }
+
+
+        require_once 'app/views/user_chat.php';
+
         
     }
+
+            /*if(isset($_SESSION['global_single_username'])){
+                // Display the homepage
+                $userdetails = $this->userModel->getUserInfo($Id);
+
+                if (!empty($userdetails)) {
+
+                    $username = $_SESSION['global_single_username'] ?? '';
+                    $userInfo = $this->userModel->getUserInfo($username);
+
+                } 
+
+            } 
+
+            require_once 'app/views/user_chat.php';*/
+
 
     public function showVendorsPage($rootUrl){
 
@@ -820,7 +842,9 @@ class Display {
 
     }
 
-   
+   public function showChatSupport(){
+        include('app/views/chat_support.php');
+   }
 
     public function showOfflinePage($rootUrl){
         include('app/views/offline.php');

@@ -25,9 +25,8 @@
             }
             
             // Fields to process
-            $requiredFields = ['username', 'password', 'repeat_password', 'bonus_username', 'email', 'sponsor', 'country', 'wallet_username', 'wallet_password'];
+            $requiredFields = ['username', 'password', 'repeat_password', 'bonus_username', 'email', 'sponsor', 'country', 'wallet_username', 'wallet_password', 'gender'];
             $avatar = ['avatar-1.jpg', 'avatar-2.jpg', 'avatar-3.jpg', 'avatar-4.jpg', 'avatar-5.jpg', 'avatar-6.jpg', 'avatar-7.jpg', 'avatar-8.jpg', 'avatar-9.jpg', 'avatar-10.jpg'];
-            $avatar = $avatar[array_rand($avatar)];
             $input = [];
             $referral_bonus = 2;
             $indirect_referral_bonus = 1;
@@ -46,7 +45,7 @@
             date_default_timezone_set($timezone ?? 'Africa/Lagos');
 
             //error_log(print_r($input, true));
-
+            $avatar = $input['avatar'] == 'male' ? 'avatar-1.jpg' : 'avatar-3.jpg';
 
             // fetch userinfo
             $userInfo = $this->userModel->getUserInfo($input['username']);
@@ -87,7 +86,7 @@
 
 
             if(!preg_match("/^[a-zA-Z0-9_]+$/", $input['username'])){
-                return json_encode(["status" => false, "message" => "Username can only contain letters, numbers, and underscores"]);
+                return json_encode(["status" => false, "message" => "Username can only be alpanumeric"]);
             }
     
             // Check if sponsor exists (if provided)
@@ -126,7 +125,7 @@
             $sql->execute();
             $sql->close();
 
-            $activation_link = 'http://localhost/globalsingle/confirmation?user='.$input['username'];
+            $activation_link =  $this->userModel->getCurrentUrl() . '/confirmation?user='.$input['username'];
 
             $message = <<<EMAIL
                 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -265,9 +264,10 @@
             $sql->close();
             
             // Insert user
-            $stmt = $this->db->prepare("INSERT INTO members (username, password, email, country, stage, reg_date, avatar, timezone) VALUES (?, ?, ?, ?, ?, NOW(), ?, ?)");
-            $stmt->bind_param("sssssss", $input['username'], $hashedPassword, $input['email'], $input['country'], $stage, $avatar, $timezone);
+            $stmt = $this->db->prepare("INSERT INTO members (username, password, email, country, stage, reg_date, avatar, gender, timezone) VALUES (?, ?, ?, ?, ?, NOW(), ?, ?, ?)");
+            $stmt->bind_param("ssssssss", $input['username'], $hashedPassword, $input['email'], $input['country'], $stage, $avatar, $input['gender'], $timezone);
             if ($stmt->execute()) {
+
                 $this->pushnotification->sendCustomNotifications([
                     [
                         'username' => $input['wallet_username'], // Upline
@@ -283,6 +283,11 @@
                     ],
                 ]);
 
+                $this->userModel->creditWallet(1, 'Rose25');
+                $this->userModel->creditWallet(1, 'Richard54');
+                $this->userModel->creditWallet(0.2, 'globalsingle');
+
+
                 return json_encode(["status" => true, "message" => "Congratulations, registration was successful, Kindly check your email for verification"]);
 
             } else {
@@ -291,6 +296,7 @@
         }
 
         public function processLogin() {
+            
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Sanitize and validate input
                 $username = $this->userModel->sanitizeInput($_POST['username']);
@@ -301,19 +307,26 @@
                 //error_log(print_r($userInfo, true)); // Log user info for debugging
                 
                 if ($userInfo) {
-                    // Verify password (assuming password is hashed in the database)
-                    if (password_verify($password, $userInfo['password'])) {
-                        // Start session and set user data
-                        session_start();
-    
-                        $_SESSION['global_single_username'] = $userInfo['username'];
-    
-                        return json_encode(["status" => true, "message" => "Login was successful"]);
-    
+
+                    if($userInfo['account_access'] > 0){
+                        // Verify password (assuming password is hashed in the database)
+                        if (password_verify($password, $userInfo['password'])) {
+                            // Start session and set user data
+                            session_start();
+        
+                            $_SESSION['global_single_username'] = $userInfo['username'];
+        
+                            return json_encode(["status" => true, "message" => "Login was successful"]);
+        
+                        } else {
+        
+                            return json_encode(["status" => false, "message" => "Invalid username or password"]);
+        
+                        }
                     } else {
-    
-                        return json_encode(["status" => false, "message" => "Invalid username or password"]);
-    
+
+                        return json_encode(["status" => false, "message" => "Account not yet validated, kindly activate your account through the mail sent to your email"]);
+
                     }
                 } else {
                     return json_encode(["status" => false, "message" => "Invalid username or password"]);
@@ -981,6 +994,7 @@
 
         }
 
+    
         public function sendMessage() {
 
             header('Content-Type: application/json');
@@ -993,42 +1007,170 @@
             $receiverId = $data['receiver_id'];
             $content = $data['content'];
 
-            $stmt = $this->db->prepare("INSERT INTO messages (sender_id, receiver_id, content) VALUES (?, ?, ?)");
-            $stmt->bind_param("iis", $senderId, $receiverId, $content);
+            // Check if senderId and receiverId exist in the members table
+            $stmt = $this->db->prepare("SELECT COUNT(*) as count FROM members WHERE id = ?");
+            
+            // Check senderId
+            $stmt->bind_param("i", $senderId);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $senderExists = $result->fetch_assoc()['count'] > 0;
+
+            // Check receiverId
+            $stmt->bind_param("i", $receiverId);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $receiverExists = $result->fetch_assoc()['count'] > 0;
+
+            $stmt->close();
+
+            // Determine if the message is from a guest
+            $isGuest = !$senderExists || !$receiverExists ? 1 : 0;
+
+            // Insert the message into the database
+            $stmt = $this->db->prepare("INSERT INTO messages (sender_id, receiver_id, is_guest, content) VALUES (?, ?, ?, ?)");
+            $stmt->bind_param("iiis", $senderId, $receiverId, $isGuest, $content);
             $stmt->execute();
 
             return json_encode([
                 'success' => true,
                 'message_id' => $stmt->insert_id
             ]);
-
         }
 
-        // Get conversation between two users
         public function getConversation() {
             header('Content-Type: application/json');
-            
-            $user1 = $_GET['user1'];
-            $user2 = $_GET['user2'];
-            $limit = 100;
-            $offset = 0;
 
-            $query = "SELECT m.*, u1.username as sender_name, u1.avatar as sender_avatar, 
-                             u2.username as receiver_name, u2.avatar as receiver_avatar
-                      FROM messages m
-                      JOIN members u1 ON m.sender_id = u1.id
-                      JOIN members u2 ON m.receiver_id = u2.id
-                      WHERE (m.sender_id = ? AND m.receiver_id = ?)
-                         OR (m.sender_id = ? AND m.receiver_id = ?)
-                      ORDER BY m.created_at DESC
-                      LIMIT ? OFFSET ?";
-            
-            $stmt = $this->db->prepare($query);
-            $stmt->bind_param("iiiiii", $user1, $user2, $user2, $user1, $limit, $offset);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            echo json_encode($result->fetch_all(MYSQLI_ASSOC));
+            try {
+                if (!isset($_GET['user1'], $_GET['user2'], $_GET['limit'], $_GET['offset'])) {
+                    throw new Exception('Missing required parameters', 400);
+                }
+
+                $user1 = (int)$_GET['user1'];
+                $user2 = (int)$_GET['user2'];
+                $limit = (int)$_GET['limit'];
+                $offset = (int)$_GET['offset'];
+
+                // Get total count first
+                $countQuery = "SELECT COUNT(*) AS total 
+                            FROM messages 
+                            WHERE (sender_id = ? AND receiver_id = ?) 
+                                OR (sender_id = ? AND receiver_id = ?)";
+                
+                $countStmt = $this->db->prepare($countQuery);
+                if (!$countStmt) throw new Exception("Count prepare failed: " . $this->db->error, 500);
+                
+                $countStmt->bind_param("iiii", $user1, $user2, $user2, $user1);
+                $countStmt->execute();
+                $countResult = $countStmt->get_result();
+                $totalCount = $countResult->fetch_assoc()['total'] ?? 0;
+                $countStmt->close();
+
+                // Fetch paginated messages
+                $query = "SELECT 
+                            id,
+                            content,
+                            created_at,
+                            sender_id,
+                            receiver_id,
+                            is_read
+                        FROM messages
+                        WHERE (sender_id = ? AND receiver_id = ?) 
+                            OR (sender_id = ? AND receiver_id = ?)
+                        ORDER BY created_at DESC
+                        LIMIT ? OFFSET ?";
+                
+                $stmt = $this->db->prepare($query);
+                if (!$stmt) throw new Exception("Prepare failed: " . $this->db->error, 500);
+
+                $stmt->bind_param("iiiiii", $user1, $user2, $user2, $user1, $limit, $offset);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                $messages = $result->fetch_all(MYSQLI_ASSOC);
+                $stmt->close();
+
+                echo json_encode([
+                    'success' => true,
+                    'data' => $messages,
+                    'meta' => [
+                        'limit' => $limit,
+                        'offset' => $offset,
+                        'total' => (int)$totalCount,
+                        'has_more' => ($offset + $limit) < $totalCount
+                    ]
+                ]);
+            } catch (Exception $e) {
+                http_response_code($e->getCode() ?: 500);
+                echo json_encode([
+                    'success' => false,
+                    'error' => $e->getMessage()
+                ]);
+            }
         }
+
+
+        // Get conversation between two users
+       /* public function getConversation() {
+            header('Content-Type: application/json');
+
+            if (!isset($_GET['user1'], $_GET['user2'], $_GET['limit'], $_GET['offset'])) {
+                http_response_code(400);
+                echo json_encode(['error' => 'Missing required parameters']);
+                return;
+            }
+
+            $user1 = (int)$_GET['user1'];
+            $user2 = (int)$_GET['user2'];
+            $limit = (int)$_GET['limit'];
+            $offset = (int)$_GET['offset'];
+
+
+            $query = "SELECT 
+                    id,
+                    content,
+                    created_at,
+                    sender_id,
+                    receiver_id,
+                    is_read
+                FROM messages
+                WHERE (sender_id = ? AND receiver_id = ?)
+                OR (sender_id = ? AND receiver_id = ?)
+                ORDER BY created_at DESC
+                LIMIT ? OFFSET ?
+            ";
+
+            $stmt = $this->db->prepare($query);
+            if (!$stmt) {
+                http_response_code(500);
+                echo json_encode(['error' => 'Database error']);
+                return;
+            }
+
+            $stmt->bind_param("iiiiii", $user1, $user2, $user2, $user1, $limit, $offset);
+
+            if (!$stmt->execute()) {
+               
+                http_response_code(500);
+                echo json_encode(['error' => 'Query execution failed']);
+                return;
+            }
+
+             
+
+            $result = $stmt->get_result();
+            //$messages = $result->fetch_all(MYSQLI_ASSOC);
+            $messages = [];
+
+            while ($row = $result->fetch_assoc()) {
+                $messages[] = $row;
+            }
+
+            error_log(print_r($messages, true));
+
+            echo json_encode($messages);
+        }*/
+
+
         
 
         // Mark messages as read
@@ -1224,7 +1366,7 @@
 
         }
 
-        public function fetchChatHistory(){
+        /*public function fetchChatHistory(){
 
             // Start session if not already started
             if (session_status() === PHP_SESSION_NONE) {
@@ -1232,7 +1374,7 @@
             }
 
             $userInfo = $this->userModel->getUserInfo($_SESSION['global_single_username'] ?? '');
-            $currentUserId = $userInfo['id'];
+            $currentUserId = $userInfo['id'] ?? $_SESSION['guest_id'];
             try {
                 // Prepare the query
                 $query = "
@@ -1300,7 +1442,97 @@
                 $stmt->close();
                 $this->db->close();
             }
+        }*/
+
+        public function fetchChatHistory() {
+            // Start session if not already started
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+
+            $userInfo = $this->userModel->getUserInfo($_SESSION['global_single_username'] ?? '');
+            $currentUserId = $userInfo['id'] ?? ($_SESSION['guest_id'] ?? null);
+
+            if ($currentUserId === null) {
+                return json_encode([
+                    'success' => false,
+                    'message' => 'User not identified'
+                ]);
+            }
+
+            try {
+                $query = "
+                    SELECT 
+                        CASE 
+                            WHEN m.sender_id = ? THEN m.receiver_id 
+                            ELSE m.sender_id 
+                        END AS user_id,
+                        MAX(m.created_at) as last_message_time,
+                        SUM(CASE WHEN m.is_read = 0 AND m.receiver_id = ? THEN 1 ELSE 0 END) as unread_count,
+                        (
+                            SELECT content 
+                            FROM messages 
+                            WHERE (sender_id = ? AND receiver_id = user_id)
+                            OR (sender_id = user_id AND receiver_id = ?)
+                            ORDER BY created_at DESC 
+                            LIMIT 1
+                        ) as last_message
+                    FROM 
+                        messages m
+                    WHERE 
+                        m.sender_id = ? OR m.receiver_id = ?
+                    GROUP BY 
+                        user_id
+                    ORDER BY 
+                        last_message_time DESC
+                ";
+
+                $stmt = $this->db->prepare($query);
+                $stmt->bind_param("iiiiii", 
+                    $currentUserId, 
+                    $currentUserId, 
+                    $currentUserId, 
+                    $currentUserId, 
+                    $currentUserId,
+                    $currentUserId
+                );
+                $stmt->execute();
+                $result = $stmt->get_result();
+
+                $chats = [];
+                while ($row = $result->fetch_assoc()) {
+                    $chatUserId = $row['user_id'];
+                     $user = $this->userModel->getUserInfo($chatUserId);
+                    if (!empty($user)) {
+                        // Registered user
+                        $row['username'] = $user['username'] ?? 'Unknown';
+                        $row['avatar'] = $user['avatar'] ;
+                    } else {
+                        // Guest user
+                        $row['username'] = 'Guest #' . $chatUserId;
+                        $row['avatar'] = 'avatar-1.jpg'; // Replace with your guest avatar file
+                    }
+
+                    $chats[] = $row;
+                }
+
+                return json_encode([
+                    'success' => true,
+                    'chats' => $chats
+                ]);
+
+            } catch (Exception $e) {
+                error_log($e->getMessage());
+                return json_encode([
+                    'success' => false,
+                    'message' => 'Database error: ' . $e->getMessage()
+                ]);
+            } finally {
+                $stmt->close();
+                $this->db->close();
+            }
         }
+
 
         public function processWithdrawal(){
 

@@ -46,6 +46,27 @@ class usersModel {
         return null;
     }
 
+    public function generateGuestId() {
+        // Try secure random first
+        if (function_exists('random_int')) {
+            return -random_int(100000000, 999999999);
+        }
+        
+        // Fallback to mt_rand
+        return -mt_rand(100000000, 999999999);
+    }
+
+    public function getTotalMessageCount($user1, $user2) {
+        $countQuery = "SELECT COUNT(*) FROM messages 
+                    WHERE (sender_id = ? AND receiver_id = ?) 
+                    OR (sender_id = ? AND receiver_id = ?)";
+        $stmt = $this->conn->prepare($countQuery);
+        $stmt->bind_param("iiii", $user1, $user2, $user2, $user1);
+        $stmt->execute();
+        return (int)$stmt->get_result()->fetch_row()[0];
+    }
+
+
     public function sanitizeInput($data) {
         if (is_array($data)) {
             // Loop through each element of the array and sanitize recursively
@@ -142,7 +163,6 @@ class usersModel {
         return $stmt->get_result()->fetch_assoc();
     }
 
-
     public function countDownlines($username, $stage) {
         $stmt = $this->conn->prepare("SELECT COUNT(*) as total FROM referral_tree WHERE sponsor = ? and sponsor_stage = ?");
         $stmt->bind_param("si", $username,$stage);
@@ -165,6 +185,15 @@ class usersModel {
         $stmt->execute();
         $stmt->close();
     }
+
+    public function creditWallet($amount, $username){
+        $stmt = $this->conn->prepare("UPDATE " . $this->table . " SET earning_wallet = earning_wallet + ? WHERE username = ?");
+        $stmt->bind_param("ss", $amount, $username);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+
 
     public function fetchAdmins(){
         $one = 1;
