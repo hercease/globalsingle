@@ -365,7 +365,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
 
-
     // Mark message as read
     function markAsRead(Id) {
         fetch(`${url}/markasread`, {

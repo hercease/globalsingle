@@ -193,8 +193,6 @@ class usersModel {
         $stmt->close();
     }
 
-
-
     public function fetchAdmins(){
         $one = 1;
         $stmt = $this->conn->prepare("SELECT id, username FROM members WHERE admin_access = ?");

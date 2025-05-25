@@ -100,16 +100,16 @@ async function transferTon(mnemonic, toAddress, amountTon, apiKey) {
     });
 
     //const cleaned = mnemonic.replace(/"/g, '');
-    console.log(mnemonic);
+    //console.log(mnemonic);
 
     // Step 2: Split by commas and trim each word
     //const mnemonicArray = cleaned.split(',').map(word => word.trim());
     //console.log(mnemonic.split(' '));
     const words = mnemonic.split(',');
-    console.log(words);
+    //console.log(words);
     // 1. Convert mnemonic to private key
     const keyPair = await mnemonicToWalletKey(words);
-    console.log(keyPair.secretKey.toString('hex'));
+    //console.log(keyPair.secretKey.toString('hex'));
     // 2. Initialize wallet (v4 by default)
     const wallet = WalletContractV4.create({
       workchain: 0,
@@ -122,8 +122,8 @@ async function transferTon(mnemonic, toAddress, amountTon, apiKey) {
     const walletAddress = walletContract.address.toString();
     const balance = await walletContract.getBalance();
     
-    console.log(`Wallet: ${walletAddress}`);
-    console.log(`Balance: ${balance.toString()} nanoTON`);
+    //console.log(`Wallet: ${walletAddress}`);
+    //console.log(`Balance: ${balance.toString()} nanoTON`);
 
     if (balance < amountTon * 1e9) {
       throw new Error("Insufficient balance");
@@ -167,9 +167,9 @@ async function checkTestnetWallet(mnemonic) {
     const client = new TonClient({ endpoint: "https://testnet.toncenter.com/api/v2/jsonRPC" });
     const walletContract = client.open(wallet);
   
-    console.log("Testnet Address:", walletContract.address.toString('hex'));
-    console.log("Workchain:", wallet.workchain);
-    console.log("Public Key:", Buffer.from(keyPair.publicKey).toString("hex"));
+    //console.log("Testnet Address:", walletContract.address.toString('hex'));
+    //console.log("Workchain:", wallet.workchain);
+    //console.log("Public Key:", Buffer.from(keyPair.publicKey).toString("hex"));
 
   }
 
@@ -210,7 +210,7 @@ app.post('/send-ton', async (req, res) => {
             throw new Error("Withdrawal is not available right now, check back after sometimes");
         }
 
-        console.log('Current seqno:', seqno);
+        //console.log('Current seqno:', seqno);
 
         const transfer = walletContract.createTransfer({
             seqno,
@@ -237,11 +237,11 @@ app.post('/send-ton', async (req, res) => {
                 delayMs: 2000
             });
             
-            console.log('New transaction details:', {
+            /*console.log('New transaction details:', {
                 //lt: newTx.lt.toString(),
                 //hash: newTx.hash.toString()
                 newTx
-            });
+            });*/
 
         } catch (error) {
             console.error('Transaction polling failed:', error);
