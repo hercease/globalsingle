@@ -45,7 +45,7 @@
             date_default_timezone_set($timezone ?? 'Africa/Lagos');
 
             //error_log(print_r($input, true));
-            $avatar = $input['avatar'] == 'male' ? 'avatar-1.jpg' : 'avatar-3.jpg';
+            $avatar = $input['gender'] == 'male' ? 'avatar-1.jpg' : 'avatar-3.jpg';
 
             // fetch userinfo
             $userInfo = $this->userModel->getUserInfo($input['username']);
@@ -296,7 +296,7 @@
         }
 
         public function processLogin() {
-            
+
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Sanitize and validate input
                 $username = $this->userModel->sanitizeInput($_POST['username']);
@@ -1042,6 +1042,7 @@
             header('Content-Type: application/json');
 
             try {
+
                 if (!isset($_GET['user1'], $_GET['user2'], $_GET['limit'], $_GET['offset'])) {
                     throw new Exception('Missing required parameters', 400);
                 }
@@ -1099,6 +1100,7 @@
                         'has_more' => ($offset + $limit) < $totalCount
                     ]
                 ]);
+
             } catch (Exception $e) {
                 http_response_code($e->getCode() ?: 500);
                 echo json_encode([
