@@ -48,6 +48,11 @@ switch ($url) {
             $DisplayController->showWalletTransferPage($rootUrl);
         }
         break;
+    case '/confirmation':
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $DisplayController->showConfirmationPage($rootUrl);
+        }
+        break;
     case '/intra_transfer':
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $DisplayController->showIntraTransferPage($rootUrl);

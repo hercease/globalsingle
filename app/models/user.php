@@ -223,6 +223,14 @@ class usersModel {
         $stmt->close();
     }
 
+    public function activateAccount($username){
+        $one = 1;
+        $stmt = $this->conn->prepare("UPDATE " . $this->table . " SET account_access = ? WHERE username = ?");
+        $stmt->bind_param("is", $one, $username);
+        $stmt->execute();
+        $stmt->close();
+    }
+
     public function curlRequest(string $url, string $method = 'GET', array $data = []): array {
         $ch = curl_init();
         

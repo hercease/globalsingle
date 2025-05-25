@@ -33,6 +33,17 @@ class Display {
         include('app/views/register.php');
     }
 
+    public function showConfirmationPage($rootUrl) {
+        if(isset($_GET['user']) && $_GET['user'] !== ''){
+            $this->userModel->activateAccount($_GET['user']);
+            include('app/views/confirmation.php');
+
+        } else {
+            include('app/views/404.php');
+        }
+        
+    }
+
     public function showCheckersPage($rootUrl) {
         if (session_status() === PHP_SESSION_NONE){
             session_start();
