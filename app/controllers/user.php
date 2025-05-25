@@ -190,8 +190,7 @@
                                         </ul>
                                         
                                         <p style="margin: 0 0 16px 0;">We're excited to partner with you in building sustainable network marketing through our services and self-generated funds.</p>
-                                        
-                                        <p style="margin: 0 0 24px 0;">We wish you profitable experience and pleasant business transactions throughout your journey with us.</p>
+                                
                                         <p style="margin: 0 0 24px 0;">Your account is currently inactive. To unlock all platform features, please activate your account:</p>
                                         
                                         <table border="0" cellpadding="0" cellspacing="0" width="100%">
