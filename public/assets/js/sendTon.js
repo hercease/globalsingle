@@ -280,7 +280,7 @@ app.post('/api/generate-wallet', async (req, res) => {
 
         // Create a TON wallet instance
         let workchain = 0; // Usually you need a workchain 0
-        let wallet = WalletContractV4.create({ workchain : 0, publicKey: keyPair.publicKey });
+        let wallet = WalletContractV4.create({ workchain, publicKey: keyPair.publicKey });
         let walletContract = client.open(wallet);
         //console.log(walletContract);
         // Get wallet address
