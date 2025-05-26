@@ -188,7 +188,7 @@ class usersModel {
 
     public function creditWallet($amount, $username){
         $stmt = $this->conn->prepare("UPDATE " . $this->table . " SET earning_wallet = earning_wallet + ? WHERE username = ?");
-        $stmt->bind_param("ss", $amount, $username);
+        $stmt->bind_param("ds", $amount, $username);
         $stmt->execute();
         $stmt->close();
     }

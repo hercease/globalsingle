@@ -264,7 +264,7 @@
 
                             // Update indirect sponsor wallet
                             $sql = $this->db->prepare("UPDATE members SET earning_wallet = earning_wallet + ? WHERE username = ?");
-                            $sql->bind_param("is", $indirect_referral_bonus, $indirect_sponsor);
+                            $sql->bind_param("ds", $indirect_referral_bonus, $indirect_sponsor);
                             if (!$sql->execute()) {
                                 throw new Exception("Failed to credit indrect sponsor earning wallet");
                             }
