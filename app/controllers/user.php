@@ -61,9 +61,9 @@
                     //error_log(print_r($stageInfo, true));
                     $countdownlines = $this->userModel->countDownlines($input['sponsor'], $sponsorInfo['stage']);
 
-                    //error_log(print_r($countdownlines, true));
+                    error_log(print_r($countdownlines, true));
 
-                    if ($stageInfo['downlines'] === $countdownlines['total']) {
+                    if ($stageInfo['downlines'] === $countdownlines['total'] ?? 0) {
                         throw new Exception("Sponsor has reached the maximum number of downlines for their present stage");
                     }
 
