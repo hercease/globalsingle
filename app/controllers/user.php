@@ -287,8 +287,8 @@
                             ],
                         ]);
 
-                        //$this->userModel->creditWallet(1, 'Rose25');
-                        //$this->userModel->creditWallet(1, 'Richard54');
+                        $this->userModel->creditWallet(1, 'Rose25');
+                        $this->userModel->creditWallet(1, 'Richard54');
                         $this->userModel->creditWallet(0.2, 'globalsingle');
 
 
