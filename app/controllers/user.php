@@ -121,12 +121,6 @@
                     $stage = 1;
                     $indirect_sponsor = $this->userModel->fetchSponsor($input['bonus_username'])['sponsor'] ?? null;
 
-                    // Update paying wallet
-                    $sql = $this->db->prepare("UPDATE members SET reg_wallet = reg_wallet - ? WHERE username = ?");
-                    $sql->bind_param("is", $reg_fee, $input['wallet_username']);
-                    $sql->execute();
-                    $sql->close();
-
                     $activation_link =  $this->userModel->getCurrentUrl() . '/confirmation?user='.$input['username'];
 
                     $logourl = $this->userModel->getCurrentUrl() . "/public/assets/images/logo_new.png";
@@ -233,46 +227,61 @@
                         </html>
                     EMAIL;
 
-                    $this->userModel->sendmail($input['email'],$input['username'],$message,"Registration Confirmation");
-
-                    // Insert Transaction history for paying wallet
-                    $this->userModel->InsertHistory($input['wallet_username'], $reg_fee, 'debit', 'Registration Fee for ' . $input['username']);
-
-                    // Update sponsor wallet
-                    $sql = $this->db->prepare("UPDATE members SET earning_wallet = earning_wallet + ? WHERE username = ?");
-                    $sql->bind_param("is", $referral_bonus, $input['bonus_username']);
-                    $sql->execute();
-                    $sql->close();
-
-                    // Insert Transaction history for sponsor
-                    $this->userModel->InsertHistory($input['bonus_username'], $referral_bonus, 'credit', 'Referral Bonus for ' . $input['username']);
-
-            
-                    if(!is_null($indirect_sponsor)){
-
-                        // Update indirect sponsor wallet
-                        $sql = $this->db->prepare("UPDATE members SET earning_wallet = earning_wallet + ? WHERE username = ?");
-                        $sql->bind_param("is", $indirect_referral_bonus, $indirect_sponsor);
-                        $sql->execute();
-                        $sql->close();
-
-                        // Insert Transaction history for indirect sponsor
-                        $this->userModel->InsertHistory($indirect_sponsor, $indirect_referral_bonus, 'credit', 'Indirect Bonus for ' . $input['username']);
-
-                        $this->pushnotification->sendNotification($indirect_sponsor, 'Credit Alert', 'Dear ' .$input['bonus_username']. ', The sum of $'. $indirect_referral_bonus .' has just been credited into your earning wallet', $this->userModel->getCurrentUrl());
-
-                    }
-            
-                    // Insert into referral tree
-                    $sql = $this->db->prepare("INSERT INTO referral_tree (username, sponsor, sponsor_stage, reg_date) VALUES (?, ?, ?, NOW())");
-                    $sql->bind_param("sss", $input['username'], $input['sponsor'], $sponsor_stage);
-                    $sql->execute();
-                    $sql->close();
-            
                     // Insert user
                     $stmt = $this->db->prepare("INSERT INTO members (username, password, email, country, stage, reg_date, avatar, gender, timezone) VALUES (?, ?, ?, ?, ?, NOW(), ?, ?, ?)");
                     $stmt->bind_param("ssssssss", $input['username'], $hashedPassword, $input['email'], $input['country'], $stage, $avatar, $input['gender'], $timezone);
-                    if ($stmt->execute()) {
+                    if (!$stmt->execute()) {
+                        throw new Exception("Failed to insert user: " . $stmt->error);
+                    }
+
+                        // Update paying wallet
+                        $sql = $this->db->prepare("UPDATE members SET reg_wallet = reg_wallet - ? WHERE username = ?");
+                        $sql->bind_param("is", $reg_fee, $input['wallet_username']);
+                        if (!$sql->execute()) {
+                            throw new Exception("Failed to debit registration wallet");
+                        }
+                        $sql->close();
+
+                        $this->userModel->sendmail($input['email'],$input['username'],$message,"Registration Confirmation");
+
+                        // Insert Transaction history for paying wallet
+                        $this->userModel->InsertHistory($input['wallet_username'], $reg_fee, 'debit', 'Registration Fee for ' . $input['username']);
+
+                        // Update sponsor wallet
+                        $sql = $this->db->prepare("UPDATE members SET earning_wallet = earning_wallet + ? WHERE username = ?");
+                        $sql->bind_param("is", $referral_bonus, $input['bonus_username']);
+                        if (!$sql->execute()) {
+                            throw new Exception("Failed to credit sponsor earning wallet");
+                        }
+                        $sql->close();
+
+                        // Insert Transaction history for sponsor
+                        $this->userModel->InsertHistory($input['bonus_username'], $referral_bonus, 'credit', 'Referral Bonus for ' . $input['username']);
+
+                        if(!is_null($indirect_sponsor)){
+
+                            // Update indirect sponsor wallet
+                            $sql = $this->db->prepare("UPDATE members SET earning_wallet = earning_wallet + ? WHERE username = ?");
+                            $sql->bind_param("is", $indirect_referral_bonus, $indirect_sponsor);
+                            if (!$sql->execute()) {
+                                throw new Exception("Failed to credit indrect sponsor earning wallet");
+                            }
+                            $sql->close();
+
+                            // Insert Transaction history for indirect sponsor
+                            $this->userModel->InsertHistory($indirect_sponsor, $indirect_referral_bonus, 'credit', 'Indirect Bonus for ' . $input['username']);
+
+                            $this->pushnotification->sendNotification($indirect_sponsor, 'Credit Alert', 'Dear ' .$input['bonus_username']. ', The sum of $'. $indirect_referral_bonus .' has just been credited into your earning wallet', $this->userModel->getCurrentUrl());
+
+                        }
+                
+                        // Insert into referral tree
+                        $sql = $this->db->prepare("INSERT INTO referral_tree (username, sponsor, sponsor_stage, reg_date) VALUES (?, ?, ?, NOW())");
+                        $sql->bind_param("sss", $input['username'], $input['sponsor'], $sponsor_stage);
+                        if (!$sql->execute()) {
+                            throw new Exception("Failed to insert user referral tree");
+                        }
+                        $sql->close();
 
                         $this->pushnotification->sendCustomNotifications([
                             [
@@ -297,12 +306,10 @@
 
                         $this->userModel->creditMultipleWallets($credits);
 
+                        $this->db->commit();
 
                         return json_encode(["status" => true, "message" => "Congratulations, registration was successful, Kindly check your email for verification"]);
 
-                        $this->db->commit();
-                    }
-                   
                 } catch (Exception $e) {
                     $this->db->rollback();
                     return json_encode([
