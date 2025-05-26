@@ -341,17 +341,28 @@
                             <h5 class="alert-heading mb-3">Wallet Address Information</h5>
                             <p>
                                 Dear <strong><?php echo htmlspecialchars($userInfo['username']); ?></strong>,<br>
-                                Below is a static <strong>TON wallet address</strong> generated specifically for you.
+                                Below is a static <strong>TON Chain wallet address</strong> generated specifically for you.
                                 Every time you fund this wallet, your vendor wallet will be credited instantly.
                             </p>
                             <p class="mb-0 text-danger fw-semibold">
-                                Please send <u>only TON</u> to the address shown below. We will not be responsible for any loss resulting from sending other assets.
+                                Please, Kindly Send <u>Only USDT [TON Blockchain Network]</u> To The Wallet Addresses Shown Below.<br> 
+                                We Will NOT Be Responsible For Any Loss Occurred From Sending Other Assets. THANKS.
                             </p>
                         </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">For Tonkeeper/Telegram Wallet deposits</label>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" id="wallet-address" value="<?php echo $addressInfo['result']['bounceable']['b64url'] ?? "" ?>" readonly>
+                                <button class="btn btn-outline-primary" type="button" id="copy-button">
+                                    <i class="fas fa-copy"></i> Copy
+                                </button>
+                            </div>
+                        </div>
 
-                        <label class="form-label fw-semibold">Your TON Wallet Address</label>
+                        <label class="form-label fw-semibold">Other Wallet Exchanges </label>
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="wallet-address" value="<?php echo $userWallet['wallet_address'] ?? "" ?>" readonly>
+                            <input type="text" class="form-control" id="wallet-address" value="<?php echo $addressInfo['result']['non_bounceable']['b64url'] ?? "" ?>" readonly>
                             <button class="btn btn-outline-primary" type="button" id="copy-button">
                                 <i class="fas fa-copy"></i> Copy
                             </button>
