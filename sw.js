@@ -8,7 +8,7 @@ workbox.setConfig({
 });
 
 // Cache name
-const CACHE_NAME = 'globalsingle-cache-v3';
+const CACHE_NAME = 'globalsingle-cache-v4';
 workbox.core.setCacheNameDetails({
   prefix: CACHE_NAME,
 });
