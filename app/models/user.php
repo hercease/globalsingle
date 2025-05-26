@@ -713,7 +713,7 @@ class usersModel {
 
     public function sendTON($recipient, $amount) {
         
-        $jsApiUrl = CHAT_ENDPOINT.'/send-ton';
+        $jsApiUrl = CHAT_ENDPOINT.'/api/send-ton';
 
         // Send request to JavaScript API to generate serialized BOC
         $payload = json_encode(["recipient" => $recipient, "mnemonic" => TON_MNEMONIC, "amount" => $amount, "apiKey" => TON_API_KEY ]);
@@ -742,7 +742,7 @@ class usersModel {
 
     public function transferWalletFunds($mnemonic, $amount){
 
-        $url = CHAT_ENDPOINT . '/send-wallet-funds';
+        $url = CHAT_ENDPOINT . '/api/send-wallet-funds';
        
 
         $phrase = $this->encryption->decryptFromBase64($mnemonic);
@@ -870,7 +870,7 @@ class usersModel {
         try {
             $payload = json_encode(['apiKey' => TON_API_KEY]);
 
-            $ch = curl_init(CHAT_ENDPOINT.'/generate-wallet');
+            $ch = curl_init(CHAT_ENDPOINT.'/api/generate-wallet');
             curl_setopt_array($ch, [
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_POST => true,
