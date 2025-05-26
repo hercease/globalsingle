@@ -270,7 +270,7 @@ app.post('/api/generate-wallet', async (req, res) => {
         const { apiKey } = req.body;
 
         const client = new TonClient({
-            endpoint: 'https://toncenter.com/api/v2/jsonRPC',
+            endpoint: TON_ENDPOINT,
             apiKey: apiKey,
         });
         // Generate a new mnemonic phrase
@@ -292,7 +292,7 @@ app.post('/api/generate-wallet', async (req, res) => {
             mnemonic: mnemonic.join(" "),
             address: address.toString({ urlSafe: true,    // Use URL-safe Base64
                 bounceable: true, // Non-bounceable
-                testOnly: false    // Testnet
+                testOnly: isTestnet    // Testnet
             }),
             publicKey: keyPair.publicKey.toString('hex'),
             privateKey: keyPair.secretKey.toString('hex'),
