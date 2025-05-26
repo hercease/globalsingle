@@ -76,7 +76,7 @@
                         throw new Exception("Invalid wallet username or password");
                     }
 
-                    if (!password_verify($input['wallet_password'], $sponsorInfo['wallet_password'])){
+                    if (!password_verify($input['wallet_password'], $walletInfo['wallet_password'])){
                         throw new Exception("Invalid wallet username or password");
                     }
 
@@ -84,7 +84,6 @@
                     if ($walletInfo['reg_wallet'] < $reg_fee) {
                         throw new Exception("Insufficient registration wallet balance");
                     }
-
 
                     if(!preg_match("/^[a-zA-Z0-9_]+$/", $input['username'])){
                         throw new Exception("Username can only be alpanumeric");
