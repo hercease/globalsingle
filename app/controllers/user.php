@@ -354,7 +354,7 @@
                 $one = 1;
                 // fetch user by id
                 $userInfo = $this->userModel->getUserInfo($id);
-                
+
                 if (!$userInfo) throw new Exception("User not found");
 
                 $username = $userInfo['username'];
@@ -808,7 +808,7 @@
                         'amount' => $input['amount'],
                         'receiver' => $username,
                         'type' => 'debit',
-                        'description' => 'Wallet transfer to registration wallet wallet was successful'
+                        'description' => 'Wallet transfer to registration wallet was successful'
                     ],
                     [
                         'username' => $username,
