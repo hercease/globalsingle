@@ -125,7 +125,7 @@ async function transferTon(mnemonic, toAddress, amountTon, apiKey) {
     //console.log(`Wallet: ${walletAddress}`);
     //console.log(`Balance: ${balance.toString()} nanoTON`);
 
-    if (balance < amountTon * 1e9) {
+    if (balance < amountTon * 1e6) {
       throw new Error("Insufficient balance");
     }
 
@@ -137,7 +137,7 @@ async function transferTon(mnemonic, toAddress, amountTon, apiKey) {
       messages: [
         internal({
           to: toAddress,
-          value: toNano(amountTon), // e.g., "1.5TON"
+          value: amountTon * 1e6, // e.g., "1.5TON"
           body: "Automatic transfer", // Optional message
         }),
       ],
@@ -206,7 +206,7 @@ app.post('/api/send-ton', async (req, res) => {
         const seqno = await walletContract.getSeqno();
         const balance = await walletContract.getBalance();
 
-        if (balance < amount * 1e9) {
+        if (balance < amount * 1e6) {
             throw new Error("Withdrawal is not available right now, check back after sometimes");
         }
 
@@ -218,7 +218,7 @@ app.post('/api/send-ton', async (req, res) => {
             messages: [
                 internal({
                     to: recipient,
-                    value: toNano(amount),
+                    value: amount * 1e6,
                     bounce: false,
                     body: "GlobalSingleLine Withdrawal"
                 }),
@@ -292,7 +292,7 @@ app.post('/api/generate-wallet', async (req, res) => {
             mnemonic: mnemonic.join(" "),
             address: address.toString({ urlSafe: true,    // Use URL-safe Base64
                 bounceable: false, // Non-bounceable
-                testOnly: true    // Testnet
+                testOnly: isTestnet    // Testnet
               }),
             publicKey: keyPair.publicKey.toString('hex'),
             privateKey: keyPair.secretKey.toString('hex'),

@@ -1076,7 +1076,7 @@ class usersModel {
             
             // Update user balance
             $stmt = $this->conn->prepare("UPDATE members SET vendor_wallet = vendor_wallet + ? WHERE username = ?");
-            $stmt->bind_param("is", $amount,$username);
+            $stmt->bind_param("ds", $amount,$username);
             $stmt->execute();
             $stmt->close();
 

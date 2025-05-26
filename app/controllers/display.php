@@ -568,28 +568,7 @@ class Display {
 
     public function checkAndUpdateWithdrawals() {
     
-            // page_refresher.php
-            header('Content-Type: text/html; charset=utf-8');
-            $refresh_interval = 5; // Refresh every 5 seconds
-            ?>
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <title>Auto-Refreshing Page</title>
-                <meta http-equiv="refresh" content="<?php echo $refresh_interval; ?>">
-            </head>
-            <body>
-                <h1>Page Last Updated: <?php echo date('Y-m-d H:i:s'); ?></h1>
-                <p>This page will refresh every <?php echo $refresh_interval; ?> seconds.</p>
-                
-                <?php
-                // Your PHP content here
-                echo "Current server time: " . date('H:i:s');
-                ?>
-            </body>
-            </html>
-        <?php
-
+        // page_refresher.php
         try {
             $apiKey = TON_API_KEY;
             $baseUrl = TESTNET ? 
@@ -731,31 +710,7 @@ class Display {
         }
     }
 
-    public function checkPaymentTransaction() {
-           // page_refresher.php
-           header('Content-Type: text/html; charset=utf-8');
-           $refresh_interval = 5; // Refresh every 5 seconds
-           ?>
-           <!DOCTYPE html>
-           <html>
-           <head>
-               <title>Auto-Refreshing Page</title>
-               <meta http-equiv="refresh" content="<?php echo $refresh_interval; ?>">
-           </head>
-           <body>
-               <h1>Page Last Updated: <?php echo date('Y-m-d H:i:s'); ?></h1>
-               <p>This page will refresh every <?php echo $refresh_interval; ?> seconds.</p>
-               
-               <?php
-               // Your PHP content here
-               echo "Current server time: " . date('H:i:s');
-               ?>
-           </body>
-           </html>
-       <?php
-
-            
-
+    // page_refresher.php
             /*$key = Key::loadFromAsciiSafeString(ENCRYPTION_KEY);
 
             $plaintext = 'donate divide illegal delay impose manage spring orphan budget chef protect barely tape category muffin chalk stairs gasp rug industry bachelor crash text add';
@@ -766,6 +721,9 @@ class Display {
             echo "Original: $plaintext\n";
             echo "Encrypted (base64): " . base64_encode($encrypted) . "\n";
             echo "Decrypted:" . $decrypted."\n";*/
+
+    public function checkPaymentTransaction() {
+           
 
             $confirmationDelay = 20; // Adjust if needed
 
@@ -822,7 +780,7 @@ class Display {
                             }
             
                             // 5. Credit the user
-                            $amountTon = $amountNano / 1e9;
+                            $amountTon = $amountNano / 1e6; // Convert from nano to USDT Jetton
                             $sender = $tx['in_msg']['source'] ?? 'unknown';
             
                             $this->userModel->ConfirmPaymentTransaction(
@@ -852,6 +810,106 @@ class Display {
             }
 
     }
+
+
+       /* public function checkPaymentTransaction() {
+            $confirmationDelay = 20; // 20 seconds confirmation delay
+
+            try {
+                // 1. Fetch wallets needing checks
+                $query = "SELECT id, wallet_address, username, last_checked
+                        FROM user_wallets 
+                        WHERE last_checked < NOW() - INTERVAL 5 MINUTE 
+                        LIMIT 5";
+                $result = $this->db->query($query);
+            
+                if (!$result) {
+                    throw new Exception("Wallet fetch failed: " . $this->db->error);
+                }
+            
+                $this->db->begin_transaction();
+            
+                while ($wallet = $result->fetch_assoc()) {
+                    $walletId = $wallet['id'];
+                    $walletAddress = $wallet['wallet_address'];
+                    $username = $wallet['username'];
+            
+                    try {
+                        // 2. Fetch transactions for this wallet
+                        $transactions = $this->userModel->fetchTonTransactions($walletAddress);
+            
+                        if (empty($transactions)) {
+                            $this->userModel->updateLastChecked($walletId);
+                            continue;
+                        }
+            
+                        foreach ($transactions as $tx) {
+                            // 3. Validate transaction and check if it's a USDT Jetton transfer
+                            if (
+                                empty($tx['transaction_id']['hash']) || 
+                                empty($tx['in_msg']['value']) || 
+                                empty($tx['utime']) ||
+                                empty($tx['in_msg']['message']) // Check for Jetton metadata
+                            ) {
+                                continue;
+                            }
+
+            
+                            $txHash = $tx['transaction_id']['hash'];
+                            $amountNano = $tx['in_msg']['value'];
+                            $txTime = $tx['utime'];
+            
+                            // 4. Skip if already processed or too recent
+                            if (
+                                $this->userModel->checkTransactionhash($txHash) ||
+                                $amountNano <= 0 ||
+                                (time() - $txTime) < $confirmationDelay
+                            ) {
+                                continue;
+                            }
+            
+                            // 5. Convert amount from nano to USDT (6 decimals for USDT)
+                            $amountUsdt = $amountNano / 1e6; // USDT has 6 decimal places
+                            $sender = $tx['in_msg']['source'] ?? 'unknown';
+            
+                            // 6. Credit the user's account
+                            $this->userModel->ConfirmPaymentTransaction(
+                                $username,
+                                $amountUsdt,
+                                $txHash,
+                                $sender,
+                                $walletId
+                            );
+
+                            // 7. Send notification to user
+                            $url = $this->userModel->getCurrentUrl() . '/transaction_history';
+                            $this->pushnotification->sendNotification(
+                                $username,
+                                'Payment Received',
+                                sprintf('Received %.2f USDT from %s', 
+                                    $amountUsdt,
+                                    substr($sender, 0, 8) . '...'
+                                ),
+                                $url
+                            );
+                        }
+            
+                        // 8. Update last checked timestamp
+                        $this->userModel->updateLastChecked($walletId);
+            
+                    } catch (Exception $e) {
+                        error_log("Wallet $walletId error: " . $e->getMessage());
+                        continue;
+                    }
+                }
+            
+                $this->db->commit();
+            
+            } catch (Exception $e) {
+                $this->db->rollback();
+                error_log("Payment processor error: " . $e->getMessage());
+            }
+        } */
 
    public function showChatSupport(){
         include('app/views/chat_support.php');
