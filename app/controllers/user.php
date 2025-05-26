@@ -234,6 +234,8 @@
                         throw new Exception("Failed to insert user: " . $stmt->error);
                     }
 
+                        $date = date('Y-m-d H:i:s');
+
                         // Update paying wallet
                         $sql = $this->db->prepare("UPDATE members SET reg_wallet = reg_wallet - ? WHERE username = ?");
                         $sql->bind_param("is", $reg_fee, $input['wallet_username']);
@@ -245,18 +247,18 @@
                         $this->userModel->sendmail($input['email'],$input['username'],$message,"Registration Confirmation");
 
                         // Insert Transaction history for paying wallet
-                        $this->userModel->InsertHistory($input['wallet_username'], $reg_fee, 'debit', 'Registration Fee for ' . $input['username']);
+                        $this->userModel->InsertHistory($input['wallet_username'], $reg_fee, $date, 'debit', 'Registration Fee for ' . $input['username']);
 
                         // Update sponsor wallet
                         $sql = $this->db->prepare("UPDATE members SET earning_wallet = earning_wallet + ? WHERE username = ?");
-                        $sql->bind_param("is", $referral_bonus, $input['bonus_username']);
+                        $sql->bind_param("ds", $referral_bonus, $input['bonus_username']);
                         if (!$sql->execute()) {
                             throw new Exception("Failed to credit sponsor earning wallet");
                         }
                         $sql->close();
 
                         // Insert Transaction history for sponsor
-                        $this->userModel->InsertHistory($input['bonus_username'], $referral_bonus, 'credit', 'Referral Bonus for ' . $input['username']);
+                        $this->userModel->InsertHistory($input['bonus_username'], $referral_bonus, $date, 'credit', 'Referral Bonus for ' . $input['username']);
 
                         if(!is_null($indirect_sponsor)){
 
@@ -269,7 +271,7 @@
                             $sql->close();
 
                             // Insert Transaction history for indirect sponsor
-                            $this->userModel->InsertHistory($indirect_sponsor, $indirect_referral_bonus, 'credit', 'Indirect Bonus for ' . $input['username']);
+                            $this->userModel->InsertHistory($indirect_sponsor, $indirect_referral_bonus, $date, 'credit', 'Indirect Bonus for ' . $input['username']);
 
                             $this->pushnotification->sendNotification($indirect_sponsor, 'Credit Alert', 'Dear ' .$input['bonus_username']. ', The sum of $'. $indirect_referral_bonus .' has just been credited into your earning wallet', $this->userModel->getCurrentUrl());
 
@@ -1655,7 +1657,9 @@
 
                 $txHash = $response['lt'] ?? null;
 
-                $history_id = $this->userModel->InsertHistory($username, $input['amount'], 'debit', $description);
+                $date = date('Y-m-d H:i:s');
+
+                $history_id = $this->userModel->InsertHistory($username, $input['amount'], $date, 'debit', $description);
 
                 $this->userModel->logTransaction($history_id, $address, $input['amount'], $txHash, 'pending'); // Replace '1' with your user id
 
@@ -2000,7 +2004,9 @@
                     $stmt->execute();
                     $stmt->close();
 
-                    $this->userModel->InsertHistory($username, $amount, 'debit', 'Vendor Application Fee');
+                    $date = date('Y-m-d H:i:s');
+
+                    $this->userModel->InsertHistory($username, $amount, $date, 'debit', 'Vendor Application Fee');
 
                     $this->pushnotification->sendCustomNotifications([
                         [
