@@ -180,7 +180,7 @@ async function checkTestnetWallet(mnemonic) {
     //console.log("Raw address 1 (hex):", Buffer.from(address1.hash).toString("hex"));
     //console.log("Raw address 2 (hex):", Buffer.from(address2.hash).toString("hex"));
 
-app.post('/api/send-wallet-funds', async (req, res) => {
+app.post('/send-wallet-funds', async (req, res) => {
 
     const { mnemonic, toAddress, amountTon, apiKey } = req.body;
 
@@ -195,7 +195,7 @@ app.post('/api/send-wallet-funds', async (req, res) => {
 
 
 // API endpoint to send TON
-app.post('/api/send-ton', async (req, res) => {
+app.post('/send-ton', async (req, res) => {
     try {
         const { recipient, mnemonic, amount, apiKey } = req.body;
         if (!recipient || !amount) {
@@ -263,7 +263,7 @@ app.post('/api/send-ton', async (req, res) => {
 });
 
 
-app.post('/api/generate-wallet', async (req, res) => {
+app.post('/generate-wallet', async (req, res) => {
 
     try {
 
