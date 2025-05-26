@@ -193,6 +193,23 @@ class usersModel {
         $stmt->close();
     }
 
+    public function creditMultipleWallets(array $credits): void {
+        foreach ($credits as $credit) {
+            $amount = $credit['amount'];
+            $username = $credit['username'];
+
+            // Optional: validate inputs
+            if (!is_numeric($amount) || empty($username)) {
+                continue; // or throw exception
+            }
+
+            $this->InsertHistory($username, $amount, 'credit', 'Registration rebate');
+
+            $this->creditWallet($amount, $username);
+        }
+    }
+
+
     public function fetchAdmins(){
         $one = 1;
         $stmt = $this->conn->prepare("SELECT id, username FROM members WHERE admin_access = ?");

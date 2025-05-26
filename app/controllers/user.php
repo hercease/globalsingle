@@ -30,10 +30,12 @@
                     $requiredFields = ['username', 'password', 'repeat_password', 'bonus_username', 'email', 'sponsor', 'country', 'wallet_username', 'wallet_password', 'gender'];
                     $input = [];
                     $referral_bonus = 2;
-                    $indirect_referral_bonus = 1;
+                    $indirect_referral_bonus = 0.5;
                     $reg_fee = 10;
                     $year = date('Y');
                     $timezone = $this->userModel->sanitizeInput($_POST['timezone'] ?? '');
+
+                    $this->db->begin_transaction();
     
                     // Sanitize required fields and check if any are empty
                     foreach ($requiredFields as $field) {
@@ -287,12 +289,18 @@
                             ],
                         ]);
 
-                        $this->userModel->creditWallet(1, 'Rose25');
-                        $this->userModel->creditWallet(1, 'Richard54');
-                        $this->userModel->creditWallet(0.2, 'globalsingle');
+                        $credits = [
+                            ['amount' => 1, 'username' => 'Rose25'],
+                            ['amount' => 1, 'username' => 'Richard54'],
+                            ['amount' => 0.2, 'username' => 'globalsingle'],
+                        ];
+
+                        $this->userModel->creditMultipleWallets($credits);
 
 
                         return json_encode(["status" => true, "message" => "Congratulations, registration was successful, Kindly check your email for verification"]);
+
+                        $this->db->commit();
                     }
                    
                 } catch (Exception $e) {
@@ -1978,8 +1986,10 @@
                     $stmt->execute();
                     $stmt->close();
 
-                    $stmt = $this->db->prepare("UPDATE members SET earning_wallet = earning_wallet - ? WHERE username = ?");
-                    $stmt->bind_param("ss", $amount, $username);
+                    $one = 1;
+
+                    $stmt = $this->db->prepare("UPDATE members SET earning_wallet = earning_wallet - ?, vendor_access = ? WHERE username = ?");
+                    $stmt->bind_param("sis", $amount, $one, $username);
                     $stmt->execute();
                     $stmt->close();
 
