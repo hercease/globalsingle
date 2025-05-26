@@ -208,8 +208,7 @@ class Display {
         if (session_status() === PHP_SESSION_NONE){
             session_start();
         }
-       
-
+    
             $username = $_SESSION['global_single_username'] ?? "";
             $userInfo = $this->userModel->getUserInfo($username);
 
@@ -217,6 +216,7 @@ class Display {
     }
 
     public function showMyChatPage($rootUrl){
+
         if (session_status() === PHP_SESSION_NONE){
             session_start();
         }
