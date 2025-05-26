@@ -35,6 +35,7 @@ class Display {
 
     public function showConfirmationPage($rootUrl) {
         if(isset($_GET['user']) && $_GET['user'] !== ''){
+
             $this->userModel->activateAccount($_GET['user']);
             include('app/views/confirmation.php');
 
@@ -368,6 +369,7 @@ class Display {
             if($userInfo['vendor_access'] > 0){
 
                 $userWallet = $this->userModel->getUserWallet($username);
+                $addressInfo = $this->userModel->detectAddress($userWallet['wallet_address']);
 
                 include('app/views/fund_wallet.php');
 

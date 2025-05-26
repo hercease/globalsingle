@@ -826,14 +826,12 @@
                     [
                         'username' => $username,
                         'amount' => $input['amount'],
-                        'receiver' => $username,
                         'type' => 'debit',
                         'description' => 'Wallet transfer to registration wallet was successful'
                     ],
                     [
                         'username' => $username,
                         'amount' => $input['amount'],
-                        'receiver' => $username,
                         'type' => 'credit',
                         'description' => 'Wallet transfer from vendor wallet was successful'
                     ]

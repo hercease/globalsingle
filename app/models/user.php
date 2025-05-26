@@ -249,6 +249,14 @@ class usersModel {
         $stmt->close();
     }
 
+    public function detectAddress($address){
+        $baseUrl = TESTNET
+            ? "https://testnet.toncenter.com/api/v2/detectAddress"
+            : "https://toncenter.com/api/v2/detectAddress";
+        $url = "$baseUrl?address=$address&api_key=" . TON_API_KEY;
+        return $this->curlRequest($url);
+    }
+
     public function curlRequest(string $url, string $method = 'GET', array $data = []): array {
         $ch = curl_init();
         
@@ -787,35 +795,41 @@ class usersModel {
     }
 
     public function InsertMultipleHistories($histories) {
-        if (empty($histories)) return false;
-    
-        $placeholders = [];
-        $values = [];
-    
-        foreach ($histories as $history) {
-            $placeholders[] = "(?, ?, NOW(), ?, ?, ?)";
-            $values[] = $history['username'];
-            $values[] = $history['amount'];
-            $values[] = $history['receiver'];
-            $values[] = $history['type'];
-            $values[] = $history['description'];
+        try {
+            
+            if (empty($histories)) return false;
+
+            $placeholders = [];
+            $values = [];
+        
+            foreach ($histories as $history) {
+                $placeholders[] = "(?, ?, NOW(), ?, ?)";
+                $values[] = $history['username'];
+                $values[] = $history['amount'];
+                $values[] = $history['type'];
+                $values[] = $history['description'];
+            }
+
+            $sql = "INSERT INTO tranx_history (username, amount, date, type, description) VALUES " . implode(", ", $placeholders);
+
+            $stmt = $this->conn->prepare($sql);
+        
+            if ($stmt === false) {
+                throw new Exception("Failed to prepare statement: " . $this->conn->error);
+            }
+        
+            // Bind dynamically
+            $types = str_repeat('s', count($values)); // All strings
+            $stmt->bind_param($types, ...$values);
+        
+            $stmt->execute();
+        
+            return $stmt->insert_id; // Only the first inserted id
+
+        } catch (Exception $e) {
+            return "Error: " . $e->getMessage();
         }
-    
-        $sql = "INSERT INTO tranx_history (username, amount, date, receiver, type, description) VALUES " . implode(", ", $placeholders);
-    
-        $stmt = $this->conn->prepare($sql);
-    
-        if ($stmt === false) {
-            throw new Exception("Failed to prepare statement: " . $this->conn->error);
-        }
-    
-        // Bind dynamically
-        $types = str_repeat('s', count($values)); // All strings
-        $stmt->bind_param($types, ...$values);
-    
-        $stmt->execute();
-    
-        return $stmt->insert_id; // Only the first inserted id
+        
     }
 
     public function allCounts($count_type) {
