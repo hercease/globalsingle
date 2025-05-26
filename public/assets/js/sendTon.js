@@ -17,8 +17,8 @@ const app = express();
 app.use(express.json());
 
 // Load .env variables
-const MNEMONIC = process.env.MNEMONIC.split(',');
-const TON_API_KEY = process.env.TON_API_KEY;
+//const MNEMONIC = process.env.MNEMONIC.split(',');
+//const TON_API_KEY = process.env.TON_API_KEY;
 const WORKCHAIN_ID = 0; // Default for most wallets
 
 // Initialize TON Client
