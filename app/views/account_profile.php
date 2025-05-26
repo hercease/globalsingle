@@ -274,7 +274,7 @@
                           </div>
                           <div class="text-center mt-3">
                             <div class="chat-avtar d-inline-flex mx-auto">
-                              <img class="rounded-circle img-fluid wid-70" src="<?php echo $rootUrl ?>/public/assets/images/user/avatar-1.jpg" alt="User image">
+                              <img class="rounded-circle img-fluid wid-70" src="<?php echo $rootUrl ?>/public/assets/images/user/<?php echo $userInfo['avatar'] ?>" alt="User image">
                             </div>
                             
                             <hr class="my-3">
