@@ -304,7 +304,7 @@
                     }
                    
                 } catch (Exception $e) {
-
+                    $this->db->rollback();
                     return json_encode([
                         'status' => false,
                         'message' => $e->getMessage()
