@@ -135,9 +135,9 @@ class usersModel {
         return $stmt->get_result()->fetch_assoc();
     }
 
-    public function InsertHistory($username, $amount, $type, $description) {
-        $stmt = $this->conn->prepare("INSERT INTO tranx_history (username, amount, date, type, description) VALUES (?, ?, NOW(), ?, ?)");
-        $stmt->bind_param("ssss", $username, $amount, $type, $description);
+    public function InsertHistory($username, $amount, $date, $type, $description) {
+        $stmt = $this->conn->prepare("INSERT INTO tranx_history (username, amount, date, type, description) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssss", $username, $amount, $date, $type, $description);
         $stmt->execute();
         return $stmt->insert_id;
     }
@@ -197,13 +197,14 @@ class usersModel {
         foreach ($credits as $credit) {
             $amount = $credit['amount'];
             $username = $credit['username'];
+            $date = date('Y-m-d H:i:s');
 
             // Optional: validate inputs
             if (!is_numeric($amount) || empty($username)) {
                 continue; // or throw exception
             }
 
-            $this->InsertHistory($username, $amount, 'credit', 'Registration rebate');
+            $this->InsertHistory($username, $amount, $date, 'credit', 'Registration rebate');
 
             $this->creditWallet($amount, $username);
         }
@@ -1065,11 +1066,12 @@ class usersModel {
         $this->conn->begin_transaction();
         
         try {
+            $date = date('Y-m-d H:i:s');
             // Record funding
             $this->InsertFundingLog($username, $amount, $hash, $sender);
             
             // Add to history
-            $this->InsertHistory($username, $amount, 'credit', "Wallet Funding of $amount TON");
+            $this->InsertHistory($username, $amount, $date, 'credit', "Wallet Funding of $amount TON");
         
             
             // Update user balance
