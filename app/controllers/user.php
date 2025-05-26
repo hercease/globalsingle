@@ -56,7 +56,7 @@
                     // fetch sponsor info
                     $sponsorInfo = $this->userModel->getUserInfo($input['sponsor']);
 
-                    $stageInfo = $this->userModel->getStageInfo($sponsorInfo['stage']);
+                    $stageInfo = $this->userModel->getStageInfo($sponsorInfo['stage'] ?? 1);
 
                     //error_log(print_r($stageInfo, true));
                     $countdownlines = $this->userModel->countDownlines($input['sponsor'], $sponsorInfo['stage']);
