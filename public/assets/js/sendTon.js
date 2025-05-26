@@ -287,6 +287,8 @@ app.post('/api/generate-wallet', async (req, res) => {
         const address = walletContract.address;
         //console.log(address);
 
+        console.log("Testnet?", isTestnet);
+
         res.json({
 
             mnemonic: mnemonic.join(" "),
