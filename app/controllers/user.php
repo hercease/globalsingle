@@ -348,32 +348,46 @@
 
         public function checkStageQualification(){
 
-            $id = $this->userModel->sanitizeInput($_POST['id']);
-            $one = 1;
-            // fetch user by id
-            $userInfo = $this->userModel->getUserInfo($id);
-            $username = $userInfo['username'];
-            $stageInfo = $this->userModel->getStageInfo($userInfo['stage']);
-            $countdownlines = $this->userModel->countDownlines($username, $userInfo['stage']);
-            $globalDownlines = $this->userModel->countGlobalDownlines($userInfo['reg_date'], $stageInfo['total_downlines']);
-            $globalDownlinespercentage = $this->userModel->calculatePercentage($globalDownlines, $stageInfo['total_downlines'], $decimalPlaces = 2);
-            $countdownlinespercentage = $this->userModel->calculatePercentage($countdownlines['total'], $stageInfo['downlines'], $decimalPlaces = 2);
+            try {
 
-            if($globalDownlinespercentage === 100 && $countdownlinespercentage === 100){
+                $id = $this->userModel->sanitizeInput($_POST['id']);
+                $one = 1;
+                // fetch user by id
+                $userInfo = $this->userModel->getUserInfo($id);
+                
+                if (!$userInfo) throw new Exception("User not found");
 
-                $sql = $this->db->prepare("UPDATE members SET page_access = ? WHERE username = ?");
-                $sql->bind_param("is",$one, $username);
-                $sql->execute();
-                $sql->close();
+                $username = $userInfo['username'];
+                $stageInfo = $this->userModel->getStageInfo($userInfo['stage']);
+                $compensation = $stageInfo['compensation'];
+                $countdownlines = $this->userModel->countDownlines($username, $userInfo['stage']);
+                $globalDownlines = $this->userModel->countGlobalDownlines($userInfo['reg_date'], $stageInfo['total_downlines']);
+                $globalDownlinespercentage = $this->userModel->calculatePercentage($globalDownlines, $stageInfo['total_downlines'], $decimalPlaces = 2);
+                $countdownlinespercentage = $this->userModel->calculatePercentage($countdownlines['total'], $stageInfo['downlines'], $decimalPlaces = 2);
 
 
-                return json_encode(["status" => true, "message" => "Congratulations, stage completed successfully"]);
 
-            } else {
+                if($globalDownlinespercentage < 100 && $countdownlinespercentage < 100){
 
-                return json_encode(["status" => false, "message" => "Oooops, you are yet to complete your tasks"]);
+                    throw new Exception("Oooops, you are yet to complete your tasks");
+                    
+                } 
 
+                    $sql = $this->db->prepare("UPDATE members SET page_access = ? WHERE username = ?");
+                    $sql->bind_param("is",$one, $username);
+                    $sql->execute();
+                    $sql->close();
+
+                    $this->userModel->updateStage($username,$compensation,$userInfo['stage'] + 1);
+
+                   
+                    return json_encode(["status" => true, "message" => "Congratulations, stage completed successfully"]);
+
+
+            } catch (Exception $th) {
+                return json_encode(["status" => false, "message" => $th->getMessage()]);
             }
+            
         }
 
         public function processChangePassword(){

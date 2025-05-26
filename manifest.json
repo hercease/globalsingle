@@ -1,6 +1,6 @@
 {
     "name": "Global Single Line",
-    "short_name": "Global Single Line",
+    "short_name": "GSL",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#ffffff", 
