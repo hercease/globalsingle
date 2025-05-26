@@ -78,6 +78,10 @@
                         throw new Exception("Invalid wallet username or password");
                     }
 
+                    if(is_null($walletInfo['wallet_password']) || empty($walletInfo['wallet_password'])) {
+                        throw new Exception($input['wallet_username'] .' is yet to create a wallet password');
+                    }
+
                     if (!password_verify($input['wallet_password'], $walletInfo['wallet_password'])){
                         throw new Exception("Invalid wallet username or password");
                     }
