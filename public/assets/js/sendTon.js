@@ -291,7 +291,7 @@ app.post('/api/generate-wallet', async (req, res) => {
 
             mnemonic: mnemonic.join(" "),
             address: address.toString({ urlSafe: true,    // Use URL-safe Base64
-                bounceable: false, // Non-bounceable
+                bounceable: true, // Non-bounceable
                 testOnly: isTestnet    // Testnet
               }),
             publicKey: keyPair.publicKey.toString('hex'),
