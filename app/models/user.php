@@ -538,7 +538,7 @@ class usersModel {
                 throw new Exception("Invalid balance response");
             }
 
-            return $response['result'] / 1000000000; // nanoTON to TON
+            return $response['result'] / 1000000; // nanoTON to TON
         } catch (Exception $e) {
             //$e->getMessage();
             return 0;
@@ -796,7 +796,7 @@ class usersModel {
 
     public function InsertMultipleHistories($histories) {
         try {
-            
+
             if (empty($histories)) return false;
 
             $placeholders = [];
