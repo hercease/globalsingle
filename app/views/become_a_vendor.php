@@ -512,7 +512,7 @@
             </div>
             <div class="modal-body p-4">
                 <form id="vendorForm">
-                    <div class="alert alert-info">To Apply For Our Vendorship Program, Kindly note that a One Time Fee of $5 will be deducted from your Earning Wallet after Successful Verification.</div>
+                    <div class="alert alert-info">To Apply For Our Vendorship Program, Kindly note that, You must have completed STAGE 3 [SILVER], and a One Time Fee of $5 will be deducted from your Earning Wallet after Successful Verification.</div>
                 <div class="row g-3">
                     <div class="col-md-12">
                     <label for="fullName" class="form-label">Upload Personal ID card</label>
