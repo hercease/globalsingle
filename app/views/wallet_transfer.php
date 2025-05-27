@@ -359,7 +359,7 @@
                                 <label class="form-label">Select Wallet</label>
                                 <select class="form-select" required name="wallet">
                                     <option value="">Select Wallet</option>
-                                    <!--<option value="earning">Earning Wallet - $<?php echo number_format($userInfo['earning_wallet'], 2) ?></option>-->
+                                    <option value="earning">Earning Wallet - $<?php echo number_format($userInfo['earning_wallet'], 2) ?></option>
                                     <option value="registration">Registration Wallet - $<?php echo number_format($userInfo['reg_wallet'], 2) ?></option>
                                 </select>
                             </div>
@@ -384,6 +384,7 @@
                                 <label class="form-label">Vendor Wallet Balance ($)</label>
                                 <input type="text" readonly name="balance" class="form-control" value="<?php echo number_format($userInfo['vendor_wallet']) ?>" />
                             </div>
+
                             <div class="form-group mb-3">
                                 <label class="form-label">Wallet Pieces</label>
                                 <input type="number" required name="wallet_pieces" class="form-control" placeholder="Enter total wallets to transfer">
