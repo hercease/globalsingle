@@ -1,7 +1,7 @@
 // ton-api.js
 require('dotenv').config();
 const express = require('express');
-const { TonClient, WalletContractV4, internal, toNano, } = require('@ton/ton');
+const { TonClient, WalletContractV4, internal, toNano, Address, JettonWallet  } = require('@ton/ton');
 const { mnemonicToWalletKey, mnemonicNew  } = require('ton-crypto');
 const TonWeb = require('tonweb');
 const bip39 = require('bip39');
@@ -24,15 +24,69 @@ const WORKCHAIN_ID = 0; // Default for most wallets
 // Initialize TON Client
 
 
+async function transferUSDT(mnemonic, toAddress, amountUSDT, apiKey) {
+  try {
+    const client = new TonClient({
+      endpoint: TON_ENDPOINT,
+      apiKey: apiKey,
+    });
+
+    // 1. Get keys from mnemonic
+    const keyPair = await mnemonicToWalletKey(mnemonic.split(','));
+
+    // 2. Initialize sender's TON wallet (needed for gas)
+    const wallet = WalletContractV4.create({ 
+      workchain: 0, 
+      publicKey: keyPair.publicKey 
+    });
+    const walletContract = client.open(wallet);
+    const USDT_JETTON = isTestnet 
+      ? "EQBl3gg6AAdjgjO2ZoNU5Q5EzUIl8XMNZrix8Z5dJmkHUfxI" 
+      : "EQDQoc5M3Bh8eWFephi9bClhevelbZZvWhkqdo80XuY_0qXv";
+    // 3. Initialize sender's USDT Jetton wallet
+    //const USDT_JETTON = "EQDQoc5M3Bh8eWFephi9bClhevelbZZvWhkqdo80XuY_0qXv"; // Mainnet
+    const senderJettonWallet = client.open(
+      JettonWallet.createFromAddress(USDT_JETTON)
+    );
+
+    const tonBalance = await walletContract.getBalance();
+    const minTonRequired = toNano("0.05"); // 0.05 TON
+    if (tonBalance < minTonRequired) {
+    throw new Error(`Add ${fromNano(minTonRequired)} TON for gas fees.`);
+    }
+
+    // 4. Check USDT balance
+    const usdtBalance = await senderJettonWallet.getBalance();
+    if (usdtBalance < amountUSDT * 1e6) {
+      throw new Error("Insufficient USDT balance");
+    }
+
+    // 5. Send USDT
+    await senderJettonWallet.sendTransfer({
+      secretKey: keyPair.secretKey,
+      to: toAddress,
+      amount: amountUSDT * 1e6, // USDT units (6 decimals)
+      forwardTonAmount: toNano("0.05"), // 0.05 TON for gas
+      forwardPayload: null // Optional message
+    });
+
+    return { status: true, message: `${amountUSDT} USDT sent to ${toAddress}` };
+
+  } catch (error) {
+    return { status: false, message: `USDT transfer failed: ${error.message}` };
+  }
+}
+
+
 // Async helper to initialize wallet
-async function getWalletContract(menmonic,apiKey) {
+async function getWalletContract(mnemonic, apiKey) {
 
     const client = new TonClient({
         endpoint: TON_ENDPOINT,
         apiKey: apiKey,
     });
 
-    const keyPair = await mnemonicToWalletKey(menmonic.split(','));
+    const keyPair = await mnemonicToWalletKey(mnemonic.split(','));
 
     const wallet = WalletContractV4.create({
         workchain: 0,
@@ -119,8 +173,8 @@ async function transferTon(mnemonic, toAddress, amountTon, apiKey) {
     // 3. Open wallet and get balance
     const walletContract = client.open(wallet);
     //console.log(walletContract);
-    const walletAddress = walletContract.address.toString();
-    const balance = await walletContract.getBalance();
+    //const walletAddress = walletContract.address.toString();
+    //const balance = await walletContract.getBalance();
     
     //console.log(`Wallet: ${walletAddress}`);
     //console.log(`Balance: ${balance.toString()} nanoTON`);
@@ -131,6 +185,18 @@ async function transferTon(mnemonic, toAddress, amountTon, apiKey) {
 
     // 4. Prepare transfer
     const seqno = await walletContract.getSeqno(); // Get current seqno
+
+     // 3. Initialize sender's USDT Jetton wallet
+    const USDT_JETTON = "EQDQoc5M3Bh8eWFephi9bClhevelbZZvWhkqdo80XuY_0qXv"; // Mainnet
+    const senderJettonWallet = client.open(
+      JettonWallet.createFromAddress(USDT_JETTON)
+    );
+    // Check USDT balance
+    const usdtBalance = await senderJettonWallet.getBalance();
+    if (usdtBalance < amountUSDT * 1e6) {
+      throw new Error("Insufficient USDT balance");
+    }
+
     const transfer = walletContract.createTransfer({
       seqno,
       secretKey: keyPair.secretKey,
@@ -261,6 +327,58 @@ app.post('/api/send-ton', async (req, res) => {
         res.status(500).json({ status: false, error: e.message });
     }
 });
+
+/*app.post('/api/generate-wallet', async (req, res) => {
+  try {
+    const { apiKey } = req.body;
+    const isTestnet = process.env.TON_NETWORK === 'testnet';
+    const USDT_JETTON = isTestnet 
+      ? "EQBl3gg6AAdjgjO2ZoNU5Q5EzUIl8XMNZrix8Z5dJmkHUfxI" 
+      : "EQDQoc5M3Bh8eWFephi9bClhevelbZZvWhkqdo80XuY_0qXv";
+
+    const client = new TonClient({
+      endpoint: isTestnet 
+        ? "https://testnet.toncenter.com/api/v2/jsonRPC" 
+        : "https://toncenter.com/api/v2/jsonRPC",
+      apiKey: apiKey,
+    });
+
+    // Generate base TON wallet
+    const mnemonic = await mnemonicNew();
+    const keyPair = await mnemonicToWalletKey(mnemonic);
+    const wallet = WalletContractV4.create({ 
+      workchain: 0, 
+      publicKey: keyPair.publicKey 
+    });
+    const walletContract = client.open(wallet);
+    const tonAddress = walletContract.address.toString({
+      urlSafe: true,
+      bounceable: false,
+      testOnly: isTestnet
+    });
+
+    // Generate USDT Jetton wallet address
+    const usdtJettonWallet = client.open(
+      JettonWallet.createFromAddress(USDT_JETTON)
+    );
+    const usdtAddress = usdtJettonWallet.address.toString({
+      bounceable: false,
+      testOnly: isTestnet
+    });
+
+    res.json({
+      mnemonic: mnemonic.join(" "),
+      ton_address: tonAddress,
+      usdt_jetton_address: usdtAddress,
+      publicKey: keyPair.publicKey.toString('hex'),
+      privateKey: keyPair.secretKey.toString('hex'),
+      network: isTestnet ? "testnet" : "mainnet"
+    });
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});*/
 
 
 app.post('/api/generate-wallet', async (req, res) => {

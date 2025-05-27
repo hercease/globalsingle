@@ -784,14 +784,15 @@
 
             try {
 
+                $this->db->begin_transaction();
+
                 $userInfo = $this->userModel->getUserInfo($_SESSION['global_single_username']);
                 $username = $_SESSION['global_single_username'];
-                $requiredFields = ['wallet_pieces', 'amount', 'wallet_password'];
+                $requiredFields = ['wallet_pieces', 'wallet_password'];
                 $input = [];
                 foreach ($requiredFields as $field) {
                     $input[$field] = $this->userModel->sanitizeInput($_POST[$field] ?? '');
                     if (empty($input[$field])) {
-
                         throw new Exception(ucfirst($field) . " is required");
                     }
                 }
@@ -799,7 +800,11 @@
                 $wallet_balance = $userInfo['vendor_wallet'];
                 $wallet_db_password = $userInfo['wallet_password'];
                 $converted_amount = $input['wallet_pieces'] * 9;
+                $real_amount = $input['wallet_pieces'] * 10;
 
+                if(is_null($wallet_db_password) || empty($wallet_db_password)){
+                    throw new Exception("You are yet to set your wallet password");
+                }
                 // Check password
                 if (!password_verify($input['wallet_password'], $wallet_db_password)){
                     throw new Exception("Incorrect wallet password");
@@ -811,13 +816,13 @@
 
                 //Credit wallet
                 $stmt = $this->db->prepare("UPDATE members SET reg_wallet = reg_wallet + ? WHERE username = ?");
-                $stmt->bind_param("is", $converted_amount, $username);
+                $stmt->bind_param("ds", $real_amount, $username);
                 $stmt->execute();
                 $stmt->close();
 
                 // Debit sender
                 $stmt = $this->db->prepare("UPDATE members SET vendor_wallet = vendor_wallet - ? WHERE username = ?");
-                $stmt->bind_param("is", $converted_amount, $username);
+                $stmt->bind_param("ds", $converted_amount, $username);
                 $stmt->execute();
                 $stmt->close();
 
@@ -825,22 +830,24 @@
                 $this->userModel->InsertMultipleHistories([
                     [
                         'username' => $username,
-                        'amount' => $input['amount'],
+                        'amount' => $converted_amount,
                         'type' => 'debit',
                         'description' => 'Wallet transfer to registration wallet was successful'
                     ],
                     [
                         'username' => $username,
-                        'amount' => $input['amount'],
+                        'amount' =>  $real_amount,
                         'type' => 'credit',
                         'description' => 'Wallet transfer from vendor wallet was successful'
                     ]
                 ]);
+
+                $this->db->commit();
                 
                 return json_encode(["status" => true, "message" => "Registration wallet credited successfully"]);
 
             } catch (Exception $e) {
-
+                $this->db->rollback();
                 return json_encode([
                     'status' => false,
                     'message' => $e->getMessage()
