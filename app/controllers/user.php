@@ -667,6 +667,8 @@
 
             try {
 
+                $this->db->begin_transaction();
+
                 $userInfo = $this->userModel->getUserInfo($_SESSION['global_single_username']);
                 $username = $_SESSION['global_single_username'];
                 $requiredFields = ['receiver', 'wallet', 'amount', 'wallet_password'];
@@ -688,6 +690,18 @@
                 $wallet_db_password = $userInfo['wallet_password'];
                 $wallet_message = $input['wallet'] == 'registration' ? "Insufficient registration wallet balance" : "Insufficient earning wallet balance";
 
+                if(is_null($wallet_db_password) || empty($wallet_db_password)){
+                    throw new Exception("You are yet to create a wallet password");
+                }
+
+                if(!$this->userModel->getUserInfo($receiver)){
+                    throw new Exception("Receiver username does not exist");
+                }
+
+                if(strtolower($input['receiver']) == strtolower($username)){
+                    throw new Exception("Funds can not be transferred between same account wallets");
+                }
+
                 //check if wallet is empty
                 if($amount < 1){
                     return json_encode(["status" => false, "message" => "Transfer amount must be greater than 0"]);
@@ -697,14 +711,6 @@
                 // Check password
                 if (!password_verify($wallet_password, $wallet_db_password)){
                     throw new Exception("Incorrect wallet password");
-                }
-
-                if(!$this->userModel->getUserInfo($receiver)){
-                    throw new Exception("Receiver username does not exist");
-                }
-
-                if($receiver === $username){
-                    throw new Exception("You can not transfer to same account");
                 }
 
                 if($amount > $wallet_balance){
@@ -764,10 +770,12 @@
                     ],
                 ]);
 
+                $this->db->commit();
+
                 return json_encode(["status" => true, "message" => "Wallet transfer of $$amount to " . $input['receiver'] . " was successful"]);
 
             } catch (Exception $e) {
-
+                $this->db->rollback();
                 return json_encode([
                     'status' => false,
                     'message' => $e->getMessage()
