@@ -27,7 +27,7 @@
                     }
                     
                     // Fields to process
-                    $requiredFields = ['username', 'password', 'repeat_password', 'bonus_username', 'email', 'sponsor', 'country', 'wallet_username', 'wallet_password', 'gender'];
+                    $requiredFields = ['username', 'password', 'registration_pin', 'repeat_password', 'bonus_username', 'email', 'sponsor', 'country', 'wallet_username', 'wallet_password', 'gender'];
                     $input = [];
                     $referral_bonus = 2;
                     $indirect_referral_bonus = 0.5;
@@ -58,14 +58,14 @@
 
                     $stageInfo = $this->userModel->getStageInfo($sponsorInfo['stage'] ?? 1);
 
-                    error_log(print_r($stageInfo, true));
+                    //error_log(print_r($stageInfo, true));
                     $countdownlines = $this->userModel->countDownlines($input['sponsor'], $sponsorInfo['stage']);
-
-                    error_log(print_r($countdownlines, true));
-
-                    if ($stageInfo['downlines'] === $countdownlines['total'] ?? 0) {
-                        throw new Exception("Sponsor has reached the maximum number of downlines for their present stage");
-                    }
+                    $checkpin = $this->userModel->checkpin($input['registration_pin']);
+                    //error_log(print_r($countdownlines, true));
+                    if(!$checkpin['exists'] || $checkpin['status'] === 1) {
+                        // Pin is valid, proceed with registration
+                        throw new Exception("Registration pin has either been used or does not exist");
+                    } 
 
                     $bonusUserInfo = $this->userModel->getUserInfo($input['bonus_username']);
                     if (!$bonusUserInfo) {
@@ -906,6 +906,33 @@
                 $searchValue = $this->userModel->sanitizeInput($_POST['search']['value']); // Search value
             
                 $data = $this->userModel->fetchTableRows($start,$rowperpage,$searchValue,"all_wallets");
+
+                $response = array(
+                    "draw" => intval($draw),
+                    "recordsTotal" => $data['recordsTotal'],
+                    "recordsFiltered" => $data['totalRecordsWithFilter'],
+                    "data" => $data['data']
+                );
+                echo json_encode($response);
+            } else {
+                echo json_encode(['error' => 'User not authenticated']);
+            }
+        }
+
+        public function fetchGeneratedPins(){
+
+            if (session_status() === PHP_SESSION_NONE){
+                session_start();
+            }
+
+            if (isset($_SESSION['global_single_username'])){
+                
+                $start = isset($_POST['start']) ? intval($_POST['start']) : 0;
+                $draw = isset($_POST['draw']) ? intval($_POST['draw']) : 1;
+                $rowperpage = isset($_POST['length']) ? intval($_POST['length']) : 10;
+                $searchValue = $this->userModel->sanitizeInput($_POST['search']['value']); // Search value
+            
+                $data = $this->userModel->fetchTableRows($start,$rowperpage,$searchValue,"my_generated_wallets");
 
                 $response = array(
                     "draw" => intval($draw),

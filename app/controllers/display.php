@@ -119,6 +119,27 @@ class Display {
         }
    }
 
+    public function showGeneratePinPage($rootUrl){
+        
+        if (session_status() === PHP_SESSION_NONE){
+            session_start();
+        }
+        // Check if the session variable is set
+        if (isset($_SESSION['global_single_username'])) {
+
+            $username = $_SESSION['global_single_username'];
+            $userInfo = $this->userModel->getUserInfo($username);
+            $fetchSponsor = $this->userModel->fetchSponsor($username);
+            include('app/views/generate_reg_pin.php');
+
+        } else {
+
+            header("Location: $rootUrl/login");
+            exit();
+
+        }
+    }
+
    public function showSupportPage($rootUrl){
         if (session_status() === PHP_SESSION_NONE){
             session_start();

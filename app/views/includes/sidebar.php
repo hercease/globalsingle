@@ -102,6 +102,13 @@
           </a>
         </li>
 
+        <li class="pc-item">
+          <a href="<?php echo $rootUrl ?>/generate_reg_pin" class="pc-link">
+            <span class="pc-micon"><i class="ti ti-exchange"></i></span>
+            <span class="pc-mtext">Generate Reg Pins</span>
+          </a>
+        </li>
+
         <?php if($userInfo['vendor_access'] === 0){ ?>
 
           <li class="pc-item">

@@ -179,6 +179,77 @@ class usersModel {
         return $result->num_rows; // Only counts up to $max
     }
 
+    public function checkpin($pin) {
+        $stmt = $this->conn->prepare("SELECT status FROM " . $this->table . " WHERE pin = ?");
+        $stmt->bind_param("s", $pin);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($row = $result->fetch_assoc()) {
+            return [
+                'exists' => true,
+                'status' => $row['status']
+            ];
+        } else {
+            return [
+                'exists' => false,
+                'status' => null
+            ];
+        }
+    }
+
+    public function generatePins($username, $numberOfPins) {
+        try {
+            $pins = [];
+            $values = [];
+            $placeholders = [];
+            $currentDate = date('Y-m-d H:i:s');
+
+            // Generate requested number of unique pins
+            while (count($pins) < $numberOfPins) {
+                $pin = 'GSL-';
+                for ($i = 0; $i < 6; $i++) {
+                    $pin .= mt_rand(0, 9); 
+                }
+                
+                // Check if pin already exists
+                $stmt = $this->conn->prepare("SELECT pin FROM reg_pin WHERE pin = ?");
+                $stmt->bind_param("s", $pin);
+                $stmt->execute();
+                
+                if ($stmt->get_result()->num_rows === 0) {
+                    $pins[] = $pin;
+                    $values = array_merge($values, [$username, $pin, $currentDate]);
+                    $placeholders[] = "(?, ?, ?)";
+                }
+            }
+
+            // Insert all pins in a single query
+            $sql = "INSERT INTO reg_pin (username, pin, created_on) VALUES " . implode(",", $placeholders);
+            $stmt = $this->conn->prepare($sql);
+            
+            // Bind all parameters 
+            $types = str_repeat("sss", count($pins)); // 3 params per pin
+            $stmt->bind_param($types, ...$values);
+            
+            $stmt->execute();
+            $stmt->close();
+
+            return [
+                'success' => true, 
+                'pins' => $pins,
+                'message' => count($pins) . ' pins generated successfully'
+            ];
+
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Error generating pins: ' . $e->getMessage()
+            ];
+        }
+    }
+
+
     public function deductWallet($amount, $username){
         $stmt = $this->conn->prepare("UPDATE " . $this->table . " SET earning_wallet = earning_wallet - ? WHERE username = ?");
         $stmt->bind_param("ss", $amount, $username);
@@ -338,13 +409,13 @@ class usersModel {
         $user = $_SESSION['global_single_username'] ?? "";
         $rootUrl = $this->getCurrentUrl();
 
-        if ($tabletype === 'transaction_history') {
+        if ($tabletype === 'my_generated_wallets') {
 
-            $query = "SELECT id, username, amount, date, receiver, description, type FROM tranx_history WHERE username = ?"; // Adjust column names and table as needed
+            $query = "SELECT id, pin, created_on, used_by, used_on, status FROM reg_pin WHERE username = ?"; // Adjust column names and table as needed
             $params[] = $user;
             $paramTypes .= "s";
             if (!empty($searchValue)) {
-                $searchQuery = " WHERE username LIKE ? OR amount LIKE ?";
+                $searchQuery = " WHERE pin LIKE ? OR used_by LIKE ?";
                 $params[] = "%$searchValue%";
                 $params[] = "%$searchValue%";
                 $paramTypes .= "ss";
@@ -415,15 +486,17 @@ class usersModel {
         $i = 0;
 
         while ($row = $result->fetch_assoc()) {
-            if($tabletype === 'transaction_history'){
-                $amount = $row['type'] == 'credit' ? "<b class='text-success'>+ $" . number_format($row['amount']) . "</b>" : "<b class='text-danger'>- $" . number_format($row['amount']) . "</b>";
+            if($tabletype === 'my_generated_wallets'){
+
+                $status = $row['status'] == 1 ? 'Used' : '';
+
                 $data[] = [
                     "id" => ++$i,
-                    "type" => $row['type'],
-                    "amount" => $amount,
-                    "description" =>  $row['description'],
-                    "date" =>  $row['date'],
-                    "action" =>  "<button data-id='".$row['id']."'  class='btn btn-danger btn-sm del_package'>Details</button>"
+                    "pin" => $row['pin'],
+                    "created_on" => $row['created_on'],
+                    "used_by" =>  $row['used_by'],
+                    "used_on" =>  $row['used_on'],
+                    "status" =>  $row['status']
                 ];
 
             } elseif($tabletype === 'all_users'){
@@ -603,8 +676,8 @@ error_log("Jetton Balance URL: " . $url); // Log for debugging
         $user = $_SESSION['global_single_username'] ?? "";
 
         switch ($tabletype){
-            case 'transaction_history':
-                $query = "SELECT COUNT(*) AS count FROM tranx_history WHERE username = ?";
+            case 'my_generated_wallets':
+                $query = "SELECT COUNT(*) AS count FROM reg_pin WHERE username = ?";
                 $params[] = $user;
                 $paramTypes .= "s";
                 break;
@@ -645,13 +718,13 @@ error_log("Jetton Balance URL: " . $url); // Log for debugging
         $paramTypes = "";
         $user = $_SESSION['global_single_username'] ?? "";
 
-        if($tabletype === 'transaction_history'){
+        if($tabletype === 'my_generated_wallets'){
 
-            $query = "SELECT COUNT(*) AS count FROM tranx_history WHERE username = ?";
+            $query = "SELECT COUNT(*) AS count FROM reg_pin WHERE username = ?";
             $params[] = $user;
             $paramTypes .= "s";
             if (!empty($searchValue)) {
-                $searchQuery = "WHERE username LIKE ? OR amount LIKE ?";
+                $searchQuery = "WHERE pin LIKE ? OR used_by LIKE ?";
                 $params = ["%$searchValue%", "%$searchValue%"];
                 $paramTypes = "ss";
             }

@@ -89,6 +89,11 @@ switch ($url) {
             $DisplayController->showVendorsPage($rootUrl);
         }
         break;
+    case '/generate_reg_pin':
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $DisplayController->showGeneratePinPage($rootUrl);
+        }
+        break;
     case '/fetchVendors':
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $Usercontroller->fetchVendors($rootUrl);
@@ -293,6 +298,11 @@ switch ($url) {
     case '/fetchallwallets':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo $Usercontroller->fetchAllWallets();
+        }
+        break;
+    case '/fetchgeneratedpins':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            echo $Usercontroller->fetchGeneratedPins();
         }
         break;
     case '/processuserwallettransfer':
