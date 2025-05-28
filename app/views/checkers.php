@@ -212,7 +212,7 @@
   </style>
   <script>
         window.env = {
-            NOTIFICATION_ACCESS: "<?php echo $userInfo['notification_access']; ?>",
+            NOTIFICATION_ACCESS: "<?php echo $userInfo['notification_access'] ?? 1; ?>",
             VAPID_PUBLIC_KEY: "<?php echo VAPID_PUBLIC_KEY ?>",
             ENDPOINT: "<?php echo $rootUrl ?>"
         };

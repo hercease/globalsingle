@@ -387,7 +387,7 @@
 
 
 
-                if($globalDownlinespercentage < 100 && $countdownlinespercentage < 100){
+                if((int)$globalDownlinespercentage < 100 && (int)$countdownlinespercentage < 100){
 
                     throw new Exception("Oooops, you are yet to complete your tasks");
                     
@@ -397,8 +397,6 @@
                     $sql->bind_param("is",$one, $username);
                     $sql->execute();
                     $sql->close();
-
-                    $this->userModel->updateStage($username,$compensation,$userInfo['stage'] + 1);
 
                    
                     return json_encode(["status" => true, "message" => "Congratulations, stage completed successfully"]);

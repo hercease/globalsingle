@@ -236,7 +236,7 @@ class usersModel {
 
     public function updateStage($username, $amount, $stage, $page_access = 0) {
         $stmt = $this->conn->prepare("UPDATE " . $this->table . " SET stage = ?, earning_wallet = earning_wallet + ?, page_access = ? WHERE username = ?");
-        $stmt->bind_param("iiis", $stage, $amount, $page_access, $username);
+        $stmt->bind_param("idis", $stage, $amount, $page_access, $username);
         $stmt->execute();
         $stmt->close();
     }
