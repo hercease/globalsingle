@@ -257,7 +257,7 @@ class usersModel {
         return $this->curlRequest($url);
     }
 
-    public function curlRequest(string $url, string $method = 'GET', array $data = []): array {
+    public function curlRequest(string $url, string $method = 'GET', array $data = [], array $headers = []): array {
         $ch = curl_init();
         
         $options = [
@@ -271,10 +271,21 @@ class usersModel {
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_2TLS,
         ];
         
+        // Merge custom headers with content-type if POST
+        $httpHeaders = [];
         if ($method === 'POST') {
             $options[CURLOPT_POST] = true;
             $options[CURLOPT_POSTFIELDS] = json_encode($data);
-            $options[CURLOPT_HTTPHEADER] = ['Content-Type: application/json'];
+            $httpHeaders[] = 'Content-Type: application/json';
+        }
+        
+        // Add custom headers if provided
+        if (!empty($headers)) {
+            $httpHeaders = array_merge($httpHeaders, $headers);
+        }
+        
+        if (!empty($httpHeaders)) {
+            $options[CURLOPT_HTTPHEADER] = $httpHeaders;
         }
         
         curl_setopt_array($ch, $options);
@@ -479,13 +490,13 @@ class usersModel {
                 
                 $action .= "</div></div>";
 
-                $balance = $this->getTonBalance($row['wallet_address'], true);
+                $balance = $this->getJettonBalance($row['wallet_address']);
 
                 $data[] = [
                     "id" => ++$i,
                     "username" => $row['username'],
                     "address" => $row['wallet_address'],
-                    "balance" => '$' . number_format($balance,2),
+                    "balance" => '$' . number_format(0.00,2),
                     "date" =>  $row['created_at'],
                     "action" =>  $action
                 ];
@@ -544,6 +555,45 @@ class usersModel {
             return 0;
         }
     
+    }
+
+    public function getJettonBalance($walletAddress) {
+        $baseUrl = TESTNET
+            ? "https://testnet.tonapi.io/v2/accounts/{address}/jettons" 
+            : "https://tonapi.io/v2/accounts/{address}/jettons";
+        
+        $apiKey = TON_API_KEY; // Required for tonapi.io
+        $url = str_replace('{address}', urlencode($walletAddress), $baseUrl);
+error_log("Jetton Balance URL: " . $url); // Log for debugging
+        try {
+
+            $headers = [
+                'Authorization: Bearer ' . $apiKey,
+                'Accept: application/json'
+            ];
+
+            $response = $this->curlRequest($url, 'GET', [], []);
+            error_log("Jetton Balance Response: " . json_encode($response)); // Log for debugging
+            if (!isset($response['balances'])) {
+                throw new Exception("Invalid jetton response");
+            }
+
+            // Extract jetton addresses from the response
+            $jettonAddresses = [];
+            foreach ($response['balances'] as $jetton) {
+                if (isset($jetton['jetton']['address'])) {
+                    $jettonAddresses[] = $jetton['jetton']['address'];
+                }
+            }
+
+            error_log("Jetton Addresses: " . json_encode($jettonAddresses)); // Log for debugging
+
+            return $jettonAddresses;
+
+        } catch (Exception $e) {
+            // Log error if needed: $e->getMessage();
+            return [];
+        }
     }
     
     public function getTotalRecords($tabletype){
@@ -900,6 +950,7 @@ class usersModel {
     public function generateTonWallet($username)
     {
         try {
+
             $payload = json_encode(['apiKey' => TON_API_KEY]);
 
             $ch = curl_init(CHAT_ENDPOINT.'/api/generate-wallet');
@@ -942,13 +993,13 @@ class usersModel {
                 'mnemonic' => $this->encryption->encryptToBase64($mnemonic),
                 'privateKey' => $this->encryption->encryptToBase64($walletData['privateKey']),
                 'publicKey' => $this->encryption->encryptToBase64($walletData['publicKey'] ?? ''), // Add fallback
-                'address' => $walletData['address'],
+                'address' => $walletData['address'] ?? '', // Add fallback for ton_address
             ];
 
             // Encrypt and store logic (same as before)...
             $stmt = $this->conn->prepare("
                 INSERT INTO user_wallets 
-                (username, wallet_address, public_key, private_key, mnemonic, created_at) 
+                (username, address, public_key, private_key, mnemonic, created_at) 
                 VALUES (?, ?, ?, ?, ?, NOW())
             ");
 
@@ -962,11 +1013,13 @@ class usersModel {
             ]);
 
         } catch (Exception $e) {
+
             return json_encode([
                 'status' => false,
                 'message' => $e->getMessage(),
                 'error_code' => $e->getCode(),
             ]);
+
         }
     }
 
@@ -1017,10 +1070,56 @@ class usersModel {
         return $data['result'] ?? [];
     }
 
+    public function fetchJettonTransactions($walletAddress, $limit = 5) {
+        //https://toncenter.com/api/v3/jetton/transfers?owner_address=EQBE8dSZuymb3R48z_FR7iQLtDNUVqc-gEhR59yBX20gkO_N&direction=in&limit=10&offset=0&sort=desc
+        $apiKey = TON_API_KEY; // Your API key
+        $url = TESTNET ? "https://testnet.tonapi.io/v2/accounts/{$walletAddress}/jettons/history" : "https://tonapi.io/v2/accounts/{$walletAddress}/jettons/history";
+        $params = [
+            'limit' => $limit,
+            'archival' => false // Set to true for old transactions
+        ];
+
+        $headers = [
+            'Content-Type: application/json',
+            'X-API-Key: ' . $apiKey
+        ];
+
+        $ch = curl_init($url . '?' . http_build_query($params));
+
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPGET => true,
+            CURLOPT_HTTPHEADER => $headers,
+            CURLOPT_TIMEOUT => 10
+        ]);
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
+        curl_close($ch);
+
+        if ($error) {
+            throw new Exception("cURL Error: $error");
+        }
+
+        $data = json_decode($response, true);
+
+        if ($httpCode !== 200 || isset($data['error'])) {
+            $errorMsg = $data['error']['message'] ?? 'Unknown error';
+            throw new Exception("TonAPI Error ($httpCode): $errorMsg");
+        }
+
+        if (!isset($data['operations'])) {
+            throw new Exception("Invalid response format");
+        }
+
+        return $data['operations'] ?? [];
+    }
+
     public function confirmWithdrawalTransaction($amount,$id,$hist_id,$address){
-        
+
         $this->conn->begin_transaction();
-        
+
         try {
 
             $history_details = $this->fetchHistoryDetails($hist_id);

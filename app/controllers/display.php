@@ -751,7 +751,7 @@ class Display {
             
                     try {
                         // 2. Fetch transactions for this wallet
-                        $transactions = $this->userModel->fetchTonTransactions($walletAddress);
+                        $transactions = $this->userModel->fetchJettonTransactions($walletAddress);
             
                         if (empty($transactions)) {
                             $this->userModel->updateLastChecked($walletId);
@@ -765,8 +765,8 @@ class Display {
                                 continue;
                             }
             
-                            $txHash = $tx['transaction_id']['hash'];
-                            $amountNano = $tx['in_msg']['value'];
+                            $txHash = $tx['transaction_hash'];
+                            $amountNano = $tx['amount'];
                             $txTime = $tx['utime']; // UNIX timestamp
             
                             // 4. Skip if:
