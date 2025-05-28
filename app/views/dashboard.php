@@ -658,10 +658,8 @@
                   </div>
                 </div>
               </div>
-              <?php
-              var_dump($countdownlinespercentage, $globalDownlinespercentage);
-?>
-              <?php if($countdownlinespercentage === 100 && $globalDownlinespercentage === 100){  ?>
+
+              <?php if((int)$countdownlinespercentage === 100 && (int)$globalDownlinespercentage === 100){  ?>
                 <a id="<?php echo $userInfo['id'] ?>" class="btn btn-secondary btn-shadow reward">Claim Reward</a>
               <?php } ?>
               
