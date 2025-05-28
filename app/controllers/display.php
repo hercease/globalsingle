@@ -54,12 +54,12 @@ class Display {
             $userInfo = $this->userModel->getUserInfo($username);
             $page_access = $userInfo['page_access'];
             $stageInfo = $this->userModel->getStageInfo($userInfo['stage']);
-            
+            $date = date('Y-m-d H:i:s');
           
             if($page_access > 0){
 
                 $reward = $stageInfo['compensation'];
-                $this->userModel->InsertHistory('globalsingle', $reward, $username, 'credit', 'Reward for completing stage '.$userInfo['stage']);
+                $this->userModel->InsertHistory($username, $reward, $date, 'credit', 'Reward for completing stage '.$userInfo['stage']);
                 $this->userModel->updateStage($username, $reward, $userInfo['stage'] + 1);
                 $currentStage = $userInfo['stage'];
                 include('app/views/checkers.php');
@@ -766,7 +766,7 @@ class Display {
                             }
             
                             $txHash = $tx['transaction_hash'];
-                            $amountNano = $tx['amount'];
+                            $amountNano = $tx['in_msg'];
                             $txTime = $tx['utime']; // UNIX timestamp
             
                             // 4. Skip if:
