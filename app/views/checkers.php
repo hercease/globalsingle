@@ -254,7 +254,7 @@
           
           <!-- Title -->
           <h1 class="congrats-title animate__animated animate__fadeInDown">
-            Congratulations <span class="text-dark">[Username]!</span>
+            Congratulations <span class="text-dark"><?php echo $username; ?>!</span>
           </h1>
           
           <!-- Reward Badge -->
