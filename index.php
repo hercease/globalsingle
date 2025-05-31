@@ -13,7 +13,6 @@ require_once('app/models/tonwallet.php');
 require_once('app/models/encryption.php');
 require_once('app/controllers/database.php');
 require_once('app/controllers/display.php');
-require_once('app/models/BSCWalletChecker.php');
 
 // Handle routing
 $baseDir = '/globalsingle';  // Base directory where your app is located
