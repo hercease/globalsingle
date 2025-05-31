@@ -39,6 +39,8 @@
     <link rel="stylesheet" href="<?php echo $rootUrl ?>/public/assets/css/style.css" id="main-style-link">
     <link rel="stylesheet" href="<?php echo $rootUrl ?>/public/assets/css/style-preset.css">
     <link href="https://cdn.datatables.net/v/bs5/jszip-3.10.1/dt-1.13.6/b-2.4.2/b-colvis-2.4.2/b-html5-2.4.2/b-print-2.4.2/r-2.5.0/datatables.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/3.28.1/tabler-icons.min.css" integrity="sha512-UuL1Le1IzormILxFr3ki91VGuPYjsKQkRFUvSrEuwdVCvYt6a1X73cJ8sWb/1E726+rfDRexUn528XRdqrSAOw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
     <style>
         body {
             background: #deebf1;
@@ -341,32 +343,25 @@
                             <h5 class="alert-heading mb-3">Wallet Address Information</h5>
                             <p>
                                 Dear <strong><?php echo htmlspecialchars($userInfo['username']); ?></strong>,<br>
-                                Below is a static <strong>TON Chain wallet address</strong> generated specifically for you.
+                                Below is a static <strong>BEP20 wallet address</strong> generated specifically for you.
                                 Every time you fund this wallet, your vendor wallet will be credited instantly.
                             </p>
                             <p class="mb-0 text-danger fw-semibold">
-                                Please, Kindly Send <u>Only USDT [TON Blockchain Network]</u> To The Wallet Addresses Shown Below.<br> 
-                                We Will NOT Be Responsible For Any Loss Occurred From Sending Other Assets. THANKS.
+                                Please, Kindly Send <u>Only USDT BEP20 Asset</u> To The Wallet Address Shown Below.<br> 
+                                We Will NOT Be Responsible For Any Loss Occurred From Sending Other Assets. THANKS.
                             </p>
                         </div>
                         
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">For Tonkeeper/Telegram Wallet deposits</label>
+                            <label class="form-label fw-semibold">For USDT BEP20 deposits</label>
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control" id="wallet-address" value="<?php echo $addressInfo['result']['bounceable']['b64url'] ?? "" ?>" readonly>
+                                <input type="text" class="form-control" id="wallet-address" value="<?php echo $userWallet['address'] ?? "" ?>" readonly>
                                 <button class="btn btn-outline-primary" type="button" id="copy-button">
                                     <i class="fas fa-copy"></i> Copy
                                 </button>
                             </div>
                         </div>
 
-                        <label class="form-label fw-semibold">Other Wallet Exchanges </label>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="wallet-address" value="<?php echo $addressInfo['result']['non_bounceable']['b64url'] ?? "" ?>" readonly>
-                            <button class="btn btn-outline-primary" type="button" id="copy-button">
-                                <i class="fas fa-copy"></i> Copy
-                            </button>
-                        </div>
 
                         <div id="copy-feedback" class="text-success small d-none">
                             Address copied to clipboard!

@@ -11,6 +11,7 @@ class Display {
     private $userModel;
     private $pushnotification;
     private $encryption;
+    private $bscwallet;
 
     public function __construct($db) {
         $this->db = $db;
@@ -18,7 +19,7 @@ class Display {
         $this->rootUrl = (new UsersModel($db))->getCurrentUrl();
         $this->pushnotification = new PushNotificationService($this->db,VAPID_PUBLIC_KEY,VAPID_PRIVATE_KEY);
         $this->encryption = new EncryptionHelper(ENCRYPTION_KEY);
-        
+        $this->bscwallet = new BSCWalletChecker();
     }
 
     public function showLoginPage($rootUrl) {
@@ -390,7 +391,6 @@ class Display {
             if($userInfo['vendor_access'] > 0){
 
                 $userWallet = $this->userModel->getUserWallet($username);
-                $addressInfo = $this->userModel->detectAddress($userWallet['wallet_address']);
 
                 include('app/views/fund_wallet.php');
 
@@ -590,148 +590,82 @@ class Display {
 
 
     public function checkAndUpdateWithdrawals() {
-    
-        // page_refresher.php
         try {
-            $apiKey = TON_API_KEY;
-            $baseUrl = TESTNET ? 
-                "https://testnet.toncenter.com/api/v2/getTransactions" : 
-                "https://toncenter.com/api/v2/getTransactions";
-    
-            // Get pending withdrawals older than 2 minutes
+            // 1. Get a pending withdrawal request
             $query = "SELECT wl.id, wl.tx_id, wl.tranx_id, wl.amount, wl.to_address, h.username 
-                     FROM withdrawal_log wl
-                     JOIN tranx_history h ON wl.tranx_id = h.id
-                     WHERE wl.status = 'pending' 
-                     AND wl.created_at < DATE_SUB(NOW(), INTERVAL 10 MINUTE)
-                     LIMIT 20";
-            
+                      FROM withdrawal_log wl
+                      JOIN tranx_history h ON wl.tranx_id = h.id
+                      WHERE wl.status = 'pending'
+                      LIMIT 1";
+    
             $result = $this->db->query($query);
-            
+    
             if (!$result) {
                 throw new Exception("Query failed: " . $this->db->error);
             }
     
-            $senderWallet = FROM_WALLET_ADDRESS;
-            $pendingWithdrawals = [];
-            
-            // Store all pending withdrawals with their details
-            while ($tx = $result->fetch_assoc()) {
-                $pendingWithdrawals[$tx['id']] = [
-                    'tx_id' => $tx['tx_id'],
-                    'tranx_id' => $tx['tranx_id'],
-                    'amount' => $tx['amount'],
-                    'to_address' => $tx['to_address'],
-                    'username' => $tx['username']
-                ];
+            $tx = $result->fetch_assoc();
+    
+            // 2. Exit if no pending withdrawal
+            if (!$tx) {
+                return json_encode(['status' => false, 'message' => 'No pending withdrawals.']);
             }
     
-            if (empty($pendingWithdrawals)) {
-                return; // Nothing to process
-            }
-    
-            // Get recent transactions once
-            $url = "$baseUrl?address=" . urlencode($senderWallet) . 
-                   "&limit=50&archival=true&api_key=$apiKey";
-            
-            $ch = curl_init($url);
-            curl_setopt_array($ch, [
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_HTTPHEADER => ["X-API-Key: $apiKey"],
-                CURLOPT_TIMEOUT => 15 // Increased timeout
-            ]);
-            
-            $response = curl_exec($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-            
-            if ($httpCode !== 200) {
-                throw new Exception("TON API returned status: $httpCode");
-            }
-    
-            $data = json_decode($response, true);
-            
-            if (empty($data['result'])) {
-                error_log("No transactions found for $senderWallet");
-                return;
-            }
-    
-            // Process all pending withdrawals
+            // 3. Begin transaction
             $this->db->begin_transaction();
-            
-            try {
-                foreach ($data['result'] as $tx) {
-
-                    if (!isset($tx['transaction_id']['lt'])) {
-                        continue; // Skip malformed transactions
-                    }
     
-                    $txLt = $tx['transaction_id']['lt'];
-                    
-                    foreach ($pendingWithdrawals as $id => $withdrawal) {
-                        if ($txLt == $withdrawal['tx_id']) {
-                            // Found confirmed withdrawal
-                            $stmt = $this->db->prepare(
-                                "UPDATE withdrawal_log 
-                                SET status = 'confirmed', 
-                                confirmed_at = NOW() 
-                                WHERE id = ?"
-                            );
-                            $stmt->bind_param("i", $id);
-                            $stmt->execute();
+            $amount = $tx['amount'];
+            $toAddress = $tx['to_address'];
+            $tranx_id = $tx['id'];
+            $username = $tx['username'];
+            $tx_hash = $tx['txHash'];
     
-                            // Send notification
-                            $url = $this->userModel->getCurrentUrl() . '/transaction_history';
-                            $this->pushnotification->sendNotification(
-                                $withdrawal['username'],
-                                'Fund Withdrawal',
-                                "Withdrawal of $" . number_format($withdrawal['amount'], 2) . 
-                                " to " . substr($withdrawal['to_address'], 0, 6) . "... was successful",
-                                $url
-                            );
+            // 4. Send funds using internal method
+            $response = $this->userModel->transferWalletFunds('', $amount, $toAddress);
     
-                            unset($pendingWithdrawals[$id]);
-                            break;
-                        }
-                    }
-                    
-                    if (empty($pendingWithdrawals)) break;
-                }
-                
-                // Mark old pending withdrawals as failed
-                $hourAgo = date('Y-m-d H:i:s', strtotime('-1 hour'));
-                $failedIds = array_keys($pendingWithdrawals);
-                
-                if (!empty($failedIds)) {
-                    $placeholders = implode(',', array_fill(0, count($failedIds), '?'));
-                    $types = str_repeat('i', count($failedIds));
-                    
-                    $stmt = $this->db->prepare(
-                        "UPDATE withdrawal_log 
-                        SET status = 'failed',
-                        error = 'Timeout: Not found in blockchain'
-                        WHERE id IN ($placeholders) AND created_at < ?"
-                    );
-                    
-                    $params = array_merge($failedIds, [$hourAgo]);
-                    $stmt->bind_param($types . 's', ...$params);
-                    $stmt->execute();
-                }
-                
+            error_log("Transfer Response: " . print_r($response, true));
+    
+            // 5. Check if successful
+            if (isset($response['status']) && $response['status'] === true) {
+                $this->userModel->confirmWithdrawalTransaction($amount, $tranx_id, $tx_hash, $username, $toAddress);
                 $this->db->commit();
-                
-            } catch (Exception $e) {
-                $this->db->rollback();
-                throw $e;
+    
+                return json_encode([
+                    'status' => true,
+                    'message' => "Congratulations, withdrawal was successful",
+                    'txHash' => $response['txHash'] ?? null
+                ]);
+            } else {
+                // 6. Mark failed and log reason
+                $errorMessage = $response['error'] ?? json_encode($response);
+                $failed = 'failed';
+    
+                $stmt = $this->db->prepare("UPDATE withdrawal_log SET status = ?, error = ? WHERE id = ?");
+                $stmt->bind_param("sss", $failed, $errorMessage, $tranx_id);
+                $stmt->execute();
+                $stmt->close();
+    
+                $this->db->commit();
+    
+                return json_encode([
+                    'status' => false,
+                    'message' => "Withdrawal failed. Please try again later",
+                    'error' => $errorMessage
+                ]);
             }
-            
+    
         } catch (Throwable $th) {
-            error_log("Withdrawal check error: " . $th->getMessage());
-            // Consider implementing an alert system here
+            $this->db->rollback();
+            error_log("Withdrawal processing error: " . $th->getMessage());
+            return json_encode([
+                'status' => false,
+                'message' => "System error: " . $th->getMessage()
+            ]);
         } finally {
             $this->db->close();
         }
     }
+    
 
     // page_refresher.php
             /*$key = Key::loadFromAsciiSafeString(ENCRYPTION_KEY);
@@ -745,94 +679,88 @@ class Display {
             echo "Encrypted (base64): " . base64_encode($encrypted) . "\n";
             echo "Decrypted:" . $decrypted."\n";*/
 
-    public function checkPaymentTransaction() {
-           
+            public function checkPaymentTransaction() {
 
-            $confirmationDelay = 20; // Adjust if needed
-
-            try {
-                // 1. Fetch wallets needing checks
-                $query = "SELECT id, wallet_address, username, last_checked
-                          FROM user_wallets 
-                          WHERE last_checked < NOW() - INTERVAL 5 MINUTE 
-                          LIMIT 5";
-                $result = $this->db->query($query);
+                $minConfirmations = 3;
+                $checkInterval = 5; // minutes
             
-                if (!$result) {
-                    throw new Exception("Wallet fetch failed: " . $this->db->error);
-                }
+                try {
+                    // 1. Fetch wallets needing checks
+                    $query = "SELECT id, address, username, last_checked
+                              FROM user_wallets 
+                              WHERE last_checked < NOW() - INTERVAL {$checkInterval} MINUTE 
+                              LIMIT 5";
+                    $result = $this->db->query($query);
             
-                $this->db->begin_transaction();
+                    if (!$result) {
+                        throw new Exception("Wallet fetch failed: " . $this->db->error);
+                    }
             
-                while ($wallet = $result->fetch_assoc()) {
-
-                    $walletId = $wallet['id'];
-                    $walletAddress = $wallet['wallet_address'];
-                    $username = $wallet['username'];
+                    $endBlock = $this->userModel->getLatestBlockNumber(); // Current block number
             
-                    try {
-                        // 2. Fetch transactions for this wallet
-                        $transactions = $this->userModel->fetchJettonTransactions($walletAddress);
+                    $this->db->begin_transaction();
             
-                        if (empty($transactions)) {
+                    while ($wallet = $result->fetch_assoc()) {
+                        $walletId = $wallet['id'];
+                        $walletAddress = $wallet['address'];
+                        $username = $wallet['username'];
+                        $startBlock = $this->userModel->getLastCheckedBlock($walletAddress) + 1;
+            
+                        try {
+                            $transactions = $this->userModel->fetchUsdtTransactions($walletAddress, $startBlock, $endBlock);
+            
+                            if (empty($transactions)) {
+                                $this->userModel->updateLastChecked($walletId);
+                                continue;
+                            }
+            
+                            $lastBlock = $startBlock - 1;
+            
+                            foreach ($transactions as $tx) {
+                                $txHash = $tx['hash'];
+                                $amount = $tx['value'];
+                                $txBlock = (int)$tx['blockNumber'];
+                                $confirmations = $endBlock - $txBlock + 1;
+                                $tokenDecimal = isset($tx['tokenDecimal']) ? (int)$tx['tokenDecimal'] : 18;
+            
+                                if (
+                                    $this->userModel->checkTransactionhash($txHash) ||
+                                    $amount <= 0 ||
+                                    $confirmations < $minConfirmations
+                                ) {
+                                    continue;
+                                }
+            
+                                $amountUsdt = $amount / pow(10, $tokenDecimal);
+                                $sender = $tx['from'] ?? 'unknown';
+            
+                                // Record payment
+                                $this->userModel->ConfirmPaymentTransaction($username, $amountUsdt, $txHash, $sender, $walletId);
+                                error_log("Credited $username with $amountUsdt USDT from tx $txHash");
+            
+                                $lastBlock = max($lastBlock, $txBlock);
+                            }
+            
+                            // 6. Update tracking info
                             $this->userModel->updateLastChecked($walletId);
+                            if ($lastBlock >= $startBlock) {
+                                $this->userModel->saveLastCheckedBlock($walletAddress, $lastBlock);
+                            }
+            
+                        } catch (Exception $e) {
+                            error_log("Wallet $walletId error: " . $e->getMessage());
                             continue;
                         }
-            
-                        foreach ($transactions as $tx) {
-                            // 3. Validate transaction
-                            if (empty($tx['transaction_id']['hash']) || empty($tx['in_msg']['value']) || empty($tx['utime'])) {
-                               // error_log("Invalid TX for wallet $walletAddress: " . json_encode($tx));
-                                continue;
-                            }
-            
-                            $txHash = $tx['transaction_hash'];
-                            $amountNano = $tx['in_msg'];
-                            $txTime = $tx['utime']; // UNIX timestamp
-            
-                            // 4. Skip if:
-                            // - Already processed
-                            // - Amount <= 0
-                            // - TX is too recent (<20 seconds old)
-                            if (
-                                $this->userModel->checkTransactionhash($txHash) ||
-                                $amountNano <= 0 ||
-                                (time() - $txTime) < $confirmationDelay
-                            ) {
-                                continue;
-                            }
-            
-                            // 5. Credit the user
-                            $amountTon = $amountNano / 1e6; // Convert from nano to USDT Jetton
-                            $sender = $tx['in_msg']['source'] ?? 'unknown';
-            
-                            $this->userModel->ConfirmPaymentTransaction(
-                                $username,
-                                $amountTon,
-                                $txHash,
-                                $sender,
-                                $walletId
-                            );
-                        }
-            
-                        // 6. Mark wallet as checked
-                        $this->userModel->updateLastChecked($walletId);
-            
-                    } catch (Exception $e) {
-                        error_log("Wallet $walletId error: " . $e->getMessage());
-                        continue;
                     }
+            
+                    $this->db->commit();
+            
+                } catch (Exception $e) {
+                    $this->db->rollback();
+                    error_log("System error: " . $e->getMessage());
                 }
-            
-                $this->db->commit();
-            
-            } catch (Exception $e) {
-                $this->db->rollback();
-                error_log("System error: " . $e->getMessage());
-                //$this->notifyAdmin("Payment Processor Crash", $e->getMessage());
             }
-
-    }
+            
 
 
        /* public function checkPaymentTransaction() {

@@ -38,7 +38,10 @@
     <!-- [Template CSS Files] -->
     <link rel="stylesheet" href="<?php echo $rootUrl ?>/public/assets/css/style.css" id="main-style-link">
     <link rel="stylesheet" href="<?php echo $rootUrl ?>/public/assets/css/style-preset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
     <link href="https://cdn.datatables.net/v/bs5/jszip-3.10.1/dt-1.13.6/b-2.4.2/b-colvis-2.4.2/b-html5-2.4.2/b-print-2.4.2/r-2.5.0/datatables.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/3.28.1/tabler-icons.min.css" integrity="sha512-UuL1Le1IzormILxFr3ki91VGuPYjsKQkRFUvSrEuwdVCvYt6a1X73cJ8sWb/1E726+rfDRexUn528XRdqrSAOw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
     <style>
         body {
             background: #deebf1;
@@ -325,7 +328,7 @@
               <div class="page-header-title">
                 <h2 class="mb-0">Generate Pin</h2>
               </div>
-              <button class="btn btn-primary btn-sm ms-auto" onclick="window.location.href='generate_reg_pin'">
+              <button class="btn btn-primary btn-sm ms-auto" data-bs-toggle='modal' data-bs-target='#modalCentered'>
                 <i class="ti ti-plus"></i>
               </button>
             </div>
@@ -366,6 +369,34 @@
   <a href="support" class="support-icon">
       <span><i class="fas fa-headset"></i></span> <!-- Or use an icon (e.g., Font Awesome) -->
   </a>
+
+  <div class="modal fade" id="modalCentered" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title">Reg Pin Gneration</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="reg_pin_form">
+                    <div class="modal-body">
+                        <!-- Textarea for reason -->
+                        <div class="mb-3">
+                            <label for="reason" class="form-label">Enter no pin/s</label>
+                            <input type="number" class="form-control" name="pin_no" required placeholder="Enter number of pin to generate" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary px-4">
+                            <span id="submitText">Contnue</span>
+                            <span id="submitSpinner" class="spinner-border spinner-border-sm d-none" role="status"></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+           
+        </div>
+    </div>
   <!-- [ Main Content ] end -->
   <footer class="pc-footer">
     <div class="footer-wrapper container-fluid">
@@ -385,6 +416,7 @@
 <script src="<?php echo $rootUrl ?>/public/assets/js/plugins/jquery-validate.js"></script>
 <script src="<?php echo $rootUrl ?>/public/assets/js/pcoded.js"></script>
 <script src="<?php echo $rootUrl ?>/public/assets/js/plugins/feather.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
 <script src="https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox-window.prod.mjs" type="module"></script>
 <script src="https://cdn.datatables.net/v/bs5/jszip-3.10.1/dt-1.13.6/b-2.4.2/b-colvis-2.4.2/b-html5-2.4.2/b-print-2.4.2/r-2.5.0/datatables.min.js"></script>
 <script src="sw.js"></script>
@@ -404,6 +436,8 @@
                 preloader.style.display = 'none'; // Hide after fade-out
             }, 500); // Matches the CSS transition duration (if added)
         });
+
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
         var usersDataTable = $('#registration_pins').DataTable({
             'processing': true,
@@ -429,6 +463,117 @@
             ]
 
         });
+
+        $(document).ready(function() {
+            // Form submission handling
+            $('#reg_pin_form').validate({
+                rules: {
+                // Add validation rules here
+                },
+
+                submitHandler: function(form) {
+
+                const submitBtn = $('#reg_pin_form button[type="submit"]');
+                const submitText = $('#submitText');
+                const spinner = $('#submitSpinner');
+                
+                // Show loading state
+                
+                const formData = new FormData(form);
+                formData += '&timezone=' + encodeURIComponent(timezone);
+                
+                // Simulate form submission (replace with actual AJAX call)
+                iziToast.question({
+                timeout: false,
+                close: false,
+                overlay: true,
+                displayMode: 'once',
+                id: 'question',
+                title: 'Confirmation',
+                message: 'Are you sure you want to continue?',
+                position: 'center',
+                buttons: [
+                    ['<button><b>Yes</b></button>', function (instance, toast){
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                        
+                        // Run your AJAX function here
+                        $.ajax({
+                            type: "POST",
+                            url: "generateregpin",
+                            data: formData,
+                            contentType: false,
+                            processData: false,
+                            beforeSend: function () {
+                                submitText.text('Processing...');
+                                spinner.removeClass('d-none');
+                                submitBtn.prop('disabled', true);
+                            },
+                            dataType: 'json',
+                            success: function(data) {
+
+                                submitBtn.prop('disabled', false);
+                                // Close modal after 2 seconds
+                            
+                            console.log(data);
+                            if (data.status===true) {
+
+                              
+                                    
+                                    $('#modalCentered').modal('hide');
+                                    submitText.text('Continue');
+                                    submitBtn.prop('disabled', false);
+                                    form.reset();
+
+                                    iziToast.success({
+                                        title: 'Success',
+                                        message: data.message,
+                                    });
+
+                                    usersDataTable.ajax.reload();
+                                
+                            
+                            } else {
+
+                                submitText.text('Continue');
+                                submitBtn.prop('disabled', false);
+                                spinner.addClass('d-none');
+
+                                iziToast.warning({
+                                    title: 'Error',
+                                    message: data.message,
+                                });
+
+                            }
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                submitText.text('Continue');
+                                spinner.addClass('d-none');
+                                submitBtn.prop('disabled', false);
+                                iziToast.warning({
+                                    title: 'Error',
+                                    message: errorThrown,
+                                });
+                            }
+                        }); 
+
+                    }, true],
+                    ['<button>No</button>', function (instance, toast) {
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                    }]
+                ],
+                onClosing: function(instance, toast, closedBy){
+                    console.info('Closing | closedBy: ' + closedBy);
+                },
+                onClosed: function(instance, toast, closedBy){
+                    console.info('Closed | closedBy: ' + closedBy);
+                }
+            });
+                
+                }
+            });
+        });
+
+
 
 </script>
 
