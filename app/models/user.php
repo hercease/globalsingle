@@ -209,7 +209,7 @@ class usersModel {
             while (count($pins) < $numberOfPins) {
                 $pin = 'GSL-';
                 for ($i = 0; $i < 6; $i++) {
-                    $pin .= mt_rand(0, 9); 
+                    $pin .= mt_rand(0, 11); 
                 }
                 
                 // Check if pin already exists

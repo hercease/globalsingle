@@ -275,7 +275,7 @@ body {
                     </div>
 
                     <button class="btn btn-secondary btn-shadow w-100" name="submit" type="submit">Continue</button>
-                  </form>
+    </form>
                 </div>
             </div>
          </div>
@@ -369,10 +369,12 @@ body {
                                             iziToast.error({ title: 'Error', message: data.message });
                                         }
                                     },
-                                    error: function (xhr, status, error) {
-                                        // Re-enable the button and handle errors
-                                        $button.prop("disabled", false).html('Send Code');
-
+                                        } else {
+                                            // Enable the submit button and populate the results container
+                                            iziToast.error({ title: 'Error', message: data.message });
+                                        }
+                                        // Enable the Continue button after code is sent
+                                        document.getElementById('continueButton').disabled = false;
                                         if (xhr.status === 0) {
                                             iziToast.error({
                                                 title: 'Network Error',
