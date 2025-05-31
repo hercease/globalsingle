@@ -19,7 +19,6 @@ class Display {
         $this->rootUrl = (new UsersModel($db))->getCurrentUrl();
         $this->pushnotification = new PushNotificationService($this->db,VAPID_PUBLIC_KEY,VAPID_PRIVATE_KEY);
         $this->encryption = new EncryptionHelper(ENCRYPTION_KEY);
-        $this->bscwallet = new BSCWalletChecker();
     }
 
     public function showLoginPage($rootUrl) {
