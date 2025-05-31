@@ -378,7 +378,7 @@
                 <h5 class="modal-title">Reg Pin Gneration</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <form id="reg_pin_form">
+                <form name="reg_pin_form" id="reg_pin_form">
                     <div class="modal-body">
                         <!-- Textarea for reason -->
                         <div class="mb-3">
@@ -480,7 +480,7 @@
                 
                 // Show loading state
                 
-                var data = $("form[name='registration']").serialize();
+                var data = $("form[name='reg_pin_form']").serialize();
                 data += '&timezone=' + encodeURIComponent(timezone);
                 
                 // Simulate form submission (replace with actual AJAX call)
