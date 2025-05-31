@@ -212,6 +212,7 @@ class usersModel {
                     $pin .= mt_rand(0, 11); 
                 }
                 
+                
                 // Check if pin already exists
                 $stmt = $this->conn->prepare("SELECT pin FROM reg_pin WHERE pin = ?");
                 $stmt->bind_param("s", $pin);

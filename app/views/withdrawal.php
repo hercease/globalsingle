@@ -275,7 +275,7 @@ body {
                     </div>
 
                     <button class="btn btn-secondary btn-shadow w-100" name="submit" type="submit">Continue</button>
-    </form>
+                </form>
                 </div>
             </div>
          </div>
