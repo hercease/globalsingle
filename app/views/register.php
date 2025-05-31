@@ -319,12 +319,8 @@
               <input type="password" name="repeat_password" required class="form-control" placeholder="Password">
             </div>
             <div class="form-group mb-3">
-              <label class="form-label">Wallet Username</label>
-              <input type="text" required name="wallet_username" class="form-control" placeholder="Wallet Username">
-            </div>
-            <div class="form-group mb-3">
-              <label class="form-label">Wallet Password</label>
-              <input type="password" required name="wallet_password" class="form-control" placeholder="Wallet Password">
+              <label class="form-label">Registration Pin</label>
+              <input type="text" required name="registration_pin" class="form-control" placeholder="Registration Pin">
             </div>
             <p class="mt-4 text-sm text-muted">By Signing up, you agree to our <a href="#" class="text-primary"> Terms of Service </a> and <a href="#" class="text-primary"> Privacy Policy</a></p>
             <div class="d-grid mt-3">

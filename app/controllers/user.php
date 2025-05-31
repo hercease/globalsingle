@@ -8,6 +8,7 @@
         private $vapidPrivateKey;
         private $pushnotification;
         private $sendTON;
+        private $encryption;
 
         public function __construct($db) {
             $this->db = $db;
@@ -16,6 +17,7 @@
             $this->vapidPrivateKey = VAPID_PRIVATE_KEY;
             $this->pushnotification = new PushNotificationService($this->db,$this->vapidPublicKey,$this->vapidPrivateKey);
             $this->sendTON = new TONWallet(TON_API_KEY,FROM_WALLET_ADDRESS,TON_PRIVATE_KEY);
+            $this->encryption = new EncryptionHelper(ENCRYPTION_KEY);
         }
 
         public function processRegistration(){
@@ -27,7 +29,7 @@
                     }
                     
                     // Fields to process
-                    $requiredFields = ['username', 'password', 'repeat_password', 'bonus_username', 'email', 'sponsor', 'country', 'wallet_username', 'wallet_password', 'gender'];
+                    $requiredFields = ['username', 'password', 'registration_pin', 'repeat_password', 'bonus_username', 'email', 'sponsor', 'country', 'wallet_username', 'wallet_password', 'gender'];
                     $input = [];
                     $referral_bonus = 2;
                     $indirect_referral_bonus = 0.5;
@@ -58,14 +60,14 @@
 
                     $stageInfo = $this->userModel->getStageInfo($sponsorInfo['stage'] ?? 1);
 
-                    error_log(print_r($stageInfo, true));
+                    //error_log(print_r($stageInfo, true));
                     $countdownlines = $this->userModel->countDownlines($input['sponsor'], $sponsorInfo['stage']);
-
-                    error_log(print_r($countdownlines, true));
-
-                    if ($stageInfo['downlines'] === $countdownlines['total'] ?? 0) {
-                        throw new Exception("Sponsor has reached the maximum number of downlines for their present stage");
-                    }
+                    $checkpin = $this->userModel->checkpin($input['registration_pin']);
+                    //error_log(print_r($countdownlines, true));
+                    if(!$checkpin['exists'] || $checkpin['status'] === 1) {
+                           // Pin is invalid or has already been used
+                        throw new Exception("Registration pin has either been used or does not exist");
+                    } 
 
                     $bonusUserInfo = $this->userModel->getUserInfo($input['bonus_username']);
                     if (!$bonusUserInfo) {
@@ -242,7 +244,7 @@
 
                         // Update paying wallet
                         $sql = $this->db->prepare("UPDATE members SET reg_wallet = reg_wallet - ? WHERE username = ?");
-                        $sql->bind_param("is", $reg_fee, $input['wallet_username']);
+                        $sql->bind_param("ds", $reg_fee, $input['wallet_username']);
                         if (!$sql->execute()) {
                             throw new Exception("Failed to debit registration wallet");
                         }
@@ -311,6 +313,13 @@
                         ];
 
                         $this->userModel->creditMultipleWallets($credits);
+                        $status = 1;
+                        $sql = $this->db->prepare("UPDATE reg_pin SET used_by = ?, used_on = ?, status = ? WHERE pin = ?");
+                            $sql->bind_param("ssss", $input['username'], $date, $status, $input['registration_pin']);
+                            if (!$sql->execute()) {
+                                throw new Exception("Failed to update registration pin status");
+                            }
+                        $sql->close();
 
                         $this->db->commit();
 
@@ -715,12 +724,6 @@
                     throw new Exception($wallet_message);
                 }
 
-                // Credit receiver
-                $stmt = $this->db->prepare("UPDATE members SET reg_wallet = reg_wallet + ? WHERE username = ?");
-                $stmt->bind_param("is", $amount, $receiver);
-                $stmt->execute();
-                $stmt->close();
-
                 // Debit sender
                 if($input['wallet']=="registration"){
 
@@ -729,10 +732,20 @@
                     $stmt->execute();
                     $stmt->close();
 
+                    $stmt = $this->db->prepare("UPDATE members SET reg_wallet = reg_wallet + ? WHERE username = ?");
+                    $stmt->bind_param("is", $amount, $receiver);
+                    $stmt->execute();
+                    $stmt->close();
+
                 }else{
 
                     $stmt = $this->db->prepare("UPDATE members SET earning_wallet = earning_wallet - ? WHERE username = ?");
                     $stmt->bind_param("is", $amount, $username);
+                    $stmt->execute();
+                    $stmt->close();
+
+                    $stmt = $this->db->prepare("UPDATE members SET earning_wallet = earning_wallet + ? WHERE username = ?");
+                    $stmt->bind_param("is", $amount, $receiver);
                     $stmt->execute();
                     $stmt->close();
 
@@ -906,6 +919,33 @@
                 $searchValue = $this->userModel->sanitizeInput($_POST['search']['value']); // Search value
             
                 $data = $this->userModel->fetchTableRows($start,$rowperpage,$searchValue,"all_wallets");
+
+                $response = array(
+                    "draw" => intval($draw),
+                    "recordsTotal" => $data['recordsTotal'],
+                    "recordsFiltered" => $data['totalRecordsWithFilter'],
+                    "data" => $data['data']
+                );
+                echo json_encode($response);
+            } else {
+                echo json_encode(['error' => 'User not authenticated']);
+            }
+        }
+
+        public function fetchGeneratedPins(){
+
+            if (session_status() === PHP_SESSION_NONE){
+                session_start();
+            }
+
+            if (isset($_SESSION['global_single_username'])){
+                
+                $start = isset($_POST['start']) ? intval($_POST['start']) : 0;
+                $draw = isset($_POST['draw']) ? intval($_POST['draw']) : 1;
+                $rowperpage = isset($_POST['length']) ? intval($_POST['length']) : 10;
+                $searchValue = $this->userModel->sanitizeInput($_POST['search']['value']); // Search value
+            
+                $data = $this->userModel->fetchTableRows($start,$rowperpage,$searchValue,"my_generated_wallets");
 
                 $response = array(
                     "draw" => intval($draw),
@@ -1595,21 +1635,22 @@
 
         public function processWithdrawal(){
 
+        try {
+
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-                return json_encode(["status" => false, "message" => "Invalid request method"]);
+                throw new Exception("Invalid request method");
             }
 
             $requiredFields = ['code', 'amount', 'address'];
             $input = [];
 
-            
             foreach ($requiredFields as $field) {
                 $input[$field] = $this->userModel->sanitizeInput($_POST[$field] ?? '');
                 if (empty($input[$field])) {
-                    return json_encode(["status" => false, "message" => ucfirst($field) . " is required"]);
+                    throw new Exception(ucfirst($field) . " is required");
                 }
             }
-    
+
             // Sanitize and validate input
             $amount = $input['amount'];
             $address = $input['address'];
@@ -1619,7 +1660,7 @@
             // Check if the user is logged in
             session_start();
             if (!isset($_SESSION['global_single_username'])) {
-                return json_encode(["status" => false, "message" => "User not logged in"]);
+                throw new Exception("User not logged in");
             }
 
             $username = $_SESSION['global_single_username'];
@@ -1630,69 +1671,52 @@
             if (isset($_COOKIE['saved_code'])) {
                 $retrievedCode = $_COOKIE['saved_code'];
             } else {
-                return json_encode(["status" => false, "message" => "No code found or it expired."]);
+                throw new Exception("No code found or it expired.");
             }
 
-            if($amount + 1 > $userInfo['earning_wallet']){
-                return json_encode(["status" => false, "message" => "Insufficient Wallet balance"]);
+            if((int)$amount + 1 > $userInfo['earning_wallet']){
+                throw new Exception("Insufficient Wallet balance");
             }
 
-            if($amount < 0){
-                return json_encode(["status" => false, "message" => "Minimum withdrawal is $10"]);
+            if((int)$amount < 0){
+                throw new Exception("Minimum withdrawal is $10");
+            }
+
+            if((int)$amount < (int)$amount + 1){
+                throw new Exception("Insufficinet earning wallet balance");
             }
 
             if($retrievedCode != $code){
-                return json_encode(["status" => false, "message" => "Invalid Authentication code"]);
+                throw new Exception("Invalid Authentication code");
             }
 
-           /* if (!$this->userModel->isValidTonAddressBasic($address)) {
-                return json_encode(["status" => false, "message" => "Invalid TON Address"]);
-            }*/
-
-            $info = $this->userModel->validateTonAddressViaToncenter($address, TON_API_KEY);
-            if (isset($info['error'])) {
-                return json_encode(["status" => false, "message" => "Invalid TON address"]);
+            // Validate Usdt address via Toncenter API
+            $info = $this->userModel->validateBep20WalletAddress($address);
+            if (isset($info['status']) && $info['status']==false) {
+                throw new Exception("Invalid USDT BEP20 address");
             }
-
-            /*$sendTON =  $this->sendTON->send(
-                $address, // Recipient address
-                $amount, // Amount in TON
-                'Test payment', // Optional message
-                true // Validate balance first
-            );*/
-
-            $response = $this->userModel->sendTON($address, $amount);
-
 
             $description = "Withdrawal of " . $input['amount'] . " to $address";
 
-           //error_log(print_r($response));
+           $date = date('Y-m-d H:i:s');
 
-            if (isset($response['status']) && $response['status']===true) {
+            $history_id = $this->userModel->InsertHistory($username, $input['amount'], $date, 'debit', $description);
 
-                $txHash = $response['lt'] ?? null;
+            $this->userModel->logTransaction($history_id, $address, $input['amount'], '', 'pending'); // Replace '1' with your user id
 
-                $date = date('Y-m-d H:i:s');
+            $this->userModel->deductWallet($input['amount'] + 1, $username);
 
-                $history_id = $this->userModel->InsertHistory($username, $input['amount'], $date, 'debit', $description);
+            $url = $this->userModel->getCurrentUrl() . '/transaction_history';
 
-                $this->userModel->logTransaction($history_id, $address, $input['amount'], $txHash, 'pending'); // Replace '1' with your user id
+            return json_encode(['status' => true, 'message' => "Congratulations, withdrawal was successful"]);
 
-                $this->userModel->deductWallet($input['amount'], $username);
-
-                $url = $this->userModel->getCurrentUrl() . '/transaction_history';
-
-                //$this->pushnotification->sendNotification($username,'Withdrawal Request',"Withdrawal of $" . number_format($input['amount'],2) . " to $address was successful", $url);
-
-                return json_encode(['status' => true, 'message' => "Congratulations, withdrawal was successful"]);
-
-            }else{
-
-                return json_encode(['status' => false, 'message' => "Withdrawal failed. Please try again later"]);
-
-            }
-
+        } catch (Exception $e) {
+            return json_encode([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
         }
+    }
 
         public function processWalletTransfer(){
 
@@ -1700,21 +1724,57 @@
 
                 $wallet_id = $_POST['id'];
                 $type = $_POST['type'];
+                $addresses = [];
+                $balances = [];
 
                 if($type === 'transfer_fund'){
 
-                    $wallet_info = $this->userModel->getUserWallet($wallet_id);
-                    $amount = $this->userModel->getTonBalance($wallet_info['wallet_address']);
-                    /*if($amount === 0){
-                        throw new Exception("Zero wallet balance");
-                    }*/
                     
-                    $transfer = $this->userModel->transferWalletFunds($wallet_info['mnemonic'], $amount);
+                    $wallet_info = $this->userModel->getUserWallet($wallet_id);
+                    $address = $wallet_info['address'];
+                    $addresses[] = $wallet_info['address'];
+                   
+
+                    $url = "http://localhost:3000/api/batch-balances"; // Change to your Node.js endpoint
+                    $postData = ['addresses' => $addresses];
+    
+                    $ch = curl_init($url);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+                    $response = curl_exec($ch);
+                    curl_close($ch);
+    
+                    $respData = json_decode($response, true);
+    
+                    error_log(print_r($respData, true));
+    
+                    if ($respData && $respData['success']) {
+                        $balances = $respData['balances'];
+                    }
+
+                    $amount = $balances[$address]['usdt'] ?? 0;
+
+                    if($amount <= 0){
+                        throw new Exception("Account balance is low");
+                    }
+
+                    $private_key = $this->encryption->decryptFromBase64($wallet_info['private_key']);
+                    error_log($private_key);
+                    if($amount === 0){
+                        throw new Exception("Zero wallet balance");
+                    }
+                    
+                    $transfer = $this->userModel->transferWalletFunds($private_key, $amount, '0xa4d2B59FEe5B5C966F1dbd7B882a626AFCee1B56');
 
                     if(isset($transfer['status']) && $transfer['status']=== true){
+
                         return json_encode(['status' => true, 'message' => "Wallet transfer was successful"]);
-                    }else{
-                        throw new Exception($transfer['message']);
+
+                    } else {
+
+                        throw new Exception($transfer['error']);
+
                     }
 
                 }
@@ -2076,6 +2136,59 @@
                 header('Content-Type: application/json');
                 echo json_encode($response);
             
+            }
+        }
+
+        public function generateRegPin(){
+
+            if (session_status() === PHP_SESSION_NONE){
+                session_start();
+            }
+
+            try {
+
+                if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                    throw new Exception("Invalid request method");
+                }
+    
+                $requiredFields = ['pin_no'];
+                $input = [];
+                $username = $_SESSION['global_single_username'];
+                $timezone = $this->userModel->sanitizeInput($_POST['timezone'] ?? '');
+
+                date_default_timezone_set($timezone ?? 'Africa/Lagos');
+    
+                foreach ($requiredFields as $field) {
+                    $input[$field] = $this->userModel->sanitizeInput($_POST[$field] ?? '');
+                    if (empty($input[$field])) {
+                        throw new Exception(ucfirst($field) . " is required");
+                    }
+                }
+
+                $amount = $input['pin_no'] * 9;
+                $userInfo = $this->userModel->getUserInfo($username);
+                $reg_balance = $userInfo['reg_wallet'];
+
+                if($amount > $reg_balance){
+                    throw new Exception("Insufficient wallet balance");
+                }
+
+                $this->userModel->generatePins($username, (int)$input['pin_no']);
+
+                $stmt = $this->db->prepare("UPDATE members SET reg_wallet = reg_wallet - ? WHERE username = ?");
+                $stmt->bind_param("ds", $reg_balance,$username);
+                $stmt->execute();
+                $stmt->close();
+
+                return json_encode(["status" => true, "message" => "Pin was generated successfully"]);
+
+
+            } catch (Exception $th) {
+
+                return json_encode([
+                    'status' => false,
+                    'message' => $th->getMessage()
+                ]);
             }
         }
 

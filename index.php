@@ -13,6 +13,7 @@ require_once('app/models/tonwallet.php');
 require_once('app/models/encryption.php');
 require_once('app/controllers/database.php');
 require_once('app/controllers/display.php');
+require_once('app/models/BSCWalletChecker.php');
 
 // Handle routing
 $baseDir = '/globalsingle';  // Base directory where your app is located
@@ -87,6 +88,11 @@ switch ($url) {
     case '/vendors':
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $DisplayController->showVendorsPage($rootUrl);
+        }
+        break;
+    case '/generate_reg_pin':
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $DisplayController->showGeneratePinPage($rootUrl);
         }
         break;
     case '/fetchVendors':
@@ -295,9 +301,19 @@ switch ($url) {
             echo $Usercontroller->fetchAllWallets();
         }
         break;
+    case '/fetchgeneratedpins':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            echo $Usercontroller->fetchGeneratedPins();
+        }
+        break;
     case '/processuserwallettransfer':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo $Usercontroller->processWalletTransfer();
+        }
+        break;
+    case '/generateregpin':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            echo $Usercontroller->generateRegPin();
         }
         break;
     default:

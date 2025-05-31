@@ -39,6 +39,8 @@
     <link rel="stylesheet" href="<?php echo $rootUrl ?>/public/assets/css/style.css" id="main-style-link">
     <link rel="stylesheet" href="<?php echo $rootUrl ?>/public/assets/css/style-preset.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/3.28.1/tabler-icons.min.css" integrity="sha512-UuL1Le1IzormILxFr3ki91VGuPYjsKQkRFUvSrEuwdVCvYt6a1X73cJ8sWb/1E726+rfDRexUn528XRdqrSAOw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
     
     <style>
 body {
@@ -248,7 +250,7 @@ body {
                 </div>
                 <div class="card-body">
                   <div class="alert alert-secondary"><i class="ti ti-info-circle"></i>
-                  Withdraw fund to your wallet address, ensure you filled in the correct wallet address as we will not be liable for any loss that arises from this. <br> Kindly note that $1 transfer fee will be deducted from your wallet.</div>
+                  Withdraw fund to your wallet address, ensure you filled in the correct wallet USDT BEP20 address as we will not be liable for any loss that arises from this. <br> Kindly note that $1 transfer fee will be deducted from your wallet.</div>
                   <form name="wallet_withdrawal">
                     
                     <div class="form-group mb-3">
@@ -262,8 +264,8 @@ body {
                     </div>
 
                     <div class="form-group mb-3">
-                        <label class="form-label">TON Address</label>
-                        <input type="text" name="address" required class="form-control" placeholder="TON wallet address" />
+                        <label class="form-label">USDT BEP20 Address</label>
+                        <input type="text" name="address" required class="form-control" placeholder="USDT BEP20 wallet address" />
                     </div>
 
                     <label class="form-label">Authentication Code</label>
@@ -272,7 +274,7 @@ body {
                         <button class="btn btn-secondary" id="send_code" type="button">Send Code</button>
                     </div>
 
-                    <button class="btn btn-secondary btn-shadow w-100" disabled name="submit" type="submit">Continue</button>
+                    <button class="btn btn-secondary btn-shadow w-100" name="submit" type="submit">Continue</button>
                   </form>
                 </div>
             </div>

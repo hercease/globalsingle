@@ -15,6 +15,7 @@ class usersModel {
     private $encryption;
     private $pushnotification;
     private $rootUrl;
+     private $bscwallet;
 
     public function __construct($db) {
 
@@ -30,7 +31,6 @@ class usersModel {
             ['stage' => 6, 'downlines' => 8, 'total_downlines' => 46875, 'compensation' => 1988, 'task_info' => 'In this stage, your task is to personally recruit 8 downlines and accumulate 46875 global downlines.'],
             ['stage' => 7, 'downlines' => 18, 'total_downlines' => 234375, 'compensation' => 9986,'task_info'=>'In this stage, your task is to personally recruit 18 downlines and accumulate 234375 global downlines.']
         ];
-
     }
 
     public function getAllStages() {
@@ -179,6 +179,77 @@ class usersModel {
         return $result->num_rows; // Only counts up to $max
     }
 
+    public function checkpin($pin) {
+        $stmt = $this->conn->prepare("SELECT status FROM reg_pin WHERE pin = ?");
+        $stmt->bind_param("s", $pin);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($row = $result->fetch_assoc()) {
+            return [
+                'exists' => true,
+                'status' => $row['status']
+            ];
+        } else {
+            return [
+                'exists' => false,
+                'status' => null
+            ];
+        }
+    }
+
+    public function generatePins($username, $numberOfPins) {
+        try {
+            $pins = [];
+            $values = [];
+            $placeholders = [];
+            $currentDate = date('Y-m-d H:i:s');
+
+            // Generate requested number of unique pins
+            while (count($pins) < $numberOfPins) {
+                $pin = 'GSL-';
+                for ($i = 0; $i < 6; $i++) {
+                    $pin .= mt_rand(0, 9); 
+                }
+                
+                // Check if pin already exists
+                $stmt = $this->conn->prepare("SELECT pin FROM reg_pin WHERE pin = ?");
+                $stmt->bind_param("s", $pin);
+                $stmt->execute();
+                
+                if ($stmt->get_result()->num_rows === 0) {
+                    $pins[] = $pin;
+                    $values = array_merge($values, [$username, $pin, $currentDate]);
+                    $placeholders[] = "(?, ?, ?)";
+                }
+            }
+
+            // Insert all pins in a single query
+            $sql = "INSERT INTO reg_pin (username, pin, created_on) VALUES " . implode(",", $placeholders);
+            $stmt = $this->conn->prepare($sql);
+            
+            // Bind all parameters 
+            $types = str_repeat("sss", count($pins)); // 3 params per pin
+            $stmt->bind_param($types, ...$values);
+            
+            $stmt->execute();
+            $stmt->close();
+
+            return [
+                'status' => true, 
+                'pins' => $pins,
+                'message' => count($pins) . ' pins generated successfully'
+            ];
+
+        } catch (Exception $e) {
+            return [
+                'status' => false,
+                'message' => 'Error generating pins: ' . $e->getMessage()
+            ];
+        }
+    }
+
+
     public function deductWallet($amount, $username){
         $stmt = $this->conn->prepare("UPDATE " . $this->table . " SET earning_wallet = earning_wallet - ? WHERE username = ?");
         $stmt->bind_param("ss", $amount, $username);
@@ -259,7 +330,7 @@ class usersModel {
 
     public function curlRequest(string $url, string $method = 'GET', array $data = [], array $headers = []): array {
         $ch = curl_init();
-        
+        error_log($url);
         $options = [
             CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true,
@@ -294,7 +365,6 @@ class usersModel {
         $error = curl_error($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
-        
         if ($error) throw new Exception("cURL error: $error");
         if ($httpCode !== 200) throw new Exception("API request failed with HTTP code $httpCode");
         
@@ -338,13 +408,13 @@ class usersModel {
         $user = $_SESSION['global_single_username'] ?? "";
         $rootUrl = $this->getCurrentUrl();
 
-        if ($tabletype === 'transaction_history') {
+        if ($tabletype === 'my_generated_wallets') {
 
-            $query = "SELECT id, username, amount, date, receiver, description, type FROM tranx_history WHERE username = ?"; // Adjust column names and table as needed
+            $query = "SELECT id, pin, created_on, used_by, used_on, status FROM reg_pin WHERE username = ?"; // Adjust column names and table as needed
             $params[] = $user;
             $paramTypes .= "s";
             if (!empty($searchValue)) {
-                $searchQuery = " WHERE username LIKE ? OR amount LIKE ?";
+                $searchQuery = " WHERE pin LIKE ? OR used_by LIKE ?";
                 $params[] = "%$searchValue%";
                 $params[] = "%$searchValue%";
                 $paramTypes .= "ss";
@@ -376,11 +446,13 @@ class usersModel {
             $query .= "$searchQuery ORDER BY id DESC LIMIT ?, ?";
 
         } elseif($tabletype === 'all_wallets'){
-            $query = "SELECT id, username, wallet_address, created_at FROM user_wallets"; // Adjust column names and table as needed
+
+            $query = "SELECT id, username, address, created_at FROM user_wallets"; // Adjust column names and table as needed
             if (!empty($searchValue)) {
-                $searchQuery = " WHERE username LIKE ?";
+                $searchQuery = " WHERE username LIKE ? OR address LIKE ?";
                 $params[] = "%$searchValue%";
-                $paramTypes .= "s";
+                $params[] = "%$searchValue%";
+                $paramTypes .= "ss";
             }
     
             $query .= "$searchQuery ORDER BY id DESC LIMIT ?, ?";
@@ -409,21 +481,88 @@ class usersModel {
         // Execute the query and fetch results
         $stmt->execute();
         $result = $stmt->get_result();
+
+        // For 'all_wallets', collect addresses for batch balance fetch
+        $addresses = [];
+        if ($tabletype === 'all_wallets') {
+
+            while ($row = $result->fetch_assoc()) {
+                $addresses[] = $row['address'];
+                $rows[] = $row;  // Save rows to process after balance fetch
+            }
+
+            //error_log(print_r($addresses, true));
+
+            // Call Node.js batch API to get balances for these addresses
+            $balances = [];
+            if (!empty($addresses)) {
+                $url = "http://localhost:3000/api/batch-balances"; // Change to your Node.js endpoint
+                $postData = ['addresses' => $addresses];
+
+                $ch = curl_init($url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+                curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+                $response = curl_exec($ch);
+                curl_close($ch);
+
+                $respData = json_decode($response, true);
+
+                error_log(print_r($respData, true));
+
+                if ($respData && $respData['success']) {
+                    $balances = $respData['balances'];
+                }
+            }
+
+            // Build data array with balances
+            $data = [];
+            $i = 0;
+            foreach ($rows as $row) {
+                $action = "<div class='btn-group'>
+                    <button class='btn btn-secondary btn-sm dropdown-toggle' type='button' data-bs-toggle='dropdown' aria-expanded='false'>Action</button><div class='dropdown-menu'>
+                        <a data-id='" . $row['id'] . "' data-type='transfer_fund' data-message='Are you sure you want transfer this fund ?' class='dropdown-item process_wallet' href='#0'><i class='fas fa-check'></i> Transfer Fund</a>
+                        <a data-id='" . $row['id'] . "' data-type='delete_wallet' data-message='Are you sure you want to delete this wallet ?'  class='dropdown-item process_wallet' href='#0'><i class='fas fa-trash'></i> Delete Wallet</a>
+                    </div></div>";
+
+                $usdtbalance = $balances[$row['address']]['usdt'] ?? 0;
+                $bnb_balance = $balances[$row['address']]['bnb_usd'] ?? 0;
+                
+
+                $data[] = [
+                    "id" => ++$i,
+                    "username" => $row['username'],
+                    "address" => $row['address'],
+                    "usdt_balance" => '$' . number_format($usdtbalance, 2),
+                    "bnb_balance" => '$' . number_format($bnb_balance, 2),
+                    "date" => $row['created_at'],
+                    "action" => $action
+                ];
+            }
+
+            return [
+                "recordsTotal" => $this->getTotalRecords($tabletype),
+                "totalRecordsWithFilter" => $this->getTotalRecordswithFilter($tabletype, $searchValue),
+                "data" => $data
+            ];
+        }
     
         // Collect the data into an array
         $data = [];
         $i = 0;
 
         while ($row = $result->fetch_assoc()) {
-            if($tabletype === 'transaction_history'){
-                $amount = $row['type'] == 'credit' ? "<b class='text-success'>+ $" . number_format($row['amount']) . "</b>" : "<b class='text-danger'>- $" . number_format($row['amount']) . "</b>";
+            if($tabletype === 'my_generated_wallets'){
+
+                $status = $row['status'] == 1 ? 'Used' : '';
+
                 $data[] = [
                     "id" => ++$i,
-                    "type" => $row['type'],
-                    "amount" => $amount,
-                    "description" =>  $row['description'],
-                    "date" =>  $row['date'],
-                    "action" =>  "<button data-id='".$row['id']."'  class='btn btn-danger btn-sm del_package'>Details</button>"
+                    "pin" => $row['pin'],
+                    "created_on" => $row['created_on'],
+                    "used_by" =>  $row['used_by'],
+                    "used_on" =>  $row['used_on'],
+                    "status" =>  $status
                 ];
 
             } elseif($tabletype === 'all_users'){
@@ -464,7 +603,8 @@ class usersModel {
                 elseif($row['status']=='rejected'){
                     $badge = "<span class='badge text-bg-danger'>".$row['status']."</span>";
                 }
-
+                
+                $status = 
                 
                 $data[] = [
                     "id" => ++$i,
@@ -479,27 +619,6 @@ class usersModel {
                 ];
 
                 
-
-            } elseif($tabletype === 'all_wallets'){
-
-               $action = "<div class='btn-group'>
-                    <button class='btn btn-secondary btn-sm dropdown-toggle' type='button' data-bs-toggle='dropdown' aria-expanded='false'>Action</button><div class='dropdown-menu'>";
-                         
-                        $action .=  "<a data-id='".$row['id']."' data-type='transfer_fund' data-message='Are you sure you want transfer this fund ?' class='dropdown-item process_wallet' href='#0'><i class='fas fa-check'></i> Transfer Fund</a>";
-                        $action .=  "<a data-id='".$row['id']."' data-type='delete_wallet' data-message='Are you sure you want to delete this wallet ?'  class='dropdown-item process_wallet' href='#0'><i class='fas fa-trash'></i> Delete Wallet</a>";
-                
-                $action .= "</div></div>";
-
-                $balance = $this->getJettonBalance($row['wallet_address']);
-
-                $data[] = [
-                    "id" => ++$i,
-                    "username" => $row['username'],
-                    "address" => $row['wallet_address'],
-                    "balance" => '$' . number_format(0.00,2),
-                    "date" =>  $row['created_at'],
-                    "action" =>  $action
-                ];
 
             }
         }
@@ -603,8 +722,8 @@ error_log("Jetton Balance URL: " . $url); // Log for debugging
         $user = $_SESSION['global_single_username'] ?? "";
 
         switch ($tabletype){
-            case 'transaction_history':
-                $query = "SELECT COUNT(*) AS count FROM tranx_history WHERE username = ?";
+            case 'my_generated_wallets':
+                $query = "SELECT COUNT(*) AS count FROM reg_pin WHERE username = ?";
                 $params[] = $user;
                 $paramTypes .= "s";
                 break;
@@ -645,13 +764,13 @@ error_log("Jetton Balance URL: " . $url); // Log for debugging
         $paramTypes = "";
         $user = $_SESSION['global_single_username'] ?? "";
 
-        if($tabletype === 'transaction_history'){
+        if($tabletype === 'my_generated_wallets'){
 
-            $query = "SELECT COUNT(*) AS count FROM tranx_history WHERE username = ?";
+            $query = "SELECT COUNT(*) AS count FROM reg_pin WHERE username = ?";
             $params[] = $user;
             $paramTypes .= "s";
             if (!empty($searchValue)) {
-                $searchQuery = "WHERE username LIKE ? OR amount LIKE ?";
+                $searchQuery = "WHERE pin LIKE ? OR used_by LIKE ?";
                 $params = ["%$searchValue%", "%$searchValue%"];
                 $paramTypes = "ss";
             }
@@ -816,20 +935,40 @@ error_log("Jetton Balance URL: " . $url); // Log for debugging
         return abs((float)$value); // Ensures it works with floats too
     }
 
-    public function transferWalletFunds($mnemonic, $amount){
+    public function transferWalletFunds($privatekey, $amount, $address){
 
-        $url = CHAT_ENDPOINT . '/api/send-wallet-funds';
-       
+        $url = CHAT_ENDPOINT . '/api/transfer-usdt';
+        $key = $privatekey == '' ? WALLET_PRIVATE_KEY : $privatekey;
+        $payload = [
+            'privatekey' => $key,
+            'amount' => $amount, // Amount
+            'toAddress' => $address
+        ];
 
-        $phrase = $this->encryption->decryptFromBase64($mnemonic);
-        //$private = $this->encryption::decryptFromBase64($privateKey);
-        //error_log($phrase);
+        return $this->curlRequest($url, 'POST', $payload);
+
+    }
+
+    public function transferBnB($amount, $address){
+
+        $url = CHAT_ENDPOINT . '/api/transfer-bnb';
 
         $payload = [
-            'mnemonic' => $phrase, // 24 words
-            'toAddress' => FROM_WALLET_ADDRESS, // Destination TON address
-            'amountTon' => $this->makePositive($amount - 0.5), // Amount
-            'apiKey' => TON_API_KEY
+            'privatekey' => WALLET_PRIVATE_KEY,
+            'amount' => $amount, // Amount
+            'toAddress' => $address
+        ];
+
+        return $this->curlRequest($url, 'POST', $payload);
+
+    }
+
+    public function validateBep20WalletAddress($address){
+
+        $url = CHAT_ENDPOINT . '/api/check-address';
+
+        $payload = [
+            'toAddress' => $address
         ];
 
         return $this->curlRequest($url, 'POST', $payload);
@@ -987,23 +1126,22 @@ error_log("Jetton Balance URL: " . $url); // Log for debugging
                 }
             }
 
-            $mnemonic = is_array($walletData['mnemonic']) ? $walletData['mnemonic'][0] : $walletData['mnemonic'];
+            $mnemonic = $walletData['mnemonic']['phrase'];
             // Encrypt sensitive data
             $encryptedData = [
                 'mnemonic' => $this->encryption->encryptToBase64($mnemonic),
                 'privateKey' => $this->encryption->encryptToBase64($walletData['privateKey']),
-                'publicKey' => $this->encryption->encryptToBase64($walletData['publicKey'] ?? ''), // Add fallback
                 'address' => $walletData['address'] ?? '', // Add fallback for ton_address
             ];
 
             // Encrypt and store logic (same as before)...
             $stmt = $this->conn->prepare("
                 INSERT INTO user_wallets 
-                (username, address, public_key, private_key, mnemonic, created_at) 
-                VALUES (?, ?, ?, ?, ?, NOW())
+                (username, address, private_key, mnemonic, created_at) 
+                VALUES (?, ?, ?, ?, NOW())
             ");
 
-            $stmt->bind_param("sssss", $username, $encryptedData['address'], $encryptedData['publicKey'], $encryptedData['privateKey'], $encryptedData['mnemonic']);
+            $stmt->bind_param("ssss", $username, $encryptedData['address'], $encryptedData['privateKey'], $encryptedData['mnemonic']);
             $stmt->execute();
             $stmt->close();
 
@@ -1073,15 +1211,19 @@ error_log("Jetton Balance URL: " . $url); // Log for debugging
     public function fetchJettonTransactions($walletAddress, $limit = 5) {
         //https://toncenter.com/api/v3/jetton/transfers?owner_address=EQBE8dSZuymb3R48z_FR7iQLtDNUVqc-gEhR59yBX20gkO_N&direction=in&limit=10&offset=0&sort=desc
         $apiKey = TON_API_KEY; // Your API key
-        $url = TESTNET ? "https://testnet.tonapi.io/v2/accounts/{$walletAddress}/jettons/history" : "https://tonapi.io/v2/accounts/{$walletAddress}/jettons/history";
+
+        $url = TESTNET ? "https://toncenter.com/api/v3/jetton/transfers" : "https://toncenter.com/api/v3/jetton/transfers";
+
         $params = [
+            'owner_address' => $walletAddress,
+            'direction' => 'in', // or 'out' for outgoing transfers
             'limit' => $limit,
-            'archival' => false // Set to true for old transactions
+            'offset' => 0,
+            'sort' => 'desc'
         ];
 
         $headers = [
-            'Content-Type: application/json',
-            'X-API-Key: ' . $apiKey
+            'Content-Type: application/json'
         ];
 
         $ch = curl_init($url . '?' . http_build_query($params));
@@ -1109,31 +1251,159 @@ error_log("Jetton Balance URL: " . $url); // Log for debugging
             throw new Exception("TonAPI Error ($httpCode): $errorMsg");
         }
 
-        if (!isset($data['operations'])) {
+        if (!isset($data['jetton_transfers'])) {
             throw new Exception("Invalid response format");
         }
 
-        return $data['operations'] ?? [];
+        return $data['jetton_transfers'] ?? [];
     }
 
-    public function confirmWithdrawalTransaction($amount,$id,$hist_id,$address){
+    function saveLastCheckedBlock(string $wallet, int $blockNumber): bool {
+        // Try to update first
+        $stmt = $this->conn->prepare("UPDATE user_wallets SET last_checked_block = ? WHERE address = ?");
+        $stmt->bind_param("is", $blockNumber, $wallet);
+        $stmt->execute();
+
+        if ($stmt->affected_rows === 0) {
+            // No rows updated, insert new record
+            $stmt->close();
+            $stmt = $this->conn->prepare("INSERT INTO user_wallets (address, last_checked_block) VALUES (?, ?)");
+            $stmt->bind_param("si", $wallet, $blockNumber);
+            $result = $stmt->execute();
+            $stmt->close();
+            return $result;
+        }
+
+        $stmt->close();
+        return true;
+    }
+
+
+    function getLatestBlockNumber() {
+        $apiKey = BSC_API_KEY;
+        $url = "https://api.bscscan.com/api?module=proxy&action=eth_blockNumber&apikey=$apiKey";
+        $headers = [
+            'Content-Type: application/json'
+        ];
+
+        $ch = curl_init($url);
+
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPGET => true,
+            CURLOPT_HTTPHEADER => $headers,
+            CURLOPT_TIMEOUT => 10
+        ]);
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
+        curl_close($ch);
+
+        if ($error) {
+            throw new Exception("cURL Error: $error");
+        }
+
+        $data = json_decode($response, true);
+
+        if ($httpCode !== 200 || isset($data['error'])) {
+            $errorMsg = $data['error']['message'] ?? 'Unknown error';
+            throw new Exception("TonAPI Error ($httpCode): $errorMsg");
+        }
+        return hexdec($data['result']);
+    }
+
+    function getLastCheckedBlock(string $wallet): int {
+        $lastCheckedBlock = 0; // Default value if not found
+        $stmt = $this->conn->prepare("SELECT last_checked_block FROM user_wallets WHERE address = ?");
+        $stmt->bind_param("s", $wallet);
+        $stmt->execute();
+        $stmt->bind_result($lastCheckedBlock);
+        if ($stmt->fetch()) {
+            $stmt->close();
+            return (int)$lastCheckedBlock;
+        }
+        $stmt->close();
+        return 0; // default if no record found
+    }
+
+    public function fetchUsdtTransactions($walletAddress, $startBlock, $endBlock, $limit = 5) {
+        $apiKey= BSC_API_KEY; // Your BscScan API key
+        $url = "https://api.bscscan.com/api";
+        $params = [
+            'module' => 'account',
+            'action' => 'tokentx',
+            'contractaddress' => USDT_CONTRACT_ADDRESS, // Replace with actual USDT contract address
+            'address' => $walletAddress,
+            'startblock' => $startBlock,
+            'endblock' => $endBlock,
+            'sort' => 'desc',
+            'page' => 1,
+            'offset' => $limit,
+            'apikey' => $apiKey
+        ];
+
+        $headers = [
+            'Content-Type: application/json'
+        ];
+
+        $ch = curl_init($url . '?' . http_build_query($params));
+
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPGET => true,
+            CURLOPT_HTTPHEADER => $headers,
+            CURLOPT_TIMEOUT => 10
+        ]);
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
+        curl_close($ch);
+
+        if ($error) {
+            throw new Exception("cURL Error: $error");
+        }
+
+        $data = json_decode($response, true);
+
+        if ($httpCode !== 200 || isset($data['error'])) {
+            $errorMsg = $data['error']['message'] ?? 'Unknown error';
+            throw new Exception("TonAPI Error ($httpCode): $errorMsg");
+        }
+
+        if (!isset($data['result']) || !is_array($data['result'])) {
+            return []; // handle error or empty result
+        }
+
+        error_log(print_r($data, true));
+
+        // Filter only incoming transfers
+        $incoming = array_filter($data['result'], function($tx) use ($walletAddress) {
+            return strtolower($tx['to']) === strtolower($walletAddress);
+        });
+
+        // Return up to the requested limit
+        return array_slice(array_values($incoming), 0, $limit);
+
+    }
+
+    public function confirmWithdrawalTransaction($amount,$id,$hash,$username,$address){
 
         $this->conn->begin_transaction();
 
         try {
 
-            $history_details = $this->fetchHistoryDetails($hist_id);
-
             // Update withdrawal status if needed
             $confirmed = "confirmed";
-            $stmt = $this->conn->prepare("UPDATE withdrawal_log SET status = ?, confirmed_at = NOW() WHERE id = ?");
-            $stmt->bind_param("si", $confirmed,$id);
+            $stmt = $this->conn->prepare("UPDATE withdrawal_log SET status = ?, tx_hash = ? confirmed_at = NOW() WHERE id = ?");
+            $stmt->bind_param("sss", $confirmed,$hash,$id);
             $stmt->execute();
             $stmt->close();
 
             $url = $this->getCurrentUrl() . '/transaction_history';
 
-            $this->pushnotification->sendNotification($history_details['username'],'Fund Withdrawal',"Withdrawal of $" . number_format($amount,2) . " to $address was successful", $url);
+            $this->pushnotification->sendNotification($username,'Fund Withdrawal',"Withdrawal of $" . number_format($amount,2) . " to $address was successful", $url);
             
         } catch (Exception $e) {
             $this->conn->rollback();
@@ -1168,7 +1438,7 @@ error_log("Jetton Balance URL: " . $url); // Log for debugging
     }
 
     public function updateLastChecked($walletId){
-        $stmt = $this->conn->prepare("UPDATE user_wallets SET last_checked = NOW() WHERE id = ?");
+        $stmt = $this->conn->prepare("UPDATE user_wallets SET last_checked = NOW() + INTERVAL 5 MINUTE WHERE id = ?");
         $stmt->bind_param("i", $walletId);
         $stmt->execute();
         $stmt->close();
@@ -1179,12 +1449,13 @@ error_log("Jetton Balance URL: " . $url); // Log for debugging
         $this->conn->begin_transaction();
         
         try {
+            
             $date = date('Y-m-d H:i:s');
             // Record funding
             $this->InsertFundingLog($username, $amount, $hash, $sender);
             
             // Add to history
-            $this->InsertHistory($username, $amount, $date, 'credit', "Wallet Funding of $amount TON");
+            $this->InsertHistory($username, $amount, $date, 'credit', "Wallet Funding of $amount USDT from $sender");
         
             
             // Update user balance
@@ -1197,8 +1468,15 @@ error_log("Jetton Balance URL: " . $url); // Log for debugging
             $this->conn->commit();
             
             // Optional: Send notification
-            $this->pushnotification->sendNotification($username, 'Wallet Funding', 'Wallet Funding of $' . number_format($amount,2) . ' has just been credited to your vending wallet', $this->getCurrentUrl());
-            
+                $this->pushnotification->sendCustomNotifications([
+                    [
+                        'username' => $username, // Upper Upline
+                        'title' => 'Wallet Funding',
+                        'body' => 'Wallet Funding of $' . number_format($amount,2) . ' has just been credited to your vending wallet',
+                        'url' => $this->getCurrentUrl()
+                    ],
+                ]);
+
         } catch (Exception $e) {
 
             $this->conn->rollback();

@@ -39,6 +39,8 @@
     <link rel="stylesheet" href="<?php echo $rootUrl ?>/public/assets/css/style.css" id="main-style-link">
     <link rel="stylesheet" href="<?php echo $rootUrl ?>/public/assets/css/style-preset.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/3.28.1/tabler-icons.min.css" integrity="sha512-UuL1Le1IzormILxFr3ki91VGuPYjsKQkRFUvSrEuwdVCvYt6a1X73cJ8sWb/1E726+rfDRexUn528XRdqrSAOw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
     <style>
         body {
             background: #deebf1;
@@ -348,7 +350,7 @@
                     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                         <h3>External Transfer</h3>
                         <div class="alert alert-primary"><i class="ti ti-info-circle"></i>
-                        Transfer funds from your wallet/s to other users wallet, kindly note that transferred funds will drop into the receiving user registration wallet</div>
+                        Enjoy FREE Wallet Transfer To Other Members And Receive Payment In Your Local Currency.</div>
                         <form name="inter_transfer">
                             <div class="form-group mb-3">
                                 <label class="form-label">Receiver Username</label>
