@@ -272,7 +272,7 @@ body {
                         <button class="btn btn-secondary" id="send_code" type="button">Send Code</button>
                     </div>
 
-                    <button class="btn btn-secondary btn-shadow w-100" name="submit" type="submit">Continue</button>
+                    <button class="btn btn-secondary btn-shadow w-100" disabled name="submit" type="submit">Continue</button>
                   </form>
                 </div>
             </div>

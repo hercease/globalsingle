@@ -1,0 +1,8 @@
+2025-05-28 21:39:20: Authentication error: TypeError: "arguments[3]" must be of type "string | Buffer", got object instead.
+    at encodeCommand (/var/www/html/global/public/assets/js/node_modules/@redis/client/dist/lib/RESP/encoder.js:17:19)
+    at RedisCommandsQueue.commandsToWrite (/var/www/html/global/public/assets/js/node_modules/@redis/client/dist/lib/client/commands-queue.js:280:49)
+    at commandsToWrite.next (<anonymous>)
+    at RedisSocket.write (/var/www/html/global/public/assets/js/node_modules/@redis/client/dist/lib/client/socket.js:223:20)
+    at #write (/var/www/html/global/public/assets/js/node_modules/@redis/client/dist/lib/client/index.js:594:22)
+    at Immediate.<anonymous> (/var/www/html/global/public/assets/js/node_modules/@redis/client/dist/lib/client/index.js:601:24)
+    at process.processImmediate (node:internal/timers:483:21)
