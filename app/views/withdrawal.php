@@ -275,7 +275,6 @@ body {
                     </div>
 
                     <button class="btn btn-secondary btn-shadow w-100" name="submit" type="submit">Continue</button>
-                </form>
                 </div>
             </div>
          </div>
@@ -330,86 +329,81 @@ body {
     });
 
     $('#send_code').on('click', function () {
-                    // Save the button element for use in callbacks
-                    const $button = $(this);
-                    // Disable the button and show a spinner
+        const $button = $(this);
 
-                    iziToast.question({
-                        timeout: 20000,
-                        close: false,
-                        overlay: true,
-                        displayMode: 'once',
-                        id: 'question',
-                        title: 'Confirmation',
-                        message: 'Are you sure you want to continue?',
-                        position: 'center',
-                        buttons: [
-                            ['<button><b>Yes</b></button>', function (instance, toast) {
-                                instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
-                                
-                                console.log("Yes clicked");
-                                var spinner = document.querySelector(".loader-container");
-                                $button.prop("disabled", true).html('<i class="fa fa-spinner fa-spin fa-1x fa-fw"></i> Processing...');
-                                // Run your AJAX function here
-                                $.ajax({
-                                    url: 'sendAuthenticationCode', // Replace with your backend endpoint
-                                    type: 'POST', // or 'GET' depending on your API
-                                    dataType: 'json',
-                                    timeout: 10000, // 5 seconds timeout
-                                    success: function (data) {
-                                        // Re-enable the button and reset text
-                                        $button.prop("disabled", false).html('Send Code');
+        iziToast.question({
+            timeout: 20000,
+            close: false,
+            overlay: true,
+            displayMode: 'once',
+            id: 'question',
+            title: 'Confirmation',
+            message: 'Are you sure you want to continue?',
+            position: 'center',
+            buttons: [
+                [
+                    '<button><b>Yes</b></button>',
+                    function (instance, toast) {
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                        
+                        console.log("Yes clicked");
 
-                                        if (data.status === true) {
+                        $button.prop("disabled", true).html('<i class="fa fa-spinner fa-spin fa-1x fa-fw"></i> Processing...');
 
-                                            iziToast.success({ title: 'Success', message: data.message });
+                        $.ajax({
+                            url: 'sendAuthenticationCode', // Replace with actual endpoint
+                            type: 'POST',
+                            dataType: 'json',
+                            timeout: 10000, // 10 seconds
+                            success: function (data) {
+                                $button.prop("disabled", false).html('Send Code');
 
-                                        } else {
-                                            // Enable the submit button and populate the results container
-                                            iziToast.error({ title: 'Error', message: data.message });
-                                        }
-                                    },
-                                        } else {
-                                            // Enable the submit button and populate the results container
-                                            iziToast.error({ title: 'Error', message: data.message });
-                                        }
-                                        // Enable the Continue button after code is sent
-                                        document.getElementById('continueButton').disabled = false;
-                                        if (xhr.status === 0) {
-                                            iziToast.error({
-                                                title: 'Network Error',
-                                                message: 'No internet connection. Please check your network.'
-                                            });
-                                        } else if(status === "timeout") {
-                                            iziToast.error({
-                                                title: 'Error',
-                                                message: 'Oooops, Request timeout, please try again'
-                                            });
-                                        } else {
-                                            iziToast.error({
-                                                title: 'Error',
-                                                message: 'An error occurred: ' + xhr
-                                            });
-                                        }
-                                    }
-                                });
+                                if (data.status === true) {
+                                    iziToast.success({ title: 'Success', message: data.message });
+                                } else {
+                                    iziToast.error({ title: 'Error', message: data.message });
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                $button.prop("disabled", false).html('Send Code');
 
-                            }, true],
-                            ['<button>No</button>', function (instance, toast) {
-                                instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
-                            }]
-                        ],
-                        onClosing: function(instance, toast, closedBy){
-                            console.info('Closing | closedBy: ' + closedBy);
-                        },
-                        onClosed: function(instance, toast, closedBy){
-                            console.info('Closed | closedBy: ' + closedBy);
-                        }
-                    });
-
-            // Perform AJAX request
-           
+                                if (xhr.status === 0) {
+                                    iziToast.error({
+                                        title: 'Network Error',
+                                        message: 'No internet connection. Please check your network.'
+                                    });
+                                } else if (status === "timeout") {
+                                    iziToast.error({
+                                        title: 'Error',
+                                        message: 'Request timeout. Please try again.'
+                                    });
+                                } else {
+                                    iziToast.error({
+                                        title: 'Error',
+                                        message: 'An error occurred: ' + error
+                                    });
+                                }
+                            }
+                        });
+                    },
+                    true
+                ],
+                [
+                    '<button>No</button>',
+                    function (instance, toast) {
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                    }
+                ]
+            ],
+            onClosing: function (instance, toast, closedBy) {
+                console.info('Closing | closedBy: ' + closedBy);
+            },
+            onClosed: function (instance, toast, closedBy) {
+                console.info('Closed | closedBy: ' + closedBy);
+            }
         });
+    });
+
 
   $("form[name='wallet_withdrawal']").validate({
             // Make sure the form is submitted to the destination defined

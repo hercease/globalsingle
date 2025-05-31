@@ -502,8 +502,6 @@
                             type: "POST",
                             url: "generateregpin",
                             data: data,
-                            contentType: false,
-                            processData: false,
                             beforeSend: function () {
                                 submitText.text('Processing...');
                                 spinner.removeClass('d-none');
