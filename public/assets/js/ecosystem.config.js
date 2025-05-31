@@ -1,5 +1,6 @@
 module.exports = {
   apps: [
+    
     {
     name: "socket-server",
     script: "socket_io_server.js", // Your main server file
@@ -17,8 +18,8 @@ module.exports = {
   },
 
     {
-        name: "ton-api",
-        script: "sendTon.js", // Your Express entry file
+        name: "bep-api",
+        script: "sendUsdtBep20.js", // Your Express entry file
         instances: 1, // Typically don't cluster Express unless stateless
         exec_mode: "fork",
         env: {
