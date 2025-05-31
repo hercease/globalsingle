@@ -464,6 +464,7 @@
 
         });
 
+
         $(document).ready(function() {
             // Form submission handling
             $('#reg_pin_form').validate({
@@ -479,8 +480,8 @@
                 
                 // Show loading state
                 
-                const formData = new FormData(form);
-                formData += '&timezone=' + encodeURIComponent(timezone);
+                var data = $("form[name='registration']").serialize();
+                data += '&timezone=' + encodeURIComponent(timezone);
                 
                 // Simulate form submission (replace with actual AJAX call)
                 iziToast.question({
@@ -500,7 +501,7 @@
                         $.ajax({
                             type: "POST",
                             url: "generateregpin",
-                            data: formData,
+                            data: data,
                             contentType: false,
                             processData: false,
                             beforeSend: function () {
