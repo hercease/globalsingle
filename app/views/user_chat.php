@@ -418,7 +418,7 @@
         </div>
 
         <!-- Message Input -->
-        <div class="p-3 border-top bg-white position-sticky bottom-0 bg-white z-3">
+        <div class="p-3 border-top bg-white position-sticky bottom-0 bg-white z-3 chat-footer">
           <div class="input-group">
             <textarea class="form-control chat-input" placeholder="Type a message..." rows="1"></textarea>
             <button class="btn btn-primary send-btn">
@@ -570,6 +570,28 @@
         }, 2000);*/
         
         // You would add more JavaScript here for actual chat functionality
+
+        function adjustChatHeight() {
+            const header = document.querySelector('.chat-header');
+            const footer = document.querySelector('.chat-footer');
+            const chatContainer = document.querySelector('.chat-container');
+
+            if (header && footer && chatContainer) {
+                const headerHeight = header.offsetHeight;
+                const footerHeight = footer.offsetHeight;
+
+                // Calculate available height for chat
+                const availableHeight = window.innerHeight - headerHeight - footerHeight;
+                
+                // Apply to chat container
+                chatContainer.style.height = `${availableHeight}px`;
+                chatContainer.style.overflowY = 'auto'; // Ensure scrolling
+            }
+            }
+
+            // Run on load and when the window resizes (keyboard opens/closes)
+            window.addEventListener('load', adjustChatHeight);
+            window.addEventListener('resize', adjustChatHeight); // Critical for mobile keyboards
     </script>
     
 </body>
