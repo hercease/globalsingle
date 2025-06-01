@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
             loadChats();
         }
 
-        if (document.hidden && message.receiver_id === currentUserId) {
+        if (document.hidden || message.receiver_id === currentUserId) {
             // Request notification permission if not granted
             if (Notification.permission === 'granted') {
               showChatNotification(message);
