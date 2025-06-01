@@ -607,7 +607,8 @@ class Display {
     
             // 2. Exit if no pending withdrawal
             if (!$tx) {
-                return json_encode(['status' => false, 'message' => 'No pending withdrawals.']);
+                return;
+                //return json_encode(['status' => false, 'message' => 'No pending withdrawals.']);
             }
     
             // 3. Begin transaction
@@ -629,11 +630,11 @@ class Display {
                 $this->userModel->confirmWithdrawalTransaction($amount, $tranx_id, $tx_hash, $username, $toAddress);
                 $this->db->commit();
     
-                return json_encode([
+               /* return json_encode([
                     'status' => true,
                     'message' => "Congratulations, withdrawal was successful",
                     'txHash' => $response['txHash'] ?? null
-                ]);
+                ]);*/
             } else {
                 // 6. Mark failed and log reason
                 $errorMessage = $response['error'] ?? json_encode($response);
@@ -646,20 +647,20 @@ class Display {
     
                 $this->db->commit();
     
-                return json_encode([
+               /* return json_encode([
                     'status' => false,
                     'message' => "Withdrawal failed. Please try again later",
                     'error' => $errorMessage
-                ]);
+                ]);*/
             }
     
         } catch (Throwable $th) {
             $this->db->rollback();
             error_log("Withdrawal processing error: " . $th->getMessage());
-            return json_encode([
+            /*return json_encode([
                 'status' => false,
                 'message' => "System error: " . $th->getMessage()
-            ]);
+            ]);*/
         } finally {
             $this->db->close();
         }
