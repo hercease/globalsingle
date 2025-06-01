@@ -3,7 +3,7 @@
     "short_name": "GSL",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "white", 
+    "background_color": "#ffffff00", 
     "theme_color": "#317EFB",
     "orientation": "portrait-primary",
     "icons": [

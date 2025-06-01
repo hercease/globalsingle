@@ -378,7 +378,7 @@
                 <h5 class="modal-title">Reg Pin Gneration</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <form id="reg_pin_form">
+                <form name="reg_pin_form" id="reg_pin_form">
                     <div class="modal-body">
                         <!-- Textarea for reason -->
                         <div class="mb-3">
@@ -464,6 +464,7 @@
 
         });
 
+
         $(document).ready(function() {
             // Form submission handling
             $('#reg_pin_form').validate({
@@ -479,8 +480,8 @@
                 
                 // Show loading state
                 
-                const formData = new FormData(form);
-                formData += '&timezone=' + encodeURIComponent(timezone);
+                var data = $("form[name='reg_pin_form']").serialize();
+                data += '&timezone=' + encodeURIComponent(timezone);
                 
                 // Simulate form submission (replace with actual AJAX call)
                 iziToast.question({
@@ -500,9 +501,7 @@
                         $.ajax({
                             type: "POST",
                             url: "generateregpin",
-                            data: formData,
-                            contentType: false,
-                            processData: false,
+                            data: data,
                             beforeSend: function () {
                                 submitText.text('Processing...');
                                 spinner.removeClass('d-none');
