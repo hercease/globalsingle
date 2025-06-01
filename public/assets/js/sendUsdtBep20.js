@@ -1,5 +1,5 @@
 const { ethers, Mnemonic, Wallet } = require("ethers");
-console.log("Ethers installed! Version:", ethers.version);
+//console.log("Ethers installed! Version:", ethers.version);
 //const wallet = ethers.Wallet.createRandom();
 require('dotenv').config();
 const express = require('express');
