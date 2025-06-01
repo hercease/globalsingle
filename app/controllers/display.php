@@ -131,7 +131,7 @@ class Display {
             $username = $_SESSION['global_single_username'];
             $userInfo = $this->userModel->getUserInfo($username);
             $fetchSponsor = $this->userModel->fetchSponsor($username);
-            if($userInfo['vender_access'] > 0){
+            if($userInfo['vendor_access'] > 0){
 
                 include('app/views/generate_reg_pin.php');
 
