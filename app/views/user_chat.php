@@ -336,9 +336,16 @@
         /* Ensure full height and prevent outer scroll */
 
         /* Chat container scroll */
-        .chat-container {
-        -webkit-overflow-scrolling: touch; /* Smooth iOS scroll */
-        }
+        /* Let the chat container scroll */
+.chat-container {
+  -webkit-overflow-scrolling: touch; /* Smooth iOS scroll */
+}
+
+/* Optional: Prevent layout shift when input is focused */
+.chat-input:focus {
+  position: sticky;
+  bottom: 0;
+}
         
         
     </style>
