@@ -64,7 +64,6 @@
         overflow: hidden;
         }
 
-
         .loader-container {
             position: fixed;
             top: 0;
