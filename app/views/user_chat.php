@@ -79,7 +79,6 @@
         }
         
         .chat-container {
-    height: calc(100vh - 120px); /* Adjust based on header/input height */
     overflow-y: auto;
     -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
     background-color: #f5f5f5;
