@@ -887,3 +887,330 @@ Shutting down gracefully...
 2025-05-31 06:57:38: User v76JT0n-J1u8eWkjAAAa typing to null
 2025-05-31 06:57:38: User v76JT0n-J1u8eWkjAAAa typing to null
 2025-05-31 06:57:38: User v76JT0n-J1u8eWkjAAAa typing to null
+2025-05-31 23:59:29: 
+Shutting down gracefully...
+2025-05-31 23:59:29: 
+Shutting down gracefully...
+2025-05-31 23:59:29: pubClient disconnected
+2025-05-31 23:59:29: pubClient disconnected
+2025-05-31 23:59:29: subClient disconnected
+2025-05-31 23:59:29: redisClient disconnected
+2025-05-31 23:59:29: subClient disconnected
+2025-05-31 23:59:29: redisClient disconnected
+2025-05-31 23:59:29: 
+Shutting down gracefully...
+2025-05-31 23:59:29: pubClient disconnected
+2025-05-31 23:59:29: subClient disconnected
+2025-05-31 23:59:29: redisClient disconnected
+2025-05-31 23:59:29: 
+Shutting down gracefully...
+2025-05-31 23:59:29: pubClient disconnected
+2025-05-31 23:59:29: subClient disconnected
+2025-05-31 23:59:29: redisClient disconnected
+2025-05-31 23:59:30: pubClient connected
+2025-05-31 23:59:30: subClient connected
+2025-05-31 23:59:30: redisClient connected
+2025-05-31 23:59:30: pubClient ready
+2025-05-31 23:59:30: subClient ready
+2025-05-31 23:59:30: redisClient ready
+2025-05-31 23:59:30: pubClient connected
+2025-05-31 23:59:30: Socket.IO server with Redis running on port 7001
+2025-05-31 23:59:30: Allowed origins: https://globalsingleline.singles
+2025-05-31 23:59:30: subClient connected
+2025-05-31 23:59:30: redisClient connected
+2025-05-31 23:59:30: pubClient ready
+2025-05-31 23:59:30: subClient ready
+2025-05-31 23:59:30: redisClient ready
+2025-05-31 23:59:30: Socket.IO server with Redis running on port 7001
+2025-05-31 23:59:30: Allowed origins: https://globalsingleline.singles
+2025-05-31 23:59:30: pubClient connected
+2025-05-31 23:59:30: subClient connected
+2025-05-31 23:59:30: redisClient connected
+2025-05-31 23:59:30: pubClient ready
+2025-05-31 23:59:30: subClient ready
+2025-05-31 23:59:30: redisClient ready
+2025-05-31 23:59:30: Socket.IO server with Redis running on port 7001
+2025-05-31 23:59:30: Allowed origins: https://globalsingleline.singles
+2025-05-31 23:59:30: pubClient connected
+2025-05-31 23:59:30: subClient connected
+2025-05-31 23:59:30: redisClient connected
+2025-05-31 23:59:30: pubClient ready
+2025-05-31 23:59:30: subClient ready
+2025-05-31 23:59:30: redisClient ready
+2025-05-31 23:59:30: Socket.IO server with Redis running on port 7001
+2025-05-31 23:59:30: Allowed origins: https://globalsingleline.singles
+2025-06-01 00:13:11: 
+Shutting down gracefully...
+2025-06-01 00:13:11: 
+Shutting down gracefully...
+2025-06-01 00:13:11: pubClient disconnected
+2025-06-01 00:13:11: pubClient disconnected
+2025-06-01 00:13:11: subClient disconnected
+2025-06-01 00:13:11: subClient disconnected
+2025-06-01 00:13:11: redisClient disconnected
+2025-06-01 00:13:11: redisClient disconnected
+2025-06-01 00:13:11: 
+Shutting down gracefully...
+2025-06-01 00:13:11: pubClient disconnected
+2025-06-01 00:13:11: 
+Shutting down gracefully...
+2025-06-01 00:13:11: pubClient disconnected
+2025-06-01 00:13:11: subClient disconnected
+2025-06-01 00:13:11: redisClient disconnected
+2025-06-01 00:13:12: pubClient connected
+2025-06-01 00:13:12: subClient connected
+2025-06-01 00:13:12: redisClient connected
+2025-06-01 00:13:12: pubClient ready
+2025-06-01 00:13:12: subClient ready
+2025-06-01 00:13:12: redisClient ready
+2025-06-01 00:13:12: Socket.IO server with Redis running on port 7001
+2025-06-01 00:13:12: Allowed origins: https://globalsingleline.singles
+2025-06-01 00:13:12: pubClient connected
+2025-06-01 00:13:12: subClient connected
+2025-06-01 00:13:12: redisClient connected
+2025-06-01 00:13:12: pubClient ready
+2025-06-01 00:13:12: subClient ready
+2025-06-01 00:13:12: redisClient ready
+2025-06-01 00:13:12: Socket.IO server with Redis running on port 7001
+2025-06-01 00:13:12: Allowed origins: https://globalsingleline.singles
+2025-06-01 00:13:12: pubClient connected
+2025-06-01 00:13:12: subClient connected
+2025-06-01 00:13:12: redisClient connected
+2025-06-01 00:13:12: pubClient ready
+2025-06-01 00:13:12: subClient ready
+2025-06-01 00:13:12: redisClient ready
+2025-06-01 00:13:12: Socket.IO server with Redis running on port 7001
+2025-06-01 00:13:12: Allowed origins: https://globalsingleline.singles
+2025-06-01 00:13:12: pubClient connected
+2025-06-01 00:13:12: subClient connected
+2025-06-01 00:13:12: redisClient connected
+2025-06-01 00:13:12: pubClient ready
+2025-06-01 00:13:12: subClient ready
+2025-06-01 00:13:12: redisClient ready
+2025-06-01 00:13:12: Socket.IO server with Redis running on port 7001
+2025-06-01 00:13:12: Allowed origins: https://globalsingleline.singles
+2025-06-01 00:17:51: 
+Shutting down gracefully...
+2025-06-01 00:17:51: pubClient disconnected
+2025-06-01 00:17:51: subClient disconnected
+2025-06-01 00:17:51: redisClient disconnected
+2025-06-01 00:17:51: 
+Shutting down gracefully...
+2025-06-01 00:17:51: pubClient disconnected
+2025-06-01 00:17:51: subClient disconnected
+2025-06-01 00:17:51: redisClient disconnected
+2025-06-01 00:17:51: 
+Shutting down gracefully...
+2025-06-01 00:17:51: pubClient disconnected
+2025-06-01 00:17:51: subClient disconnected
+2025-06-01 00:17:51: 
+Shutting down gracefully...
+2025-06-01 00:17:51: pubClient disconnected
+2025-06-01 00:17:51: subClient disconnected
+2025-06-01 00:17:51: redisClient disconnected
+2025-06-01 00:17:52: pubClient connected
+2025-06-01 00:17:52: subClient connected
+2025-06-01 00:17:52: redisClient connected
+2025-06-01 00:17:52: pubClient ready
+2025-06-01 00:17:52: subClient ready
+2025-06-01 00:17:52: redisClient ready
+2025-06-01 00:17:52: Socket.IO server with Redis running on port 7001
+2025-06-01 00:17:52: Allowed origins: https://globalsingleline.singles
+2025-06-01 00:17:52: pubClient connected
+2025-06-01 00:17:52: subClient connected
+2025-06-01 00:17:52: redisClient connected
+2025-06-01 00:17:52: pubClient ready
+2025-06-01 00:17:52: subClient ready
+2025-06-01 00:17:52: redisClient ready
+2025-06-01 00:17:52: Socket.IO server with Redis running on port 7001
+2025-06-01 00:17:52: Allowed origins: https://globalsingleline.singles
+2025-06-01 00:17:52: pubClient connected
+2025-06-01 00:17:52: subClient connected
+2025-06-01 00:17:52: redisClient connected
+2025-06-01 00:17:52: pubClient ready
+2025-06-01 00:17:52: subClient ready
+2025-06-01 00:17:52: redisClient ready
+2025-06-01 00:17:52: Socket.IO server with Redis running on port 7001
+2025-06-01 00:17:52: Allowed origins: https://globalsingleline.singles
+2025-06-01 00:17:52: pubClient connected
+2025-06-01 00:17:52: subClient connected
+2025-06-01 00:17:52: redisClient connected
+2025-06-01 00:17:52: pubClient ready
+2025-06-01 00:17:52: subClient ready
+2025-06-01 00:17:52: redisClient ready
+2025-06-01 00:17:52: Socket.IO server with Redis running on port 7001
+2025-06-01 00:17:52: Allowed origins: https://globalsingleline.singles
+2025-06-01 00:29:16: 
+Shutting down gracefully...
+2025-06-01 00:29:16: pubClient disconnected
+2025-06-01 00:29:16: subClient disconnected
+2025-06-01 00:29:16: redisClient disconnected
+2025-06-01 00:29:16: 
+Shutting down gracefully...
+2025-06-01 00:29:16: pubClient disconnected
+2025-06-01 00:29:16: subClient disconnected
+2025-06-01 00:29:16: redisClient disconnected
+2025-06-01 00:29:16: 
+Shutting down gracefully...
+2025-06-01 00:29:16: pubClient disconnected
+2025-06-01 00:29:16: subClient disconnected
+2025-06-01 00:29:16: redisClient disconnected
+2025-06-01 00:29:16: 
+Shutting down gracefully...
+2025-06-01 00:29:16: pubClient disconnected
+2025-06-01 00:29:16: subClient disconnected
+2025-06-01 00:29:16: redisClient disconnected
+2025-06-01 00:29:17: pubClient connected
+2025-06-01 00:29:17: subClient connected
+2025-06-01 00:29:17: redisClient connected
+2025-06-01 00:29:17: pubClient ready
+2025-06-01 00:29:17: subClient ready
+2025-06-01 00:29:17: redisClient ready
+2025-06-01 00:29:17: Socket.IO server with Redis running on port 7001
+2025-06-01 00:29:17: pubClient connected
+2025-06-01 00:29:17: Allowed origins: https://globalsingleline.singles
+2025-06-01 00:29:17: subClient connected
+2025-06-01 00:29:17: redisClient connected
+2025-06-01 00:29:17: pubClient ready
+2025-06-01 00:29:17: subClient ready
+2025-06-01 00:29:17: redisClient ready
+2025-06-01 00:29:17: Socket.IO server with Redis running on port 7001
+2025-06-01 00:29:17: Allowed origins: https://globalsingleline.singles
+2025-06-01 00:29:17: pubClient connected
+2025-06-01 00:29:17: subClient connected
+2025-06-01 00:29:17: redisClient connected
+2025-06-01 00:29:17: pubClient ready
+2025-06-01 00:29:17: subClient ready
+2025-06-01 00:29:17: redisClient ready
+2025-06-01 00:29:17: Socket.IO server with Redis running on port 7001
+2025-06-01 00:29:17: Allowed origins: https://globalsingleline.singles
+2025-06-01 00:29:17: pubClient connected
+2025-06-01 00:29:17: subClient connected
+2025-06-01 00:29:17: redisClient connected
+2025-06-01 00:29:17: pubClient ready
+2025-06-01 00:29:17: subClient ready
+2025-06-01 00:29:17: redisClient ready
+2025-06-01 00:29:17: Socket.IO server with Redis running on port 7001
+2025-06-01 00:29:17: Allowed origins: https://globalsingleline.singles
+2025-06-01 00:33:04: 
+Shutting down gracefully...
+2025-06-01 00:33:04: pubClient disconnected
+2025-06-01 00:33:04: subClient disconnected
+2025-06-01 00:33:04: 
+Shutting down gracefully...
+2025-06-01 00:33:04: pubClient disconnected
+2025-06-01 00:33:04: subClient disconnected
+2025-06-01 00:33:04: redisClient disconnected
+2025-06-01 00:33:04: 
+Shutting down gracefully...
+2025-06-01 00:33:04: pubClient disconnected
+2025-06-01 00:33:04: 
+Shutting down gracefully...
+2025-06-01 00:33:04: pubClient disconnected
+2025-06-01 00:33:04: subClient disconnected
+2025-06-01 00:33:05: pubClient connected
+2025-06-01 00:33:05: subClient connected
+2025-06-01 00:33:05: redisClient connected
+2025-06-01 00:33:05: pubClient ready
+2025-06-01 00:33:05: subClient ready
+2025-06-01 00:33:05: redisClient ready
+2025-06-01 00:33:05: Socket.IO server with Redis running on port 7001
+2025-06-01 00:33:05: Allowed origins: https://globalsingleline.singles
+2025-06-01 00:33:05: pubClient connected
+2025-06-01 00:33:05: pubClient connected
+2025-06-01 00:33:05: subClient connected
+2025-06-01 00:33:05: redisClient connected
+2025-06-01 00:33:05: subClient connected
+2025-06-01 00:33:05: redisClient connected
+2025-06-01 00:33:05: pubClient ready
+2025-06-01 00:33:05: subClient ready
+2025-06-01 00:33:05: redisClient ready
+2025-06-01 00:33:05: Socket.IO server with Redis running on port 7001
+2025-06-01 00:33:05: Allowed origins: https://globalsingleline.singles
+2025-06-01 00:33:05: pubClient ready
+2025-06-01 00:33:05: subClient ready
+2025-06-01 00:33:05: redisClient ready
+2025-06-01 00:33:05: Socket.IO server with Redis running on port 7001
+2025-06-01 00:33:05: Allowed origins: https://globalsingleline.singles
+2025-06-01 00:33:05: pubClient connected
+2025-06-01 00:33:05: subClient connected
+2025-06-01 00:33:05: redisClient connected
+2025-06-01 00:33:05: pubClient ready
+2025-06-01 00:33:05: subClient ready
+2025-06-01 00:33:05: redisClient ready
+2025-06-01 00:33:05: Socket.IO server with Redis running on port 7001
+2025-06-01 00:33:05: Allowed origins: https://globalsingleline.singles
+2025-06-01 09:00:26: New connection: l24QsgvVl7x39Wt9AAAB
+2025-06-01 09:00:26: User 14 connected
+2025-06-01 09:00:28: User l24QsgvVl7x39Wt9AAAB typing to null
+2025-06-01 09:00:28: User l24QsgvVl7x39Wt9AAAB typing to null
+2025-06-01 09:00:28: User l24QsgvVl7x39Wt9AAAB typing to null
+2025-06-01 09:00:28: User l24QsgvVl7x39Wt9AAAB typing to null
+2025-06-01 09:00:29: User l24QsgvVl7x39Wt9AAAB typing to null
+2025-06-01 09:00:29: User l24QsgvVl7x39Wt9AAAB typing to null
+2025-06-01 09:00:29: User l24QsgvVl7x39Wt9AAAB typing to null
+2025-06-01 09:00:29: User l24QsgvVl7x39Wt9AAAB typing to null
+2025-06-01 09:00:30: User l24QsgvVl7x39Wt9AAAB typing to null
+2025-06-01 09:00:30: User l24QsgvVl7x39Wt9AAAB typing to null
+2025-06-01 09:00:30: User l24QsgvVl7x39Wt9AAAB typing to null
+2025-06-01 09:00:31: User l24QsgvVl7x39Wt9AAAB typing to null
+2025-06-01 09:03:51: New connection: P1COUDmlHERoHZT0AAAB
+2025-06-01 09:03:51: User 13 connected
+2025-06-01 09:03:54: User P1COUDmlHERoHZT0AAAB typing to l24QsgvVl7x39Wt9AAAB
+2025-06-01 09:03:54: User P1COUDmlHERoHZT0AAAB typing to l24QsgvVl7x39Wt9AAAB
+2025-06-01 09:03:54: User P1COUDmlHERoHZT0AAAB typing to l24QsgvVl7x39Wt9AAAB
+2025-06-01 09:03:54: User P1COUDmlHERoHZT0AAAB typing to l24QsgvVl7x39Wt9AAAB
+2025-06-01 09:03:55: User P1COUDmlHERoHZT0AAAB typing to l24QsgvVl7x39Wt9AAAB
+2025-06-01 09:03:55: User P1COUDmlHERoHZT0AAAB typing to l24QsgvVl7x39Wt9AAAB
+2025-06-01 09:03:55: User P1COUDmlHERoHZT0AAAB typing to l24QsgvVl7x39Wt9AAAB
+2025-06-01 09:03:55: Message Received from: 14
+2025-06-01 09:03:56: User P1COUDmlHERoHZT0AAAB typing to l24QsgvVl7x39Wt9AAAB
+2025-06-01 09:03:56: User P1COUDmlHERoHZT0AAAB typing to l24QsgvVl7x39Wt9AAAB
+2025-06-01 09:03:56: User P1COUDmlHERoHZT0AAAB typing to l24QsgvVl7x39Wt9AAAB
+2025-06-01 09:03:56: User P1COUDmlHERoHZT0AAAB typing to l24QsgvVl7x39Wt9AAAB
+2025-06-01 09:03:56: User P1COUDmlHERoHZT0AAAB typing to l24QsgvVl7x39Wt9AAAB
+2025-06-01 09:03:57: User P1COUDmlHERoHZT0AAAB typing to l24QsgvVl7x39Wt9AAAB
+2025-06-01 09:03:57: User P1COUDmlHERoHZT0AAAB typing to l24QsgvVl7x39Wt9AAAB
+2025-06-01 09:03:57: User P1COUDmlHERoHZT0AAAB typing to l24QsgvVl7x39Wt9AAAB
+2025-06-01 09:03:58: User P1COUDmlHERoHZT0AAAB typing to l24QsgvVl7x39Wt9AAAB
+2025-06-01 09:03:58: User P1COUDmlHERoHZT0AAAB typing to l24QsgvVl7x39Wt9AAAB
+2025-06-01 09:03:58: User P1COUDmlHERoHZT0AAAB typing to l24QsgvVl7x39Wt9AAAB
+2025-06-01 09:03:58: User P1COUDmlHERoHZT0AAAB typing to l24QsgvVl7x39Wt9AAAB
+2025-06-01 09:03:59: User P1COUDmlHERoHZT0AAAB typing to l24QsgvVl7x39Wt9AAAB
+2025-06-01 09:03:59: User P1COUDmlHERoHZT0AAAB typing to l24QsgvVl7x39Wt9AAAB
+2025-06-01 09:04:00: User P1COUDmlHERoHZT0AAAB typing to l24QsgvVl7x39Wt9AAAB
+2025-06-01 09:04:00: User P1COUDmlHERoHZT0AAAB typing to l24QsgvVl7x39Wt9AAAB
+2025-06-01 09:04:03: Message Received from: 13
+2025-06-01 09:04:16: User l24QsgvVl7x39Wt9AAAB typing to P1COUDmlHERoHZT0AAAB
+2025-06-01 09:04:16: User l24QsgvVl7x39Wt9AAAB typing to P1COUDmlHERoHZT0AAAB
+2025-06-01 09:04:16: User l24QsgvVl7x39Wt9AAAB typing to P1COUDmlHERoHZT0AAAB
+2025-06-01 09:04:16: User l24QsgvVl7x39Wt9AAAB typing to P1COUDmlHERoHZT0AAAB
+2025-06-01 09:04:17: User l24QsgvVl7x39Wt9AAAB typing to P1COUDmlHERoHZT0AAAB
+2025-06-01 09:04:17: User l24QsgvVl7x39Wt9AAAB typing to P1COUDmlHERoHZT0AAAB
+2025-06-01 09:04:17: User l24QsgvVl7x39Wt9AAAB typing to P1COUDmlHERoHZT0AAAB
+2025-06-01 09:04:17: User l24QsgvVl7x39Wt9AAAB typing to P1COUDmlHERoHZT0AAAB
+2025-06-01 09:04:19: Message Received from: 14
+2025-06-01 09:05:52: New connection: 7xW8dV0EWbPda2DfAAAB
+2025-06-01 09:05:52: User 13 connected
+2025-06-01 09:06:23: New connection: qFsYmaaeyleodf_BAAAB
+2025-06-01 09:06:24: User 13 connected
+2025-06-01 09:10:46: New connection: i4sdNf5-Mnd010IUAAAD
+2025-06-01 09:10:46: User 14 connected
+2025-06-01 09:11:06: New connection: uII4QXccCRBwLD1BAAAD
+2025-06-01 09:11:06: User 14 connected
+2025-06-01 09:13:11: New connection: ozy1qvq_NNaN3dfZAAAD
+2025-06-01 09:13:11: User 13 connected
+2025-06-01 09:13:13: User ozy1qvq_NNaN3dfZAAAD typing to uII4QXccCRBwLD1BAAAD
+2025-06-01 09:13:13: User ozy1qvq_NNaN3dfZAAAD typing to uII4QXccCRBwLD1BAAAD
+2025-06-01 09:13:18: New connection: S8YJ0GbXkOegBYNEAAAD
+2025-06-01 09:13:18: User 13 connected
+2025-06-01 09:13:42: Message Received from: 13
+2025-06-01 09:14:13: New connection: RUscbbfhx6SLHtvaAAAF
+2025-06-01 09:14:13: User 13 connected
+2025-06-01 09:14:34: User uII4QXccCRBwLD1BAAAD typing to RUscbbfhx6SLHtvaAAAF
+2025-06-01 09:14:34: User uII4QXccCRBwLD1BAAAD typing to RUscbbfhx6SLHtvaAAAF
+2025-06-01 09:14:35: User uII4QXccCRBwLD1BAAAD typing to RUscbbfhx6SLHtvaAAAF
+2025-06-01 09:14:35: User uII4QXccCRBwLD1BAAAD typing to RUscbbfhx6SLHtvaAAAF
+2025-06-01 09:14:38: Message Received from: 14
+2025-06-01 09:26:07: New connection: w5-toa2HBGHZVyYzAAAF
+2025-06-01 09:26:07: User 14 connected
