@@ -74,10 +74,11 @@
         }
         
         .chat-container {
-            height: 70vh;
-            overflow-y: auto;
-            background-color: #f5f5f5;
-        }
+  flex-grow: 1;
+  overflow-y: auto;
+  background-color: #f5f5f5;
+  padding: 15px;
+}
         .message {
             max-width: 70%;
             margin-bottom: 15px;
@@ -124,12 +125,16 @@
             z-index: 1;
             }
             .chat-header {
+            position: sticky;
+            top: 0;
             background-color: #ffffff;
-            border-bottom: 1px solid #e9ecef;
+            z-index: 10;
             padding: 10px 15px;
+            border-bottom: 1px solid #e9ecef;
             display: flex;
             align-items: center;
             }
+
             .avatar {
             width: 40px;
             height: 40px;
@@ -332,6 +337,10 @@
             font-size: 0.8rem;
             color: #6c757d;
         }
+
+        .col-md-9 {
+        height: 100dvh; /* or min-height */
+        }
         
     </style>
     <script>
@@ -382,7 +391,7 @@
       </div>
 
       <!-- Chat Area -->
-      <div class="col-md-9 p-0 d-flex flex-column">
+      <div class="col-md-9 p-0 d-flex min-vh-100 flex-column">
         <!-- Chat Header (With Mobile Menu Button) -->
         <div class="chat-header">
            <button class="back-button" id="backButton">
