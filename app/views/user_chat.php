@@ -124,7 +124,6 @@
             z-index: 1;
             }
             html, body {
-            height: 100%;
             overflow: hidden; /* Prevent body scroll */
             }
 
