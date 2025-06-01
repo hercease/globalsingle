@@ -59,6 +59,12 @@
             background-position: center center; /* Centers the image */
         }
 
+        html, body {
+        height: 100%;
+        overflow: hidden;
+        }
+
+
         .loader-container {
             position: fixed;
             top: 0;
