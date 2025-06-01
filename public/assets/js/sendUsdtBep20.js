@@ -9,6 +9,7 @@ app.use(express.json());
 // Configuration
 
 // Usage with environment variables
+
 const rpcUrls = [
   `https://rpc.ankr.com/bsc/${process.env.BSC_API_KEY}`, // "https://rpc.ankr.com/bsc/YOUR_KEY"
   "https://bsc-dataseed.binance.org/",
