@@ -332,6 +332,17 @@
             font-size: 0.8rem;
             color: #6c757d;
         }
+
+        /* Ensure full height and prevent outer scroll */
+        html, body, .row.h-100 {
+        height: 100vh;
+        overflow: hidden; /* Critical for mobile keyboard */
+        }
+
+        /* Chat container scroll */
+        .chat-container {
+        -webkit-overflow-scrolling: touch; /* Smooth iOS scroll */
+        }
         
         
     </style>
