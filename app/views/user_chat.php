@@ -399,7 +399,7 @@
       <!-- Chat Area -->
       <div class="col-md-9 p-0 d-flex flex-column vh-100">
         <!-- Chat Header (With Mobile Menu Button) -->
-        <div class="chat-header position-sticky top-0 bg-white z-3">
+        <div class="chat-header fixed-top bg-white z-3">
            <button class="back-button" id="backButton">
                 <i class="fas fa-arrow-left"></i>
             </button>
