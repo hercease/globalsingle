@@ -74,10 +74,15 @@
         }
         
         .chat-container {
-            height: 70vh;
-            overflow-y: auto;
-            background-color: #f5f5f5;
-        }
+  flex-grow: 1;
+  overflow-y: auto;
+  background-color: #f5f5f5;
+  padding: 15px;
+}
+
+.col-md-9 {
+  min-height: 100dvh; /* or min-height */
+}
         .message {
             max-width: 70%;
             margin-bottom: 15px;
@@ -124,9 +129,12 @@
             z-index: 1;
             }
             .chat-header {
+            position: sticky;
+            top: 0;
             background-color: #ffffff;
-            border-bottom: 1px solid #e9ecef;
+            z-index: 10;
             padding: 10px 15px;
+            border-bottom: 1px solid #e9ecef;
             display: flex;
             align-items: center;
             }
@@ -382,7 +390,7 @@
       </div>
 
       <!-- Chat Area -->
-      <div class="col-md-9 p-0 d-flex flex-column">
+      <div class="col-md-9 d-flex flex-column min-vh-100 p-0">
         <!-- Chat Header (With Mobile Menu Button) -->
         <div class="chat-header">
            <button class="back-button" id="backButton">
@@ -419,6 +427,7 @@
           </div>
         </div>
       </div>
+
     </div>
   </div>
     
@@ -426,6 +435,7 @@
     <!-- Required Js -->
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="<?php echo $rootUrl ?>/public/assets/js/plugins/jquery.js"></script>
+    <script src="<?php echo $rootUrl ?>/public/assets/js/node_modules/socket.io/client-dist/socket.io.js"></script>
     <script src="<?php echo $rootUrl ?>/public/assets/js/plugins/popper.min.js"></script>
     <script src="<?php echo $rootUrl ?>/public/assets/js/plugins/simplebar.min.js"></script>
     <script src="<?php echo $rootUrl ?>/public/assets/js/plugins/bootstrap.min.js"></script>
@@ -435,7 +445,7 @@
     <script src="<?php echo $rootUrl ?>/public/assets/js/plugins/feather.min.js"></script>
     <script src="https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox-window.prod.mjs" type="module"></script>
     <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
-    <script src="<?php echo $rootUrl ?>/public/assets/js/node_modules/socket.io/client-dist/socket.io.js"></script>
+    
     <script src="<?php echo $rootUrl ?>/sw.js"></script>
     <script src="<?php echo $rootUrl ?>/public/assets/js/app.js"></script>
     <script src="<?php echo $rootUrl ?>/public/assets/js/chat.js"></script>
@@ -461,80 +471,9 @@
             // Alternative: history.back() to go to previous page
         });
 
-        function loadChats() {
-            $.ajax({
-                url: '../fetchchathistory',
-                type: 'POST',
-                dataType: 'json',
-                success: function(response) {
-                    if (response.success) {
-                        renderChats(response.chats);
-                    } else {
-                        console.error('Error loading chats:', response.message);
-                        $('#chat-list').html('<div class="alert alert-danger">Error loading conversations</div>');
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('AJAX error:', error);
-                    $('#chat-list').html('<div class="alert alert-danger">Connection error</div>');
-                }
-            });
-        }
-
-        // Render chats to the UI
-        function renderChats(chats) {
-            const chatList = $('#chat-list');
-            chatList.empty();
-
-            if (chats.length === 0) {
-                chatList.html('<div class="text-center py-4 text-muted">No conversations yet</div>');
-                return;
-            }
-
-            chats.forEach(chat => {
-                const unreadBadge = chat.unread_count > 0 
-                    ? `<span class="badge bg-primary rounded-pill">${chat.unread_count}</span>`
-                    : '';
-
-                const chatItem = `
-                <a href="#" class="list-group-item list-group-item-action p-3 mb-2 bg-white chat-card" data-user-id="${chat.user_id}">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="d-flex align-items-center">
-                            <img src="<?php echo $rootUrl ?>/public/assets/images/user/${chat.avatar || 'https://via.placeholder.com/50'}" alt="${chat.username}" class="avatar me-3">
-                            <div>
-                                <h6 class="mb-0">${chat.username}</h6>
-                                <p class="mb-0 text-muted small">${chat.last_message || 'No messages yet'}</p>
-                            </div>
-                        </div>
-                        <div class="text-end">
-                            <span class="timestamp d-block">${formatTime(chat.last_message_time)}</span>
-                            ${unreadBadge}
-                        </div>
-                    </div>
-                </a>
-                `;
-                chatList.append(chatItem);
-            });
-
-            // Add click event to load specific chat
-            $('.chat-card').on('click', function(e) {
-                e.preventDefault();
-                const userId = $(this).data('user-id');
-               window.location.href= `${userId}`
-            });
-        }
-
-        // Format timestamp
-        function formatTime(timestamp) {
-            if (!timestamp) return '';
-            const date = new Date(timestamp);
-            return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        }
+        
 
         // Initial load
-        $(document).ready(function() {
-            loadChats();
-        });
         // Auto-scroll to bottom of chat
         /*const chatMessages = document.querySelector('.chat-messages');
         chatMessages.scrollTop = chatMessages.scrollHeight;

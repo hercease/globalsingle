@@ -52,6 +52,78 @@ document.addEventListener('DOMContentLoaded', function() {
         //loadMessages();
 
         loadOlderMessages();
+        loadChats();
+    }
+
+    function loadChats() {
+        $.ajax({
+            url: '../fetchchathistory',
+            type: 'POST',
+            dataType: 'json',
+            success: function(response) {
+                console.log("chat list", response);
+                if (response.success) {
+                    renderChats(response.chats);
+                } else {
+                    console.error('Error loading chats:', response.message);
+                    $('#chat-list').html('<div class="alert alert-danger">Error loading conversations</div>');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX error:', error);
+                $('#chat-list').html('<div class="alert alert-danger">Connection error</div>');
+            }
+        });
+    }
+
+    // Render chats to the UI
+    function renderChats(chats) {
+        const chatList = $('#chat-list');
+        chatList.empty();
+
+        if (chats.length === 0) {
+            chatList.html('<div class="text-center py-4 text-muted">No conversations yet</div>');
+            return;
+        }
+
+        chats.forEach(chat => {
+            const unreadBadge = chat.unread_count > 0 
+                ? `<span class="badge bg-primary rounded-pill">${chat.unread_count}</span>`
+                : '';
+
+            const chatItem = `
+            <a href="#" class="list-group-item list-group-item-action p-3 mb-2 bg-white chat-card" data-user-id="${chat.user_id}">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <img src="${url}/public/assets/images/user/${chat.avatar || 'https://via.placeholder.com/50'}" alt="${chat.username}" class="avatar me-3">
+                        <div>
+                            <h6 class="mb-0">${chat.username}</h6>
+                            <p class="mb-0 text-muted small">${chat.last_message || 'No messages yet'}</p>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <span class="timestamp d-block">${formatTime(chat.last_message_time)}</span>
+                        ${unreadBadge}
+                    </div>
+                </div>
+            </a>
+            `;
+            chatList.append(chatItem);
+        });
+
+        // Add click event to load specific chat
+        $('.chat-card').on('click', function(e) {
+            e.preventDefault();
+            const userId = $(this).data('user-id');
+           window.location.href= `${userId}`
+        });
+    }
+
+    // Format timestamp
+    function formatTime(timestamp) {
+        if (!timestamp) return '';
+        const date = new Date(timestamp);
+        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     }
 
     // Initialize Socket.IO connection
@@ -96,9 +168,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }*/
 
             loadChats();
+
         }
 
-        if (document.hidden || message.receiver_id === currentUserId) {
+        if (document.hidden || message.receiver_id === otherUserId) {
             // Request notification permission if not granted
             if (Notification.permission === 'granted') {
               showChatNotification(message);

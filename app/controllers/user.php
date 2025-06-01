@@ -1605,7 +1605,7 @@
                     if (!empty($user)) {
                         // Registered user
                         $row['username'] = $user['username'] ?? 'Unknown';
-                        $row['avatar'] = $user['avatar'] ;
+                        $row['avatar'] = $user['avatar'];
                     } else {
                         // Guest user
                         $row['username'] = 'Guest #' . $chatUserId;
