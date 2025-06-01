@@ -59,10 +59,10 @@
             background-position: center center; /* Centers the image */
         }
 
-        html, body {
-        height: 100%;
-        overflow: hidden;
-        }
+        body, html {
+    height: 100%;
+    overflow: hidden;
+}
 
         .loader-container {
             position: fixed;
@@ -79,10 +79,10 @@
         }
         
         .chat-container {
-  flex-grow: 1;
-  overflow-y: auto;
-  background-color: #f5f5f5;
-  padding: 15px;
+    height: calc(100vh - 120px); /* Adjust based on header/input height */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    background-color: #f5f5f5;
 }
         .message {
             max-width: 70%;
@@ -130,14 +130,14 @@
             z-index: 1;
             }
             .chat-header {
-            position: sticky;
-            top: 0;
-            background-color: #ffffff;
-            z-index: 10;
-            padding: 10px 15px;
-            border-bottom: 1px solid #e9ecef;
-            display: flex;
-            align-items: center;
+                position: sticky;
+                top: 0;
+                z-index: 1000; /* Ensure it stays above other elements */
+                background-color: #ffffff;
+                border-bottom: 1px solid #e9ecef;
+                padding: 10px 15px;
+                display: flex;
+                align-items: center;
             }
 
             .avatar {
@@ -346,6 +346,12 @@
         .col-md-9 {
         height: 100dvh; /* or min-height */
         }
+
+        .p-3.border-top.bg-white {
+    position: sticky;
+    bottom: 0;
+    background: white;
+}
         
     </style>
     <script>
