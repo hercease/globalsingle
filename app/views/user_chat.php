@@ -123,12 +123,21 @@
             position: relative;
             z-index: 1;
             }
+            html, body {
+            height: 100%;
+            overflow: hidden; /* Prevent body scroll */
+            }
+
             .chat-header {
-            background-color: #ffffff;
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+            background-color: #fff;
             border-bottom: 1px solid #e9ecef;
             padding: 10px 15px;
             display: flex;
             align-items: center;
+            gap: 10px;
             }
             .avatar {
             width: 40px;
@@ -337,8 +346,11 @@
 
         /* Chat container scroll */
         /* Let the chat container scroll */
-.chat-container {
-  -webkit-overflow-scrolling: touch; /* Smooth iOS scroll */
+        .chat-container {
+  height: calc(100dvh - 130px); /* 100dvh minus header + input height */
+  padding: 1rem;
+  background-color: #f5f5f5;
+  overflow-y: auto;
 }
 
 /* Optional: Prevent layout shift when input is focused */
@@ -346,6 +358,8 @@
   position: sticky;
   bottom: 0;
 }
+
+
         
         
     </style>
