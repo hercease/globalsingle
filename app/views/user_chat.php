@@ -334,10 +334,6 @@
         }
 
         /* Ensure full height and prevent outer scroll */
-        html, body, .row.h-100 {
-        height: 100vh;
-        overflow: hidden; /* Critical for mobile keyboard */
-        }
 
         /* Chat container scroll */
         .chat-container {
