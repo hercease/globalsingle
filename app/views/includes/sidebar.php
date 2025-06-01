@@ -105,13 +105,6 @@
         <?php if($userInfo['vendor_access'] === 0){ ?>
 
           <li class="pc-item">
-            <a href="<?php echo $rootUrl ?>/generate_reg_pin" class="pc-link">
-              <span class="pc-micon"><i class="ti ti-exchange"></i></span>
-              <span class="pc-mtext">Generate Reg PIN</span>
-            </a>
-          </li>
-
-          <li class="pc-item">
             <a href="<?php echo $rootUrl ?>/vendors" class="pc-link">
               <span class="pc-micon"><i class="ti ti-wallet"></i></span>
               <span class="pc-mtext">Buy Reg wallet</span>
@@ -119,6 +112,13 @@
           </li>
 
         <?php } else { ?>
+
+          <li class="pc-item">
+            <a href="<?php echo $rootUrl ?>/generate_reg_pin" class="pc-link">
+              <span class="pc-micon"><i class="ti ti-exchange"></i></span>
+              <span class="pc-mtext">Generate Reg PIN</span>
+            </a>
+          </li>
 
           <li class="pc-item">
             <a href="<?php echo $rootUrl ?>/fund_wallet" class="pc-link">
