@@ -107,7 +107,7 @@
           <li class="pc-item">
             <a href="<?php echo $rootUrl ?>/generate_reg_pin" class="pc-link">
               <span class="pc-micon"><i class="ti ti-exchange"></i></span>
-              <span class="pc-mtext">Generate Reg Pins</span>
+              <span class="pc-mtext">Generate Reg PIN</span>
             </a>
           </li>
 
