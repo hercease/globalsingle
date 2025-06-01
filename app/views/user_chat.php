@@ -59,11 +59,6 @@
             background-position: center center; /* Centers the image */
         }
 
-        body, html {
-    height: 100%;
-    overflow: hidden;
-}
-
         .loader-container {
             position: fixed;
             top: 0;
@@ -79,10 +74,10 @@
         }
         
         .chat-container {
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-    background-color: #f5f5f5;
-}
+            height: 70vh;
+            overflow-y: auto;
+            background-color: #f5f5f5;
+        }
         .message {
             max-width: 70%;
             margin-bottom: 15px;
@@ -129,16 +124,12 @@
             z-index: 1;
             }
             .chat-header {
-                position: sticky;
-                top: 0;
-                z-index: 1000; /* Ensure it stays above other elements */
-                background-color: #ffffff;
-                border-bottom: 1px solid #e9ecef;
-                padding: 10px 15px;
-                display: flex;
-                align-items: center;
+            background-color: #ffffff;
+            border-bottom: 1px solid #e9ecef;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
             }
-
             .avatar {
             width: 40px;
             height: 40px;
@@ -341,16 +332,7 @@
             font-size: 0.8rem;
             color: #6c757d;
         }
-
-        .col-md-9 {
-        height: 100dvh; /* or min-height */
-        }
-
-        .p-3.border-top.bg-white {
-    position: sticky;
-    bottom: 0;
-    background: white;
-}
+        
         
     </style>
     <script>
@@ -401,9 +383,9 @@
       </div>
 
       <!-- Chat Area -->
-      <div class="col-md-9 p-0  h-100 d-flex flex-column">
+      <div class="col-md-9 p-0 d-flex flex-column">
         <!-- Chat Header (With Mobile Menu Button) -->
-        <div class="chat-header position-sticky top-0 bg-white z-3">
+        <div class="chat-header">
            <button class="back-button" id="backButton">
                 <i class="fas fa-arrow-left"></i>
             </button>
@@ -421,12 +403,15 @@
         </div>
 
         <!-- Messages Container -->
-        <div class="chat-container flex-grow-1 overflow-auto p-2">
+        <div class="chat-container p-3 flex-grow-1">
           <!-- Date Group: Today -->
           
+
+
         </div>
+
         <!-- Message Input -->
-        <div class="p-3 border-top bg-white position-sticky bottom-0 bg-white z-3">
+        <div class="p-3 border-top bg-white">
           <div class="input-group">
             <textarea class="form-control chat-input" placeholder="Type a message..." rows="1"></textarea>
             <button class="btn btn-primary send-btn">
@@ -435,7 +420,6 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
     
