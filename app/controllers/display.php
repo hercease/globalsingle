@@ -591,7 +591,7 @@ class Display {
     public function checkAndUpdateWithdrawals() {
         try {
             // 1. Get a pending withdrawal request
-            $query = "SELECT wl.id, wl.tx_id, wl.tranx_id, wl.amount, wl.to_address, h.username 
+            $query = "SELECT wl.id, wl.tx_hash, wl.tranx_id, wl.amount, wl.to_address, h.username 
                       FROM withdrawal_log wl
                       JOIN tranx_history h ON wl.tranx_id = h.id
                       WHERE wl.status = 'pending'
@@ -617,7 +617,7 @@ class Display {
             $toAddress = $tx['to_address'];
             $tranx_id = $tx['id'];
             $username = $tx['username'];
-            $tx_hash = $tx['txHash'];
+            $tx_hash = $tx['tx_hash'];
     
             // 4. Send funds using internal method
             $response = $this->userModel->transferWalletFunds('', $amount, $toAddress);
