@@ -1682,8 +1682,8 @@
                 throw new Exception("Minimum withdrawal is $10");
             }
 
-            if((int)$amount < (int)$amount + 1){
-                throw new Exception("Insufficinet earning wallet balance");
+            if((int)$amount < 10){
+                throw new Exception("Sorry, minimum withdrawal is $10");
             }
 
             if($retrievedCode != $code){
