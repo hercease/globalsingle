@@ -402,9 +402,9 @@
       </div>
 
       <!-- Chat Area -->
-      <div class="col-md-9 p-0 d-flex min-vh-100 flex-column">
+      <div class="col-md-9 p-0  h-100 d-flex flex-column">
         <!-- Chat Header (With Mobile Menu Button) -->
-        <div class="chat-header">
+        <div class="chat-header position-sticky top-0 bg-white z-3">
            <button class="back-button" id="backButton">
                 <i class="fas fa-arrow-left"></i>
             </button>
@@ -422,15 +422,12 @@
         </div>
 
         <!-- Messages Container -->
-        <div class="chat-container p-3 flex-grow-1">
+        <div class="chat-container flex-grow-1 overflow-auto p-2">
           <!-- Date Group: Today -->
           
-
-
         </div>
-
         <!-- Message Input -->
-        <div class="p-3 border-top bg-white">
+        <div class="p-3 border-top bg-white position-sticky bottom-0 bg-white z-3">
           <div class="input-group">
             <textarea class="form-control chat-input" placeholder="Type a message..." rows="1"></textarea>
             <button class="btn btn-primary send-btn">
@@ -439,6 +436,7 @@
           </div>
         </div>
       </div>
+
     </div>
   </div>
     
