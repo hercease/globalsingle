@@ -126,11 +126,18 @@ class Display {
         }
         // Check if the session variable is set
         if (isset($_SESSION['global_single_username'])) {
+            
 
             $username = $_SESSION['global_single_username'];
             $userInfo = $this->userModel->getUserInfo($username);
             $fetchSponsor = $this->userModel->fetchSponsor($username);
-            include('app/views/generate_reg_pin.php');
+            if($userInfo['vender_access'] > 0){
+
+                include('app/views/generate_reg_pin.php');
+
+            } else {
+                include('app/views/404.php');
+            }
 
         } else {
 
