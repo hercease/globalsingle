@@ -330,8 +330,7 @@
         </form>
         </div>
 
-        
-
+    
         <div class="auth-footer row">
           <!-- <div class=""> -->
             <div class="col my-1">
