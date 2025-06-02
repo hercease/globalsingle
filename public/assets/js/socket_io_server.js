@@ -249,10 +249,12 @@ io.on('connection', (socket) => {
   socket.on('send-message', async (data) => {
     try {
       const receiverSocketId = await getUserSocket(data.receiver_id);
+      const status = receiverSocketId ? true : false;
       if (receiverSocketId) {
         io.to(receiverSocketId).emit('new-message', {
           ...data,
-          receiver_id: fromRedisId(data.receiver_id) // Convert back
+          receiver_id: fromRedisId(data.receiver_id), // Convert back
+          offlineStatus: status,
         });
       }
     } catch (err) {

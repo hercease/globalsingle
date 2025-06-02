@@ -180,6 +180,11 @@ switch ($url) {
             $DisplayController->showChatSupport($rootUrl);
         }
         break;
+    case '/homepage':
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $DisplayController->showHomepage($rootUrl);
+        }
+        break;
     case '/processRegistration':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo $Usercontroller->processRegistration();
@@ -313,6 +318,11 @@ switch ($url) {
     case '/generateregpin':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo $Usercontroller->generateRegPin();
+        }
+        break;
+    case '/sendchatnotification':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            echo $Usercontroller->sendChatNotification();
         }
         break;
     default:

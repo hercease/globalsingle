@@ -1052,6 +1052,7 @@
             if (stripos($description, 'Referral Bonus') !== false) return 'fa-bolt';
             if (stripos($description, 'Reward') !== false) return 'fa-users';
             if (stripos($description, 'Wallet transfer') !== false) return 'fa-wallet';
+            if (stripos($description, 'Registration Rebate') !== false) return 'fa-bolt';
             
             return $icons[$type] ?? 'fa-exchange-alt';
 
@@ -1089,6 +1090,28 @@
                 'status' => 'completed'
             ]);
 
+        }
+
+        public function sendNotification(){
+
+            header('Content-Type: application/json');
+
+            // Get the raw POST data
+            $json = file_get_contents('php://input');
+            $data = json_decode($json, true);
+            $content = $data['content'];
+
+            $receiverId = $data['receiver_id'];
+            $userInfo = $this->userModel->getUserInfo($receiverId);
+            $username = !$userInfo ? 'Guest' : $userInfo['username'];
+            $this->pushnotification->sendCustomNotifications([
+                [
+                    'username' => $username, // Upline
+                    'title' => 'New Message Alert',
+                    'body' => $content,
+                    'url' => $this->userModel->getCurrentUrl() . '/chat/'. $receiverId
+                ],
+            ]);
         }
 
     
@@ -1735,7 +1758,7 @@
                     $addresses[] = $wallet_info['address'];
                    
 
-                    $url = "http://localhost:3000/api/batch-balances"; // Change to your Node.js endpoint
+                    $url = CHAT_ENDPOINT . "/api/batch-balances";// Change to your Node.js endpoint
                     $postData = ['addresses' => $addresses];
     
                     $ch = curl_init($url);
@@ -2173,16 +2196,26 @@
                     throw new Exception("Insufficient wallet balance");
                 }
 
-                $this->userModel->generatePins($username, (int)$input['pin_no']);
+                $generate_pin = $this->userModel->generatePins($username, (int)$input['pin_no']);
+                $date = date("Y-m-d H:i:s");
 
-                $stmt = $this->db->prepare("UPDATE members SET reg_wallet = reg_wallet - ? WHERE username = ?");
-                $stmt->bind_param("ds", $reg_balance,$username);
-                $stmt->execute();
-                $stmt->close();
+                if($generate_pin['status']===true){
 
-                return json_encode(["status" => true, "message" => "Pin was generated successfully"]);
+                    $this->userModel->InsertHistory($username, $amount, $date, 'debit', 'Generation of ' .$input['pin_no']. 'registration pins');
 
+                    $stmt = $this->db->prepare("UPDATE members SET reg_wallet = reg_wallet - ? WHERE username = ?");
+                    $stmt->bind_param("ds", $amount,$username);
+                    $stmt->execute();
+                    $stmt->close();
 
+                    return json_encode(["status" => true, "message" => $generate_pin['message']]);
+
+                } else {
+
+                    throw new Exception($generate_pin['message']);
+
+                }
+                
             } catch (Exception $th) {
 
                 return json_encode([
@@ -2190,6 +2223,26 @@
                     'message' => $th->getMessage()
                 ]);
             }
+        }
+
+        public function sendChatNotification(){
+
+            header('Content-Type: application/json');
+            $data = json_decode(file_get_contents('php://input'), true);
+
+            $receiver_id = $data['receiver_id'];
+            $userInfo = $this->userModel->getUserInfo($receiver_id);
+
+            $this->pushnotification->sendCustomNotifications([
+                [
+                    'username' => $userInfo['username'], // Upline
+                    'title' => 'New Message Alert!',
+                    'body' => 'Dear ' .$userInfo['username']. ', You got a new message',
+                    'url' => $this->userModel->getCurrentUrl() . '/user/'. $data['sender_id']
+                ]
+            ]);
+
+
         }
 
         

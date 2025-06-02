@@ -25,6 +25,10 @@ class Display {
         include('app/views/login.php');
     }
 
+    public function showHomepage($rootUrl) {
+        include('app/views/homepage.php');
+    }
+
     public function showForgotPasswordPage($rootUrl) {
         include('app/views/forgot_password.php');
     }

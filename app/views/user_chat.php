@@ -420,7 +420,7 @@
             <img src="<?php echo $rootUrl ?>/public/assets/images/user/<?php echo $userdetails['avatar'] ?>" alt="<?php echo $userdetails['username'] ?>" class="avatar">
           <div>
             <h5 class="mb-0 text-capitalize"><?php echo $userdetails['username']  ?></h5>
-            <small class="text-muted">Online</small>
+            <small class="text-muted" id="user-status-text">Offline</small>
           </div>
           <div class="ms-auto">
              <button class="btn mobile-menu-btn me-2" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">

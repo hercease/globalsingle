@@ -54,6 +54,19 @@ document.addEventListener('DOMContentLoaded', function() {
         loadOlderMessages();
     }
 
+    // Example: Set user status dynamically
+    function setUserStatus(isOnline) {
+        const statusEl = document.getElementById('user-status-text');
+        if (!statusEl) return;
+
+        statusEl.textContent = isOnline ? 'Online' : 'Offline';
+        
+        // Optionally, change the style too
+        statusEl.classList.toggle('text-success', isOnline);
+        statusEl.classList.toggle('text-danger', !isOnline);
+    }
+
+
     // Initialize Socket.IO connection
    
     socket = io(window.env.CHAT_ENDPOINT, {
@@ -79,36 +92,63 @@ document.addEventListener('DOMContentLoaded', function() {
     socket.on('connect_error', (err) => {
         //console.error('Connection error:', err);
     });
+
+    /*socket.on('user-status', (data) => {
+        //console.log(data);
+        console.log(`User ${data.userId} is now ${data.online ? 'online' : 'offline'}`);
+        // Update UI accordingly, e.g., green dot for online
+        if (data.userId === otherUserId) {
+            setUserStatus(data.online);
+        }
+    });*/
+
+    socket.on('user-status', ({ userId, online }) => {
+        if (userId === otherUserId) {
+          if (online) {
+            setUserStatus(online);
+          } else {
+            setUserStatus(online);
+          }
+        }
+    });
     
 
     // New message received
     socket.on('new-message', (message) => {
         //console.log(message);
-        if ((message.sender_id === otherUserId && message.receiver_id === currentUserId) || 
-            (message.sender_id === currentUserId && message.receiver_id === otherUserId)) {
-
+    
+        const isRelevant =
+            (message.sender_id === otherUserId && message.receiver_id === currentUserId) ||
+            (message.sender_id === currentUserId && message.receiver_id === otherUserId);
+    
+        if (isRelevant) {
+            setUserStatus(message.offlineStatus); // Set user online/offline status
             addMessageToUI(message, message.sender_id === currentUserId);
             scrollToBottom();
-            
-            // Mark as read if we're the receiver
-            /*if (message.receiver_id === currentUserId) {
-                markAsRead(message.id);
-            }*/
-
             loadChats();
-        }
-
-        if (document.hidden && message.receiver_id === currentUserId) {
-            // Request notification permission if not granted
-            if (Notification.permission === 'granted') {
-              showChatNotification(message);
-            } else if (Notification.permission !== 'denied') {
-              Notification.requestPermission().then(permission => {
-                if (permission === 'granted') showChatNotification(message);
-              });
+    
+            // Only notify if the user is online and it's relevant
+            if (message.offlineStatus === false) {
+                sendNotification(message);
             }
-          }
+        }
+    
+        // Browser push notification (only if we're the receiver and not focused)
+        if (message.receiver_id === currentUserId && !document.hasFocus()) {
+            if (Notification.permission === 'granted') {
+                showChatNotification(message);
+            } else if (Notification.permission !== 'denied') {
+                Notification.requestPermission()
+                    .then(permission => {
+                        if (permission === 'granted') showChatNotification(message);
+                    })
+                    .catch(err => {
+                        console.error('Notification permission error:', err);
+                    });
+            }
+        }
     });
+    
 
     const observer = new IntersectionObserver((entries, obs) => {
         entries.forEach(entry => {
@@ -360,6 +400,22 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => {
             messageInput.disabled = false;
             //console.error('Error saving message:', error);
+        });
+
+    }
+
+    function sendNotification(message) {
+
+        fetch(`${url}/sendchatnotification`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(message)
+        })
+        .then(response => response.json())
+        .catch(error => {
+            console.error('Error sending notification:', error);
         });
 
     }
