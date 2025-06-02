@@ -44,8 +44,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/3.28.1/tabler-icons.min.css" integrity="sha512-UuL1Le1IzormILxFr3ki91VGuPYjsKQkRFUvSrEuwdVCvYt6a1X73cJ8sWb/1E726+rfDRexUn528XRdqrSAOw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     
     <style>
-
-body {
+        body {
             background: #deebf1;
             background-size: cover;
             background-blend-mode: overlay;
@@ -267,7 +266,7 @@ body {
                 100% { transform: scale(1); }
                 }
                 .support-icon {
-                animation: pulse 2s infinite;
+                    animation: pulse 2s infinite;
                 }
         
 

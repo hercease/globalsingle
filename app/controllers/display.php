@@ -152,6 +152,7 @@ class Display {
     }
 
    public function showSupportPage($rootUrl){
+    
         if (session_status() === PHP_SESSION_NONE){
             session_start();
         }
@@ -284,8 +285,11 @@ class Display {
 
         $username = $_SESSION['global_single_username'] ?? '';
         $userInfo = $this->userModel->getUserInfo($username);
-        if(empty($userInfo)){
+        if(empty($userInfo) || !isset($_SESSION['guest_id'])){
             $userInfo = ['username' => 'Guest', 'avatar' => 'avatar-1.jpg', 'id' => $_SESSION['guest_id']];
+        }else{
+            header("Location: $rootUrl/login");
+            exit();
         }
 
 
