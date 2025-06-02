@@ -40,6 +40,7 @@
     <link rel="stylesheet" href="<?php echo $rootUrl ?>/public/assets/css/style.css" id="main-style-link" >
     <link rel="stylesheet" href="<?php echo $rootUrl ?>/public/assets/css/style-preset.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
        body {
             background: #deebf1;
@@ -308,12 +309,14 @@
               </select>
             </div>
 
+            <div class="mb-3 position-relative">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" class="form-control" name="password" id="password" placeholder="Enter your password">
+              <i class="bi bi-eye-slash" id="togglePassword" style="position: absolute; top: 38px; right: 15px; cursor: pointer;"></i>
+            </div>
+
             <input name="country" id="country" type="hidden" value="">
             
-            <div class="form-group mb-3">
-              <label class="form-label">Password</label>
-              <input type="password" name="password" required class="form-control" placeholder="Password">
-            </div>
             <div class="form-group mb-3">
               <label class="form-label">Repeat Password</label>
               <input type="password" name="repeat_password" required class="form-control" placeholder="Password">
@@ -493,6 +496,19 @@
         
             
             }
+        });
+
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#password');
+
+        togglePassword.addEventListener('click', function () {
+          // Toggle the type attribute
+          const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+          password.setAttribute('type', type);
+
+          // Toggle the icon
+          this.classList.toggle('bi-eye');
+          this.classList.toggle('bi-eye-slash');
         });
 
   </script>
