@@ -251,17 +251,17 @@
                         $date = date('Y-m-d H:i:s');
 
                         // Update paying wallet
-                        $sql = $this->db->prepare("UPDATE members SET reg_wallet = reg_wallet - ? WHERE username = ?");
+                        /*$sql = $this->db->prepare("UPDATE members SET reg_wallet = reg_wallet - ? WHERE username = ?");
                         $sql->bind_param("ds", $reg_fee, $input['wallet_username']);
                         if (!$sql->execute()) {
                             throw new Exception("Failed to debit registration wallet");
                         }
-                        $sql->close();
+                        $sql->close();*/
 
                         $this->userModel->sendmail($input['email'],$input['username'],$message,"Registration Confirmation");
 
                         // Insert Transaction history for paying wallet
-                        $this->userModel->InsertHistory($input['wallet_username'], $reg_fee, $date, 'debit', 'Registration Fee for ' . $input['username']);
+                        //$this->userModel->InsertHistory($input['wallet_username'], $reg_fee, $date, 'debit', 'Registration Fee for ' . $input['username']);
 
                         // Update sponsor wallet
                         $sql = $this->db->prepare("UPDATE members SET earning_wallet = earning_wallet + ? WHERE username = ?");
@@ -300,12 +300,6 @@
                         $sql->close();
 
                         $this->pushnotification->sendCustomNotifications([
-                            [
-                                'username' => $input['wallet_username'], // Upline
-                                'title' => 'Debit Alert!',
-                                'body' => 'Dear ' .$input['wallet_username']. ', The sum of $'. $reg_fee .' has just been deducted from your registration wallet',
-                                'url' => $this->userModel->getCurrentUrl()
-                            ],
                             [
                                 'username' => $input['bonus_username'], // Upper Upline
                                 'title' => 'Credit Alert',
