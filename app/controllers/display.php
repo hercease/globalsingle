@@ -605,6 +605,9 @@ class Display {
 
 
     public function checkAndUpdateWithdrawals() {
+         // 3. Begin transaction
+         $this->db->begin_transaction();
+
         try {
             // 1. Get a pending withdrawal request
             $query = "SELECT wl.id, wl.tx_hash, wl.tranx_id, wl.amount, wl.to_address, h.username 
@@ -626,9 +629,6 @@ class Display {
                 return;
                 //return json_encode(['status' => false, 'message' => 'No pending withdrawals.']);
             }
-    
-            // 3. Begin transaction
-            $this->db->begin_transaction();
     
             $amount = $tx['amount'];
             $toAddress = $tx['to_address'];
@@ -677,9 +677,7 @@ class Display {
                 'status' => false,
                 'message' => "System error: " . $th->getMessage()
             ]);*/
-        } finally {
-            $this->db->close();
-        }
+        } 
     }
     
 
