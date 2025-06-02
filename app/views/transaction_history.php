@@ -242,6 +242,40 @@
                 0%, 100% { opacity: 1; }
                 50% { opacity: 0; }
             }
+
+            .support-icon {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+                background-color: #3498db; /* Adjust color */
+                color: white;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-decoration: none;
+                font-size: 24px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+                z-index: 9999;
+                transition: transform 0.3s, background-color 0.3s;
+                }
+
+                .support-icon:hover {
+                transform: scale(1.1);
+                background-color: #2980b9; /* Darker shade on hover */
+                }
+
+                /* Optional: Animation */
+                @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.1); }
+                100% { transform: scale(1); }
+                }
+                .support-icon {
+                animation: pulse 2s infinite;
+                }
         
     </style>
     <script>
