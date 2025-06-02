@@ -346,7 +346,7 @@
         /* Chat container scroll */
         /* Let the chat container scroll */
         .chat-container {
-  height: calc(100dvh - 150px); /* 100dvh minus header + input height */
+  height: calc(100dvh - 130px); /* 100dvh minus header + input height */
   padding: 1rem;
   background-color: #f5f5f5;
   overflow-y: auto;
