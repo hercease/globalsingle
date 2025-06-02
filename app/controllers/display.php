@@ -274,28 +274,35 @@ class Display {
         if (session_status() === PHP_SESSION_NONE){
             session_start();
         }
-        
-    
-        $userdetails = $this->userModel->getUserInfo($Id);
-        if(empty($userdetails)){
-            $userdetails = ['username' => 'Guest', 'avatar' => 'avatar-1.jpg', 'id' => $Id];
-        }
-        // Display the homepage
-    
 
-        $username = $_SESSION['global_single_username'] ?? '';
-        $userInfo = $this->userModel->getUserInfo($username);
-        if(empty($userInfo) || !isset($_SESSION['guest_id'])){
-            header("Location: $rootUrl/login");
-            exit();
+        if(isset($_SESSION['global_single_username'])){
+
+            $userdetails = $this->userModel->getUserInfo($Id);
+            if(empty($userdetails)){
+
+                $userInfo = ['username' => 'Guest', 'avatar' => 'avatar-1.jpg', 'id' => $Id];
+
+            }
+            $userInfo = $this->userModel->getUserInfo($_SESSION['global_single_username']);
+
         } else {
-            $userInfo = ['username' => 'Guest', 'avatar' => 'avatar-1.jpg', 'id' => $_SESSION['guest_id']];
-        }
 
+            if(isset($_SESSION['guest_id'])){
+
+                $guest_id = $_SESSION['global_single_username'];
+
+            } else {
+
+                $guest_id = $this->userModel->generateGuestId();
+                
+            }
+
+            $userdetails = $this->userModel->getUserInfo($Id);
+            $userInfo = ['username' => 'Guest', 'avatar' => 'avatar-1.jpg', 'id' => $guest_id];
+        }
 
         require_once 'app/views/user_chat.php';
 
-        
     }
 
             /*if(isset($_SESSION['global_single_username'])){
