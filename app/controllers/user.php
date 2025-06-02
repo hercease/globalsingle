@@ -29,7 +29,7 @@
                     }
                     
                     // Fields to process
-                    $requiredFields = ['username', 'password', 'registration_pin', 'repeat_password', 'bonus_username', 'email', 'sponsor', 'country', 'wallet_username', 'wallet_password', 'gender'];
+                    $requiredFields = ['username', 'password', 'registration_pin', 'repeat_password', 'bonus_username', 'email', 'sponsor', 'country', 'gender'];
                     $input = [];
                     $referral_bonus = 2;
                     $indirect_referral_bonus = 0.5;
