@@ -56,12 +56,12 @@
                     $userInfo = $this->userModel->getUserInfo($input['username']);
 
                     // fetch sponsor info
-                    $sponsorInfo = $this->userModel->getUserInfo($input['sponsor']);
+                
 
                     $stageInfo = $this->userModel->getStageInfo($sponsorInfo['stage'] ?? 1);
 
                     //error_log(print_r($stageInfo, true));
-                    $countdownlines = $this->userModel->countDownlines($input['sponsor'], $sponsorInfo['stage']);
+                  
                     $checkpin = $this->userModel->checkpin($input['registration_pin']);
                     //error_log(print_r($countdownlines, true));
                     if(!$checkpin['exists'] || $checkpin['status'] === 1) {
@@ -74,8 +74,9 @@
                         throw new Exception("Bonus username does not exist");
                     }
 
+
                     // fetch wallet username info
-                    $walletInfo = $this->userModel->getUserInfo($input['wallet_username']);
+                    /*$walletInfo = $this->userModel->getUserInfo($input['wallet_username']);
                     if (!$walletInfo) {
                         throw new Exception("Invalid wallet username or password");
                     }
@@ -91,7 +92,7 @@
                     // check wallet balance if its greater than or equal to the registration fee
                     if ($walletInfo['reg_wallet'] < $reg_fee) {
                         throw new Exception("Insufficient registration wallet balance");
-                    }
+                    }*/
 
                     if(!preg_match("/^[a-zA-Z0-9_]+$/", $input['username'])){
                         throw new Exception("Username can only be alpanumeric");
@@ -100,6 +101,13 @@
                     // Check if sponsor exists (if provided)
                     if (!$this->userModel->getUserInfo($input['sponsor'])) {
                         throw new Exception("Sponsor username does not exist");
+                    }
+
+                    $sponsorInfo = $this->userModel->getUserInfo($input['sponsor']);
+                    $countdownlines = $this->userModel->countDownlines($input['sponsor'], $sponsorInfo['stage']);
+                    
+                    if ($stageInfo['downlines'] === $countdownlines['total']) {
+                        return json_encode(["status" => false, "message" => "Sponsor has reached the maximum number of downlines for their present stage"]);
                     }
             
                     // Check if username already exists
