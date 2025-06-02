@@ -66,6 +66,37 @@
         transform: translateY(-2px);
         box-shadow: 0 4px 15px rgba(255,255,255,0.3);
         }
+
+          /* Custom styles for transparent overlay */
+          .carousel-item {
+      height: 500px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    .carousel-item::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5); /* Overlay */
+      z-index: 1;
+    }
+
+    .carousel-caption {
+      z-index: 2;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .carousel-caption h1,
+    .carousel-caption p {
+      color: #fff;
+      display: inline-block;
+    }
     </style>
 </head>
 <body>
@@ -95,34 +126,40 @@
     <!-- Hero Section with Transparent Overlay -->
     <section class="hero position-relative overflow-hidden">
     <!-- Background Image with Transparency -->
-    <div class="hero-bg" style="
-        background: url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') center/cover no-repeat;
-        opacity: 0.15;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 1;
-    "></div>
-
-        <!-- Content Overlay -->
-        <div class="container position-relative z-2 text-center py-5" style="
-            padding-top: 100px !important;
-            padding-bottom: 100px !important;
-        ">
-            <h1 class="display-4 fw-bold mb-4 text-white">Build Your Empire With Our MLM Platform</h1>
-            <p class="lead mb-5 text-white-75">Join 10,000+ entrepreneurs earning passive income</p>
-            <div class="d-flex justify-content-center gap-3">
-            <a href="#" class="btn btn-light btn-lg px-4">Get Started</a>
+        <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+        <!-- Slide 1 -->
+        <div class="carousel-item active" style="background-image: url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');">
+            <div class="carousel-caption">
+            <h1>Welcome to Smallyfares</h1>
+            <p>Your smart travel partner</p>
             </div>
         </div>
+        <!-- Slide 2 -->
+        <div class="carousel-item" style="background-image: url('https://source.unsplash.com/1600x900/?airplane');">
+            <div class="carousel-caption">
+            <h1>Book Flights & Hotels</h1>
+            <p>Fast, reliable and affordable</p>
+            </div>
+        </div>
+        <!-- Slide 3 -->
+        <div class="carousel-item" style="background-image: url('https://source.unsplash.com/1600x900/?beach,resort');">
+            <div class="carousel-caption">
+            <h1>Explore the World</h1>
+            <p>Discover amazing destinations</p>
+            </div>
+        </div>
+        </div>
 
-        <!-- Blue Gradient Overlay (Primary Color) -->
-        <div class="position-absolute top-0 start-0 w-100 h-100" style="
-            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-            z-index: 0;
-        "></div>
+        <!-- Carousel controls -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        </button>
+    </div>
+
     </section>
 
     <!-- Features Section -->
@@ -415,6 +452,7 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/8.2.0/mdb.umd.min.js" integrity="sha512-XaBF6KP9xEbPjS0vTWwV3ETXS4EBvYPIkvEPX7B4QcStZEj6JEesGUEHMhbZMH3aaoSmCzXFoZxWBK/GTa2tBw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
 // Your PHP data converted to JavaScript
@@ -537,6 +575,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Initialize with first stage
   updateStageDetails(stages[0]);
+
+  document.addEventListener('DOMContentLoaded', function() {
+            const carousel = new mdb.Carousel(document.getElementById('materialCarousel'), {
+                touch: true,
+                interval: 5000,
+                pause: 'hover'
+            });
+            
+            // Add smooth transition effect
+            document.querySelectorAll('.carousel-item').forEach(item => {
+                item.style.transition = 'transform 0.6s ease-in-out';
+            });
+        });
 });
 </script>
 </body>

@@ -286,10 +286,10 @@ class Display {
         $username = $_SESSION['global_single_username'] ?? '';
         $userInfo = $this->userModel->getUserInfo($username);
         if(empty($userInfo) || !isset($_SESSION['guest_id'])){
-            $userInfo = ['username' => 'Guest', 'avatar' => 'avatar-1.jpg', 'id' => $_SESSION['guest_id']];
-        }else{
             header("Location: $rootUrl/login");
             exit();
+        } else {
+            $userInfo = ['username' => 'Guest', 'avatar' => 'avatar-1.jpg', 'id' => $_SESSION['guest_id']];
         }
 
 
