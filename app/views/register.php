@@ -311,7 +311,7 @@
 
             <div class="mb-3 position-relative">
               <label for="password" class="form-label">Password</label>
-              <input type="password" class="form-control" name="password" id="password" placeholder="Enter your password">
+              <input type="password" class="form-control" required name="password" id="password" placeholder="Enter your password">
               <i class="bi bi-eye-slash" id="togglePassword" style="position: absolute; top: 38px; right: 15px; cursor: pointer;"></i>
             </div>
 
