@@ -283,10 +283,10 @@ class usersModel {
     }
 
 
-    public function fetchAdmins(){
+    public function fetchAdmins($username){
         $one = 1;
-        $stmt = $this->conn->prepare("SELECT id, username FROM members WHERE admin_access = ?");
-        $stmt->bind_param("i", $one);
+        $stmt = $this->conn->prepare("SELECT id, username, task FROM members WHERE admin_access = ? and username != ?");
+        $stmt->bind_param("is", $one,$username);
         $stmt->execute();
         $result = $stmt->get_result();
         if ($result->num_rows > 0) {

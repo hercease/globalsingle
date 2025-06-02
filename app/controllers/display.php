@@ -177,7 +177,8 @@ class Display {
              
             $userInfo = $this->userModel->getUserInfo($username);
             $fetchSponsor = $this->userModel->fetchSponsor($username);
-            $fetchAdmin = $this->userModel->fetchAdmins();
+            $fetchAdmin = $this->userModel->fetchAdmins('globalsingle');
+        
         
             include('app/views/help.php');
 

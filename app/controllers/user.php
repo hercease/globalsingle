@@ -2188,7 +2188,7 @@
                     }
                 }
 
-                $amount = $input['pin_no'] * 9;
+                $amount = $input['pin_no'] * 10;
                 $userInfo = $this->userModel->getUserInfo($username);
                 $reg_balance = $userInfo['reg_wallet'];
 

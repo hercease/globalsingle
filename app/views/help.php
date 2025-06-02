@@ -378,7 +378,7 @@
             <!-- Chat List -->
             <div class="chat-list">
                 <!-- Chat Item 1 (Unread) -->
-                 <?php foreach($fetchAdmin as $admin){?>
+                 <?php foreach($fetchAdmin as $admin){ ?>
 
                     <div class="transaction-item d-flex align-items-center unread-chat" onclick="window.location.href='/chat/<?php echo $admin['id'] ?>'">
                         <div class="transaction-icon bg-primary bg-opacity-10 text-primary">
@@ -386,7 +386,7 @@
                         </div>
                         <div class="ms-3 flex-grow-1">
                             <h6 class="mb-1 text-capitalize"><?php echo $admin['username'] ?></h6>
-                            <p class="text-muted mb-0">For enquiries/Service related matter</p>
+                            <p class="text-muted mb-0"><?php echo $admin['task'] ?></p>
                         </div>
                     </div>
 

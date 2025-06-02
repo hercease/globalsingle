@@ -485,7 +485,7 @@
 
          document.getElementById('backButton').addEventListener('click', function() {
             // Replace with your actual dashboard URL or navigation logic
-            window.location.href = '../dashboard'; 
+            window.location.href = '../my_chats'; 
             // Alternative: history.back() to go to previous page
         });
 
