@@ -12,13 +12,13 @@
     <meta name="robots" content="index, follow">
     <meta property="og:title" content="Vendor Request | GlobalSingleLine">
     <meta property="og:description" content="Generating Success For Life">
-    <meta property="og:image" content="<?php echo $rootUrl ?>/public/assets/images/logo.png">
+    <meta property="og:image" content="<?php echo $rootUrl ?>/public/assets/images/logo_new.png">
     <meta property="og:url" content="<?php echo $rootUrl ?>/vendor_request">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="vendor_request | GlobalSingleLine">
     <meta name="twitter:description" content="Generating Success For Life">
-    <meta name="twitter:image" content="<?php echo $rootUrl ?>/public/assets/images/logo.png">
+    <meta name="twitter:image" content="<?php echo $rootUrl ?>/public/assets/images/logo_new.png">
     <meta name="twitter:site" content="<?php echo $rootUrl ?>/vendor_request">
     <meta name="theme-color" content="#0a3a66">
     <link rel="canonical" href="<?php echo $rootUrl ?>/vendor_request">

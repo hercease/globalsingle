@@ -12,13 +12,13 @@
     <meta name="robots" content="index, follow">
     <meta property="og:title" content="Generate Pin | GlobalSingleLine">
     <meta property="og:description" content="Generating Success For Life">
-    <meta property="og:image" content="<?php echo $rootUrl ?>/public/assets/images/logo.png">
+    <meta property="og:image" content="<?php echo $rootUrl ?>/public/assets/images/logo_new.png">
     <meta property="og:url" content="<?php echo $rootUrl ?>/generate_reg_pin">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Generate Pin | GlobalSingleLine">
     <meta name="twitter:description" content="Generating Success For Life">
-    <meta name="twitter:image" content="<?php echo $rootUrl ?>/public/assets/images/logo.png">
+    <meta name="twitter:image" content="<?php echo $rootUrl ?>/public/assets/images/logo_new.png">
     <meta name="twitter:site" content="<?php echo $rootUrl ?>/generate_reg_pin">
     <meta name="theme-color" content="#0a3a66">
     <link rel="canonical" href="<?php echo $rootUrl ?>/generate_reg_pin">
