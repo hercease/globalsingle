@@ -7,7 +7,10 @@
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/8.2.0/mdb.min.css" integrity="sha512-7Gq9D0o4oucsdul8TfQEy1UtovxpFGnbR4je6T/pS6o31wM2HRDwZYScOQ9oVO5JFLI04EVB3WZMi1LG2dUNjg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Nunito+Sans:wght@400;500&display=swap" rel="stylesheet">
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom CSS -->
@@ -16,10 +19,15 @@
             --primary: #6f42c1; /* Purple (Bootstrap's "indigo") */
             --secondary: #f8f9fa; /* Light gray */
         }
+
+        body {
+            font-family: 'Nunito Sans', sans-serif;
+            font-weight: 400;
+            color: #333;
+        }
         
         /* Gradient Hero Section */
         .hero {
-            background: linear-gradient(135deg, #6f42c1 0%, #3a0ca3 100%);
             color: white;
         }
         
@@ -68,105 +76,204 @@
         }
 
           /* Custom styles for transparent overlay */
-          .carousel-item {
-      height: 500px;
-      background-size: cover;
-      background-position: center;
-      position: relative;
-    }
+          .owl-carousel .slide-item {
+  height: 350px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
 
-    .carousel-item::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.5); /* Overlay */
-      z-index: 1;
-    }
+.slide-item .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6); /* Dark transparent overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  color: #fff;
+  padding: 20px;
+}
 
-    .carousel-caption {
-      z-index: 2;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-    }
+.overlay h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+}
 
-    .carousel-caption h1,
-    .carousel-caption p {
-      color: #fff;
-      display: inline-block;
-    }
+.overlay p {
+  font-size: 1.2rem;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 0.3rem 0.8rem;
+  border-radius: 8px;
+}
+
+.bg-section {
+  position: relative;
+  background-image: url('public/assets/images/our_services.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  height: 100vh; /* or adjust to content height */
+}
+
+.transparent-bg-section {
+  position: relative;
+}
+
+.transparent-bg-section::before {
+  content: '';
+  background-image: url('public/assets/images/who_we_are.jpg');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.1; /* Adjust transparency (0 = fully transparent, 1 = fully opaque) */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+}
+.transparent-faq-section {
+  position: relative;
+}
+
+.transparent-faq-section::before {
+  content: '';
+  background-image: url('public/assets/images/faq.jpg');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.1; /* Adjust transparency (0 = fully transparent, 1 = fully opaque) */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+}
+
+.offcanvas {
+    width: 250px;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
     </style>
 </head>
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="#">MLM Brand</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+    <div class="container">
+
+        <!-- Brand -->
+        <a class="navbar-brand" href="#"><img width="100px" src="public/assets/images/logo_new.png" /></a>
+
+        <!-- Toggler for offcanvas on mobile -->
+        <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasNavbar"
+        aria-controls="offcanvasNavbar"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+        >
+        <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- Offcanvas menu -->
+        <div
+        class="offcanvas offcanvas-end"
+        tabindex="-1"
+        id="offcanvasNavbar"
+        aria-labelledby="offcanvasNavbarLabel"
+        >
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasNavbarLabel"><img width="100px" src="public/assets/images/logo_new.png" /></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                     <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Compensation Plan</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Products</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Testimonials</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#who">Who We Are</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#compensation">Compensation Plan</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#services">Our Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#faq">Faq</a></li>
                     <li class="nav-item ms-2">
-                        <a class="btn btn-primary rounded" href="#">Join Now <i class="fas fa-arrow-right ms-1"></i></a>
+                        <a class="btn btn-primary rounded-2" href="register">Join Now <i class="fas fa-arrow-right ms-1"></i></a>
                     </li>
                 </ul>
             </div>
         </div>
+
+    </div>
     </nav>
+<!-- Navbar -->
+
 
     <!-- Hero Section -->
     <!-- Hero Section with Transparent Overlay -->
     <section class="hero position-relative overflow-hidden">
     <!-- Background Image with Transparency -->
-        <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner">
-        <!-- Slide 1 -->
-        <div class="carousel-item active" style="background-image: url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');">
-            <div class="carousel-caption">
-            <h1>Welcome to Smallyfares</h1>
-            <p>Your smart travel partner</p>
+        <div class="owl-carousel owl-theme">
+            <div class="slide-item" style="background-image: url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');">
+                <div class="overlay">
+                <h2>Welcome to Global Single Line</h2>
+                <p>Generating Success For Life</p>
+                </div>
+            </div>
+            <div class="slide-item" style="background-image: url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');">
+                <div class="overlay">
+                <h2>Our Core Values</h2>
+                <p>Genuinity, Sincerity and Longetivity</p>
+                </div>
+            </div>
+            <div class="slide-item" style="background-image: url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');">
+                <div class="overlay">
+                <h2>Financial Independence</h2>
+                <p>Empowering millions of individuals worldwide</p>
+                </div>
             </div>
         </div>
-        <!-- Slide 2 -->
-        <div class="carousel-item" style="background-image: url('https://source.unsplash.com/1600x900/?airplane');">
-            <div class="carousel-caption">
-            <h1>Book Flights & Hotels</h1>
-            <p>Fast, reliable and affordable</p>
-            </div>
-        </div>
-        <!-- Slide 3 -->
-        <div class="carousel-item" style="background-image: url('https://source.unsplash.com/1600x900/?beach,resort');">
-            <div class="carousel-caption">
-            <h1>Explore the World</h1>
-            <p>Discover amazing destinations</p>
-            </div>
-        </div>
-        </div>
-
-        <!-- Carousel controls -->
-        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        </button>
-    </div>
-
     </section>
 
     <!-- Features Section -->
-    <section class="py-5 bg-light">
+    <section id="who" class="py-5 transparent-bg-section">
+        <div class="container">
+            <div class="text-center">
+                <h2 class="fw-bold">Who We Are?</h2>
+                <p class="text-muted">We provide everything you need to succeed</p>
+            </div>
+            <div class="row">
+                <!-- Feature 1 -->
+
+                <div class="col-md-12 text-center">
+                    <p>Global Single Line is an online Global Company designed and Established to alleviate Global poverty rate and supporting economic and scoail developments to eradicate Global conflicts in our societies through self generated funds and service charges.</p>
+                </div>
+                <!-- Feature 2 -->
+                <div class="col-md-12 text-center">
+                    <p>We are giving out a priviledge to the public to come as stakeholders through a certain membership fee attached with series of bonuese as a compensation packaged for them.</p>
+                </div>
+                <!-- Feature 3 -->
+                <div class="col-md-12  text-center">
+                    <p>We believe, many has corrupted the online business industries, but with certain effective and discipline measures, GSL will work tirelessly in empowering individuals to achieve their personal growth.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="services" class="py-5 bg-light">
         <div class="container">
             <div class="text-center mb-5">
-                <h2 class="fw-bold">Why Choose Us?</h2>
+                <h2 class="fw-bold">Our Services</h2>
                 <p class="text-muted">We provide everything you need to succeed</p>
             </div>
             <div class="row g-4">
@@ -175,10 +282,10 @@
                     <div class="card feature-card h-100 p-4">
                         <div class="card-body text-center">
                             <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
-                                <i class="fas fa-chart-line fa-2x text-primary"></i>
+                                <i class="fas fa-code fa-2x text-primary"></i>
                             </div>
-                            <h5>Proven Compensation Plan</h5>
-                            <p class="text-muted">Earn through multiple streams including direct sales, team bonuses, and leadership rewards.</p>
+                            <h5>Software Development</h5>
+                            <p class="text-muted">We provide custom software solutions for we and mobile applications for Private na dPublic Organisations. Our team create intuitive and scalable apps designed to grow with your business. Moreso, From "Planning" to "Launch" and "Management", We deliver efficient and relaible disgiatl products.</p>
                         </div>
                     </div>
                 </div>
@@ -187,10 +294,10 @@
                     <div class="card feature-card h-100 p-4">
                         <div class="card-body text-center">
                             <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
-                                <i class="fas fa-graduation-cap fa-2x text-primary"></i>
+                                <i class="fas fa-solid fa-chart-line fa-2x text-primary"></i>
                             </div>
-                            <h5>Training Academy</h5>
-                            <p class="text-muted">Access our step-by-step training system to build your business faster.</p>
+                            <h5>Online Business Trainings</h5>
+                            <p class="text-muted">GSL Online business trainings provide flexible, accessible education for entrepreneurs and professionals, with Convenience, Cost-effectiveness and Self-paced learning. Nevertheless, Our Online Business Trainings cover topics like: Leadership & Management, Entrepreneurship, FOREX/Crypto Trading, WEB & Graphic Designs.</p>
                         </div>
                     </div>
                 </div>
@@ -201,8 +308,31 @@
                             <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
                                 <i class="fas fa-users fa-2x text-primary"></i>
                             </div>
-                            <h5>Global Community</h5>
-                            <p class="text-muted">Connect with top earners in our private network for mentorship.</p>
+                            <h5>Single Leg MLM Platform</h5>
+                            <p class="text-muted">GSL company provide a Single Leg Multi-Level Marketing(MLM) system with a compensation structure where participants earn commissions primarily from Onme TEAM Network, This model can offer a more straightforward approach to the Multi-Level Marketing Industry, Meanwhile, GSL Single Leg Structure focuses on One Global Team, Multiple Levels, Series of Passive Income Opportunities, Simplified strcuture, Individual recruitment task performance and Cirlce out bonus on each stages respectively. emphasaizing personal growths and global team-work advancements.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card feature-card h-100 p-4">
+                        <div class="card-body text-center">
+                            <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
+                                <i class="fas fa-solid fa-coins fa-2x text-primary"></i>
+                            </div>
+                            <h5>Crypto Exchange Markets</h5>
+                            <p class="text-muted">GSL Crypto Exchnage is a digital platform where individuals can Buy, Sell, Store, and Trade cryptocurrencies like BTC, BNB, ETH, SOL, TON, and others. Meanwhile, We would launch our Native Utility Token(GSL) on SOLANA Blockchain next year to mark the company's a year anniversay celebration. In addition, Our Vendors would become automatic Merchants by giving license to sell Cryptocurrencies on our P2P Trading in October 2025.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card feature-card h-100 p-4">
+                        <div class="card-body text-center">
+                            <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
+                                <i class="fas fa-users fa-2x text-primary"></i>
+                            </div>
+                            <h5>Chat Platform</h5>
+                            <p class="text-muted">Our Company provides a chat platform which serves as a digital tool that enables real-time communication between individuals or groups through text, voice, or video. GSL Chat platform facilitates quick and efficiet communication between Members, Vendors and Customer support. Moreover, GSL Chat Rooms For: Employment (Online Jobs, Hybrid jobs & Offline Jobs), Business (E-commerce & Services), Entertainment ( Movie, Music & Lifestyles), Relationships (PefecthMatch & LoveQuotes), Sports(Football & Other Sports). However, All thes above interesting groups would be available after Official Launching</p>
                         </div>
                     </div>
                 </div>
@@ -211,8 +341,8 @@
     </section>
 
     <!-- Compensation Plan Highlights -->
-    <section class="py-5 bg-white">
-  <div class="container">
+    <section id="compensation" class="py-5 bg-white">
+         <div class="container">
     <div class="text-center mb-5">
       <h2 class="fw-bold">Compensation Plan Growth Path</h2>
       <p class="text-muted">See how your earnings scale with each achievement stage</p>
@@ -268,7 +398,7 @@
 
 
     <!-- FAQ Section -->
-    <section class="py-5">
+    <section id="faq" class="py-5 transparent-faq-section">
     <div class="container">
         <div class="text-center mb-5">
         <h2 class="fw-bold">Frequently Asked Questions</h2>
@@ -284,12 +414,12 @@
             <div class="accordion-item border-0 mb-3 rounded overflow-hidden shadow-sm">
                 <h3 class="accordion-header" id="headingOne">
                 <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false">
-                    How much does it cost to join?
+                    What is Single MLM System?
                 </button>
                 </h3>
                 <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
                 <div class="accordion-body bg-white">
-                    We offer starter packs beginning at $49.99, which includes your initial product kit and training access. Premium membership ($199) includes additional marketing tools and 1-on-1 coaching.
+                    It is Power-Leg MLM system, So therefore, No first-come First-serve, No legs, No Binaries, No Genealogy, Every members queue on a single straight line network.
                 </div>
                 </div>
             </div>
@@ -298,12 +428,12 @@
             <div class="accordion-item border-0 mb-3 rounded overflow-hidden shadow-sm">
                 <h3 class="accordion-header" id="headingTwo">
                 <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
-                    How do I get paid?
+                    How Can I Register?
                 </button>
                 </h3>
                 <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
                 <div class="accordion-body bg-white">
-                    Earnings are paid weekly via direct deposit or PayPal. You'll earn commissions from personal sales (20-30%), team overrides (5-15%), and leadership bonuses (up to 5% company-wide pool).
+                    You can register your upline or our mobile support.
                 </div>
                 </div>
             </div>
@@ -312,12 +442,12 @@
             <div class="accordion-item border-0 mb-3 rounded overflow-hidden shadow-sm">
                 <h3 class="accordion-header" id="headingThree">
                 <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
-                    Is there training provided?
+                    How can i buy Registration wallet?
                 </button>
                 </h3>
                 <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
                 <div class="accordion-body bg-white">
-                    Yes! You'll get instant access to our <strong>MLM Success Academy</strong> with video tutorials, scripts, and weekly live training calls. Top earners host monthly Q&A sessions exclusively for members.
+                    You can buy registration wallet from our verified vendors only, Login to the App and Contatc anyone. Moreover, we need 5,000 vendors across the Globe, Any member can apply to be a vendor once qualified.
                 </div>
                 </div>
             </div>
@@ -326,12 +456,64 @@
             <div class="accordion-item border-0 mb-3 rounded overflow-hidden shadow-sm">
                 <h3 class="accordion-header" id="headingFour">
                 <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour">
-                    How much time do I need to commit?
+                    Is Multiple Accounts Allowed?
                 </button>
                 </h3>
                 <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
                 <div class="accordion-body bg-white">
-                    Many members see results with 5-7 hours/week. Our system is designed for part-time participation, but full-time members typically achieve higher ranks faster.
+                    No, one account per user, members found guilty will lose all accounts, if multiple accounts detected without refund.
+                </div>
+                </div>
+            </div>
+
+            <div class="accordion-item border-0 mb-3 rounded overflow-hidden shadow-sm">
+                <h3 class="accordion-header" id="headingFive">
+                <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive">
+                    What is the sustainability of this platform?
+                </button>
+                </h3>
+                <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#faqAccordion">
+                <div class="accordion-body bg-white">
+                    GSL Team hands are on deck to deliver the best, meanwhile, with the support of each member performing his/her tasks, we can last for years.
+                </div>
+                </div>
+            </div>
+
+            <div class="accordion-item border-0 mb-3 rounded overflow-hidden shadow-sm">
+                <h3 class="accordion-header" id="headingSix">
+                <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix">
+                    How long does withdrawal take?
+                </button>
+                </h3>
+                <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#faqAccordion">
+                <div class="accordion-body bg-white">
+                    GSl team hands are on deck to deliver the best, meanwhile, with the support of each member performaing his/her tasks, we can last for years. 
+                </div>
+                </div>
+            </div>
+
+            <div class="accordion-item border-0 mb-3 rounded overflow-hidden shadow-sm">
+                <h3 class="accordion-header" id="headingSeven">
+                <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven">
+                    How long does withdrawal take?
+                </button>
+                </h3>
+                <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#faqAccordion">
+                <div class="accordion-body bg-white">
+                    We offer automated-swift withdrawal system, our withdrawal delivers within 5 minutes 
+                </div>
+                </div>
+            </div>
+
+            <div class="accordion-item border-0 mb-3 rounded overflow-hidden shadow-sm">
+                <h3 class="accordion-header" id="headingEight">
+                <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight">
+                    Can i refer more the withdrawal take?
+                </button>
+                </h3>
+                <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight" data-bs-parent="#faqAccordion">
+                <div class="accordion-body bg-white">
+                    No, we encourage you to assit your downlines and still claim your refferal bonus at the same time, together we earn more.
                 </div>
                 </div>
             </div>
@@ -340,71 +522,39 @@
 
             <!-- CTA Below FAQ -->
             <div class="text-center mt-5">
-            <p class="mb-3">Still have questions?</p>
-            <a href="#" class="btn btn-primary px-4">
-                <i class="fas fa-envelope me-2"></i> Contact Support
-            </a>
+                <p class="mb-3">Still have questions?</p>
+                <a href="support" class="btn btn-primary px-4">
+                    <i class="fas fa-envelope me-2"></i> Contact Support
+                </a>
             </div>
         </div>
         </div>
     </div>
     </section>
-
-    <!-- Testimonials -->
-    <section class="py-5 bg-light">
-        <div class="container">
-            <div class="text-center mb-5">
-                <h2 class="fw-bold">Success Stories</h2>
-                <p class="text-muted">Hear from our top earners</p>
-            </div>
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="testimonial-card p-4 h-100">
-                        <div class="d-flex align-items-center mb-3">
-                            <img src="https://via.placeholder.com/50" alt="User" class="rounded-circle me-3">
-                            <div>
-                                <h6 class="mb-0">Sarah Johnson</h6>
-                                <small class="text-muted">Diamond Rank</small>
-                            </div>
-                        </div>
-                        <p>"I went from $500/month to over $15,000/month in just 1 year with this system. The training made all the difference!"</p>
-                        <div class="text-warning">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                </div>
-                <!-- Add 2 more testimonials -->
-            </div>
-        </div>
-    </section>
-
-    1761895349
-
     <!-- CTA Section -->
-    <section class="py-5 bg-dark text-white">
+    <section class="py-5 bg-primary text-white">
         <div class="container text-center">
             <h2 class="fw-bold mb-4">Ready to Transform Your Income?</h2>
-            <p class="lead mb-5">Join now and get instant access to our training portal and mentorship program</p>
-            <a href="#" class="btn btn-primary btn-lg px-5">Start Your Journey Today</a>
+            <p class="lead mb-5">Click the button below to get started today.</p>
+            <a href="register" class="btn btn-light btn-lg px-5">Start Your Journey Today</a>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="py-4 bg-body-tertiary">
+    <footer class="py-5 bg-body-tertiary">
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <h5>MLM Brand</h5>
-                    <p class="text-muted">Helping entrepreneurs build wealth since 2023</p>
+                    <img width="100px" src="public/assets/images/logo_new.png" />
+                    <p class="text-muted fw-bold">Generating success for life</p>
                 </div>
                 <div class="col-md-3">
                     <h6>Quick Links</h6>
                     <ul class="list-unstyled">
-                        <li><a href="#" class="text-decoration-none text-muted">FAQ</a></li>
+                        <li><a href="#" class="text-decoration-none text-muted">Home</a></li>
+                        <li><a href="#who" class="text-decoration-none text-muted">Who We Are</a></li>
+                        <li><a href="#compensation" class="text-decoration-none text-muted">Compensation</a></li>
+                        <li><a href="#faq" class="text-decoration-none text-muted">FAQ</a></li>
                         <li><a href="#" class="text-decoration-none text-muted">Privacy Policy</a></li>
                     </ul>
                 </div>
@@ -454,7 +604,40 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/8.2.0/mdb.umd.min.js" integrity="sha512-XaBF6KP9xEbPjS0vTWwV3ETXS4EBvYPIkvEPX7B4QcStZEj6JEesGUEHMhbZMH3aaoSmCzXFoZxWBK/GTa2tBw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
+    <!-- jQuery (required) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Owl Carousel JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const navbarHeight = document.querySelector('.navbar').offsetHeight;
+
+    document.querySelectorAll('a.nav-link[href^="#"]').forEach(anchor => {
+      anchor.addEventListener("click", function (e) {
+        e.preventDefault();
+        const targetId = this.getAttribute("href").substring(1);
+        const targetElement = document.getElementById(targetId);
+
+        if (targetElement) {
+          const offsetTop = targetElement.offsetTop - navbarHeight;
+
+          window.scrollTo({
+            top: offsetTop,
+            behavior: "smooth"
+          });
+
+          // Close offcanvas if open (optional for mobile nav)
+          const offcanvas = document.querySelector('.offcanvas.show');
+          if (offcanvas) {
+            const bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvas);
+            bsOffcanvas.hide();
+          }
+        }
+      });
+    });
+  });
+
 // Your PHP data converted to JavaScript
 const stages = [
   {stage: 1, downlines: 2, total_downlines: 15, compensation: 6, task_info: 'Personally recruit 2 downlines (15 total)'},
@@ -588,6 +771,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 item.style.transition = 'transform 0.6s ease-in-out';
             });
         });
+
+    
+  $(".owl-carousel").owlCarousel({
+    items: 1,
+    loop: true,
+    autoplay: true,
+    autoplayTimeout: 4000,
+    autoplayHoverPause: true,
+    animateOut: 'fadeOut',
+    animateIn: 'fadeIn',
+    nav: false,
+    dots: false
+  });
+
 });
 </script>
 </body>
