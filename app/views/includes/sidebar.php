@@ -9,7 +9,7 @@
     <div class="navbar-content pc-trigger active simplebar-scrollable-y" data-simplebar="init"><div class="simplebar-wrapper" style="margin: -10px 0px;"><div class="simplebar-height-auto-observer-wrapper"><div class="simplebar-height-auto-observer"></div></div><div class="simplebar-mask"><div class="simplebar-offset" style="right: 0px; bottom: 0px;"><div class="simplebar-content-wrapper" tabindex="0" role="region" aria-label="scrollable content" style="height: 100%; overflow: hidden scroll;"><div class="simplebar-content" style="padding: 10px 0px;">
       <ul class="pc-navbar" style="display: block;">
         <li class="pc-item">
-          <a href="<?php echo $rootUrl ?>/" class="pc-link">
+          <a href="<?php echo $rootUrl ?>/dashboard" class="pc-link">
             <span class="pc-micon"><i class="ti ti-dashboard"></i></span>
             <span class="pc-mtext">Dashboard</span>
           </a>

@@ -125,7 +125,6 @@ switch ($url) {
         }
         break;
     case '/dashboard':
-    case '/':
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $DisplayController->showDashboardPage($rootUrl);
         }
@@ -180,6 +179,8 @@ switch ($url) {
             $DisplayController->showChatSupport($rootUrl);
         }
         break;
+        
+    case '/':
     case '/homepage':
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $DisplayController->showHomepage($rootUrl);
