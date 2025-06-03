@@ -8,7 +8,7 @@ workbox.setConfig({
 });
 
 // Cache name
-const CACHE_NAME = 'globalsingle-cache-v1';
+const CACHE_NAME = 'globalsingle-cache-v6';
 workbox.core.setCacheNameDetails({
   prefix: CACHE_NAME,
 });
@@ -16,10 +16,10 @@ workbox.core.setCacheNameDetails({
 // Precaching - Auto-generated if using Workbox build tools
 workbox.precaching.precacheAndRoute([
   { url: '/', revision: '3' },
-  { url: '/manifest.json', revision: '3' },
-  { url: 'public/assets/js/plugins/jquery.js', revision: '3' },
-  { url: 'public/assets/js/plugins/bootstrap.min.js', revision: '3' },
-  { url: 'public/assets/css/style.css', revision: '3' },
+  { url: '/manifest.json', revision: '6' },
+  { url: 'public/assets/js/plugins/jquery.js', revision: '6' },
+  { url: 'public/assets/js/plugins/bootstrap.min.js', revision: '6' },
+  { url: 'public/assets/css/style.css', revision: '6' },
   { url: 'public/assets/icons/android/android-launchericon-48-48.png', revision: null },
   { url: 'public/assets/icons/android/android-launchericon-72-72.png', revision: null },
   { url: 'public/assets/icons/android/android-launchericon-96-96.png', revision: null },
