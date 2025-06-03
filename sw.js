@@ -3,12 +3,12 @@ importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox
 
 // Set Workbox config
 workbox.setConfig({
-  debug: false, // Set to true for development
+  debug: true, // Set to true for development
   modulePathPrefix: 'https://storage.googleapis.com/workbox-cdn/releases/6.5.4/'
 });
 
 // Cache name
-const CACHE_NAME = 'globalsingle-cache-v6';
+const CACHE_NAME = 'globalsingle-cache-v1';
 workbox.core.setCacheNameDetails({
   prefix: CACHE_NAME,
 });
@@ -16,10 +16,10 @@ workbox.core.setCacheNameDetails({
 // Precaching - Auto-generated if using Workbox build tools
 workbox.precaching.precacheAndRoute([
   { url: '/', revision: '3' },
-  { url: '/manifest.json', revision: '6' },
-  { url: 'public/assets/js/plugins/jquery.js', revision: '6' },
-  { url: 'public/assets/js/plugins/bootstrap.min.js', revision: '6' },
-  { url: 'public/assets/css/style.css', revision: '6' },
+  { url: '/manifest.json', revision: '3' },
+  { url: 'public/assets/js/plugins/jquery.js', revision: '3' },
+  { url: 'public/assets/js/plugins/bootstrap.min.js', revision: '3' },
+  { url: 'public/assets/css/style.css', revision: '3' },
   { url: 'public/assets/icons/android/android-launchericon-48-48.png', revision: null },
   { url: 'public/assets/icons/android/android-launchericon-72-72.png', revision: null },
   { url: 'public/assets/icons/android/android-launchericon-96-96.png', revision: null },

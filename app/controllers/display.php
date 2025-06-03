@@ -85,7 +85,7 @@ class Display {
             session_start();
         }
 
-       $this->userModel->generateEncryptionKey();
+       //$this->userModel->generateEncryptionKey();
         // Check if the session variable is set
         if (isset($_SESSION['global_single_username'])) {
 
@@ -101,9 +101,12 @@ class Display {
             $myhistory = $this->userModel->fetchMyHistory($username);
            
             include('app/views/dashboard.php');
+
         } else {
+
             header("Location: $rootUrl/login");
             exit();
+
         }
     }
 
@@ -294,7 +297,7 @@ class Display {
             } else {
 
                 $guest_id = $this->userModel->generateGuestId();
-                
+
             }
 
             $userdetails = $this->userModel->getUserInfo($Id);

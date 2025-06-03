@@ -103,13 +103,7 @@
   }
   
   // Service Worker Update Handling
-  function checkForUpdates(registration) {
-    setInterval(() => {
-      registration.update().catch(err => {
-        console.log('Update check failed:', err);
-      });
-    }, 60 * 60 * 1000); // Check hourly
-  }
+  
   
   function showUpdatePrompt(wb) {
     const updateToast = document.createElement('div');
