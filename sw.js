@@ -3,7 +3,7 @@ importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox
 
 // Set Workbox config
 workbox.setConfig({
-  debug: true, // Set to true for development
+  debug: false, // Set to true for development
   modulePathPrefix: 'https://storage.googleapis.com/workbox-cdn/releases/6.5.4/'
 });
 
