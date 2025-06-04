@@ -678,13 +678,13 @@ html {
 
 // Your PHP data converted to JavaScript
 const stages = [
-  {stage: 1, downlines: 2, total_downlines: 15, compensation: 6, task_info: 'Personally recruit 2 downlines (15 total)'},
-  {stage: 2, downlines: 2, total_downlines: 85, compensation: 21, task_info: 'Personally recruit 2 downlines (85 total)'},
-  {stage: 3, downlines: 4, total_downlines: 385, compensation: 42, task_info: 'Personally recruit 4 downlines (385 total)'},
-  {stage: 4, downlines: 6, total_downlines: 1585, compensation: 105, task_info: 'Personally recruit 6 downlines (1,585 total)'},
-  {stage: 5, downlines: 8, total_downlines: 7585, compensation: 240, task_info: 'Personally recruit 8 downlines (7,585 total)'},
-  {stage: 6, downlines: 8, total_downlines: 38585, compensation: 1980, task_info: 'Personally recruit 8 downlines (38,585 total)'},
-  {stage: 7, downlines: 12, total_downlines: 235585, compensation: 7976, task_info: 'Personally recruit 12 downlines (235,585 total)'}
+  {stage: 1, downlines: 2, total_downlines: 15, compensation: 10, task_info: 'Personally recruit 2 downlines (15 total)'},
+  {stage: 2, downlines: 2, total_downlines: 85, compensation: 25, task_info: 'Personally recruit 2 downlines (85 total)'},
+  {stage: 3, downlines: 4, total_downlines: 385, compensation: 50, task_info: 'Personally recruit 4 downlines (385 total)'},
+  {stage: 4, downlines: 6, total_downlines: 1585, compensation: 115, task_info: 'Personally recruit 6 downlines (1,585 total)'},
+  {stage: 5, downlines: 8, total_downlines: 7585, compensation: 250, task_info: 'Personally recruit 8 downlines (7,585 total)'},
+  {stage: 6, downlines: 8, total_downlines: 38585, compensation: 2000, task_info: 'Personally recruit 8 downlines (38,585 total)'},
+  {stage: 7, downlines: 12, total_downlines: 235585, compensation: 8000, task_info: 'Personally recruit 12 downlines (235,585 total)'}
 ];
 
 // 1. Populate the modal table
