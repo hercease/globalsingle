@@ -456,9 +456,9 @@ html {
                 </button>
                 </h3>
                 <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
-                <div class="accordion-body bg-white">
-                    It is Power-Leg MLM system, So therefore, No first-come First-serve, No legs, No Binaries, No Genealogy, Every members queue on a single straight line network.
-                </div>
+                    <div class="accordion-body bg-white">
+                        It is Power-Leg MLM system, So therefore, No first-come First-serve, No legs, No Binaries, No Genealogy, Every members queue on a single straight line network.
+                    </div>
                 </div>
             </div>
 
@@ -485,7 +485,7 @@ html {
                 </h3>
                 <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
                 <div class="accordion-body bg-white">
-                    You can buy registration wallet from our verified vendors only, Login to the App and Contatc anyone. Moreover, we need 5,000 vendors across the Globe, Any member can apply to be a vendor once qualified.
+                    You can buy registration wallet from our verified vendors only, Login to the App and Contact anyone. Moreover, we need 5,000 vendors across the Globe, Any member can apply to be a vendor once qualified.
                 </div>
                 </div>
             </div>
@@ -511,9 +511,9 @@ html {
                 </button>
                 </h3>
                 <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#faqAccordion">
-                <div class="accordion-body bg-white">
-                    GSL Team hands are on deck to deliver the best, meanwhile, with the support of each member performing his/her tasks, we can last for years.
-                </div>
+                    <div class="accordion-body bg-white">
+                        GSL Team hands are on deck to deliver the best, meanwhile, with the support of each member performing his/her tasks, we can last for years.
+                    </div>
                 </div>
             </div>
 
@@ -524,9 +524,9 @@ html {
                 </button>
                 </h3>
                 <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#faqAccordion">
-                <div class="accordion-body bg-white">
-                    GSl team hands are on deck to deliver the best, meanwhile, with the support of each member performaing his/her tasks, we can last for years. 
-                </div>
+                    <div class="accordion-body bg-white">
+                        GSl team hands are on deck to deliver the best, meanwhile, with the support of each member performaing his/her tasks, we can last for years. 
+                    </div>
                 </div>
             </div>
 
@@ -611,39 +611,39 @@ html {
     </footer>
 
     <div class="modal fade" id="fullPlanModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Complete Compensation Plan</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="table-responsive">
-          <table class="table table-hover">
-            <thead class="table-light">
-              <tr>
-                <th>Stage</th>
-                <th>Personal Recruits</th>
-                <th>Total Team</th>
-                <th>Circle Out Bonus</th>
-              </tr>
-            </thead>
-            <tbody id="planTableBody">
-              <!-- Filled by JavaScript -->
-            </tbody>
-          </table>
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Complete Compensation Plan</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                    <tr>
+                        <th>Stage</th>
+                        <th>Personal Recruits</th>
+                        <th>Total Team</th>
+                        <th>Circle Out Bonus</th>
+                    </tr>
+                    </thead>
+                    <tbody id="planTableBody">
+                    <!-- Filled by JavaScript -->
+                    </tbody>
+                </table>
+                </div>
+            </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-</div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/8.2.0/mdb.umd.min.js" integrity="sha512-XaBF6KP9xEbPjS0vTWwV3ETXS4EBvYPIkvEPX7B4QcStZEj6JEesGUEHMhbZMH3aaoSmCzXFoZxWBK/GTa2tBw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- jQuery (required) -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <!-- Owl Carousel JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
@@ -679,12 +679,12 @@ html {
 // Your PHP data converted to JavaScript
 const stages = [
   {stage: 1, downlines: 2, total_downlines: 15, compensation: 6, task_info: 'Personally recruit 2 downlines (15 total)'},
-  {stage: 2, downlines: 4, total_downlines: 75, compensation: 16, task_info: 'Personally recruit 4 downlines (75 total)'},
-  {stage: 3, downlines: 4, total_downlines: 375, compensation: 39, task_info: 'Personally recruit 4 downlines (375 total)'},
-  {stage: 4, downlines: 6, total_downlines: 1875, compensation: 77, task_info: 'Personally recruit 6 downlines (1,875 total)'},
-  {stage: 5, downlines: 8, total_downlines: 9375, compensation: 240, task_info: 'Personally recruit 8 downlines (9,375 total)'},
-  {stage: 6, downlines: 8, total_downlines: 46875, compensation: 1988, task_info: 'Personally recruit 8 downlines (46,875 total)'},
-  {stage: 7, downlines: 18, total_downlines: 234375, compensation: 9986, task_info: 'Personally recruit 18 downlines (234,375 total)'}
+  {stage: 2, downlines: 2, total_downlines: 85, compensation: 21, task_info: 'Personally recruit 2 downlines (85 total)'},
+  {stage: 3, downlines: 4, total_downlines: 385, compensation: 42, task_info: 'Personally recruit 4 downlines (385 total)'},
+  {stage: 4, downlines: 6, total_downlines: 1585, compensation: 105, task_info: 'Personally recruit 6 downlines (1,585 total)'},
+  {stage: 5, downlines: 8, total_downlines: 7585, compensation: 240, task_info: 'Personally recruit 8 downlines (7,585 total)'},
+  {stage: 6, downlines: 8, total_downlines: 38585, compensation: 1980, task_info: 'Personally recruit 8 downlines (38,585 total)'},
+  {stage: 7, downlines: 12, total_downlines: 235585, compensation: 7976, task_info: 'Personally recruit 12 downlines (235,585 total)'}
 ];
 
 // 1. Populate the modal table
