@@ -1,9 +1,9 @@
 {
     "name": "Global Single Line",
     "short_name": "GSL",
-    "start_url": "/",
+    "start_url": "/login",
     "display": "standalone",
-    "background_color": "#ffffff00", 
+    "background_color": "#ffffff", 
     "theme_color": "#317EFB",
     "orientation": "portrait-primary",
     "icons": [
