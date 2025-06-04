@@ -104,11 +104,13 @@
                     }
 
                     $sponsorInfo = $this->userModel->getUserInfo($input['sponsor']);
-                    $countdownlines = $this->userModel->countDownlines($input['sponsor'], $sponsorInfo['stage']);
+
+                    /*$countdownlines = $this->userModel->countDownlines($input['sponsor'], $sponsorInfo['stage']);
                     
                     if ($stageInfo['downlines'] === $countdownlines['total']) {
                         return json_encode(["status" => false, "message" => "Sponsor has reached the maximum number of downlines for their present stage"]);
                     }
+                    */
             
                     // Check if username already exists
                     if ($this->userModel->getUserInfo($input['username'])) {

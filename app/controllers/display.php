@@ -50,10 +50,12 @@ class Display {
     }
 
     public function showCheckersPage($rootUrl) {
+
         if (session_status() === PHP_SESSION_NONE){
             session_start();
         }
         if (isset($_SESSION['global_single_username'])) {
+
             $username = $_SESSION['global_single_username'];
             $userInfo = $this->userModel->getUserInfo($username);
             $page_access = $userInfo['page_access'];
@@ -66,6 +68,7 @@ class Display {
                 $this->userModel->InsertHistory($username, $reward, $date, 'credit', 'Reward for completing stage '.$userInfo['stage']);
                 $this->userModel->updateStage($username, $reward, $userInfo['stage'] + 1);
                 $currentStage = $userInfo['stage'];
+
                 include('app/views/checkers.php');
 
             } else {
@@ -90,14 +93,13 @@ class Display {
         if (isset($_SESSION['global_single_username'])) {
 
             // User is logged in, proceed to the dashboard
-    
             $username = $_SESSION['global_single_username'];
             $userInfo = $this->userModel->getUserInfo($username);
             $stageInfo = $this->userModel->getStageInfo($userInfo['stage']);
             $countdownlines = $this->userModel->countDownlines($username, $userInfo['stage']);
             $globalDownlines = $this->userModel->countGlobalDownlines($userInfo['reg_date'], $stageInfo['total_downlines']);
             $globalDownlinespercentage = $this->userModel->calculatePercentage($globalDownlines, $stageInfo['total_downlines'], $decimalPlaces = 2);
-            $countdownlinespercentage = $this->userModel->calculatePercentage($countdownlines['total'], $stageInfo['downlines'], $decimalPlaces = 2);
+            $countdownlinespercentage = $this->userModel->calculatePercentage($countdownlines, $stageInfo['downlines'], $decimalPlaces = 2);
             $myhistory = $this->userModel->fetchMyHistory($username);
            
             include('app/views/dashboard.php');

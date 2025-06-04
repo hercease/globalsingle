@@ -31,7 +31,7 @@ class usersModel {
             ['stage' => 6, 'downlines' => 8, 'total_downlines' => 38585, 'compensation' => 1980, 'task_info' => 'In this stage, your task is to personally recruit 8 downlines and accumulate 38585 global downlines.'],
             ['stage' => 7, 'downlines' => 12, 'total_downlines' => 235585, 'compensation' => 7976,'task_info'=>'In this stage, your task is to personally recruit 12 downlines and accumulate 235585 global downlines.']
         ];
-        
+
     }
 
     public function getAllStages() {
@@ -165,10 +165,20 @@ class usersModel {
     }
 
     public function countDownlines($username, $stage) {
+
+        $stage_downlines = $this->getStageInfo($stage);
+
         $stmt = $this->conn->prepare("SELECT COUNT(*) as total FROM referral_tree WHERE sponsor = ? and sponsor_stage = ?");
         $stmt->bind_param("si", $username,$stage);
         $stmt->execute();
-        return $stmt->get_result()->fetch_assoc();
+
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+
+        $total = $row['total'] >= $stage_downlines['downlines'] ? $stage_downlines['downlines'] : $row['total']; 
+
+        return $total ?? 0; // return 0 if null
+
     }
 
     public function countGlobalDownlines($date, $max) {

@@ -638,7 +638,7 @@
                       </div>
                     </div>
                     <div class="flex-shrink-0">
-                      <p class="mb-0 text-muted"><?php echo $countdownlines['total'] ?></p>
+                      <p class="mb-0 text-muted"><?php echo $countdownlines ?></p>
                     </div>
                   </div>
                 </div>
