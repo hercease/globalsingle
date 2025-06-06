@@ -343,11 +343,11 @@ body {
 <script src="<?php echo $rootUrl ?>/public/assets/js/pcoded.js"></script>
 <script src="<?php echo $rootUrl ?>/public/assets/js/plugins/feather.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
-<script src="https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox-window.prod.mjs" type="module"></script>
+<!--<script src="https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox-window.prod.mjs" type="module"></script>-->
+<script src="https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox-window.prod.umd.js"></script>
 <script src="sw.js"></script>
 <script src="<?php echo $rootUrl ?>/public/assets/js/app.js"></script>
 <script src="<?php echo $rootUrl ?>/public/assets/js/workboxreg.js"></script>
-
 <script>layout_change('light');</script>
 <script>change_box_container('false');</script>
 <script>layout_rtl_change('false');</script>

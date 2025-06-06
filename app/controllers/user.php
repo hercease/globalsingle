@@ -1439,36 +1439,39 @@
                 session_start();
             }
             //error_log("I got here");
-            $username = $_SESSION['global_single_username']; 
-
-            // Get raw POST data
-            $checkusername = $this->db->prepare("select username from push_subscriptions where username = ?");
-            $checkusername->bind_param("s", $username);
-            $checkusername->execute();
-            $result = $checkusername->get_result();
-            if ($result->num_rows > 0) {
-                return;
-                exit;
-            }
-
-            $input = json_decode(file_get_contents('php://input'), true);
-    
-            if (isset($input['subscription'])) {
-
-                $subscription = $input['subscription'];
-
-                // Store in database
-                $stmt = $this->db->prepare("INSERT INTO push_subscriptions  (endpoint, public_key, auth_token, username)  VALUES (?, ?, ?, ?)");
-                $stmt->execute([
-                    $subscription['endpoint'],
-                    $subscription['keys']['p256dh'],
-                    $subscription['keys']['auth'],
-                    $username
-                ]);
+            if(isset($_SESSION['global_single_username'])){
                 
-                echo json_encode(['success' => true]);
-                exit;
+                $username = $_SESSION['global_single_username']; 
 
+                // Get raw POST data
+                $checkusername = $this->db->prepare("select username from push_subscriptions where username = ?");
+                $checkusername->bind_param("s", $username);
+                $checkusername->execute();
+                $result = $checkusername->get_result();
+                if ($result->num_rows > 0) {
+                    return;
+                    exit;
+                }
+
+                $input = json_decode(file_get_contents('php://input'), true);
+        
+                if (isset($input['subscription'])) {
+
+                    $subscription = $input['subscription'];
+
+                    // Store in database
+                    $stmt = $this->db->prepare("INSERT INTO push_subscriptions  (endpoint, public_key, auth_token, username)  VALUES (?, ?, ?, ?)");
+                    $stmt->execute([
+                        $subscription['endpoint'],
+                        $subscription['keys']['p256dh'],
+                        $subscription['keys']['auth'],
+                        $username
+                    ]);
+                    
+                    echo json_encode(['success' => true]);
+                    exit;
+
+                }
             }
 
         }

@@ -1,6 +1,6 @@
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      const wb = new Workbox('/sw.js');
+      const wb = new workbox.Workbox('/sw.js');
       
       // Track service worker lifecycle events
       wb.addEventListener('installed', (event) => {

@@ -436,7 +436,7 @@ class usersModel {
 
         } elseif ($tabletype === 'all_users') {
 
-            $query = "SELECT id, username, email, reg_date, country, avatar, stage FROM members"; // Adjust column names and table as needed
+            $query = "SELECT id, username, email, reg_date, country, avatar, earning_wallet, stage FROM members"; // Adjust column names and table as needed
             if (!empty($searchValue)) {
                 $searchQuery = " WHERE username LIKE ? OR email LIKE ?";
                 $params[] = "%$searchValue%";
@@ -508,7 +508,7 @@ class usersModel {
             // Call Node.js batch API to get balances for these addresses
             $balances = [];
             if (!empty($addresses)) {
-                $url = "http://localhost:3000/api/batch-balances"; // Change to your Node.js endpoint
+                $url = CHAT_ENDPOINT . "/api/batch-balances"; // Change to your Node.js endpoint
                 $postData = ['addresses' => $addresses];
 
                 $ch = curl_init($url);
@@ -587,6 +587,7 @@ class usersModel {
                     "email" => $row['email'],
                     "country" => $row['country'],
                     "stage" => $row['stage'],
+                    "earning_wallet" => '$' . number_format($row['earning_wallet'],2),
                     "date" =>  $row['reg_date'],
                     "action" =>  "<button data-id='".$row['id']."'  class='btn btn-danger btn-sm del_package'>Delete User</button>"
                 ];

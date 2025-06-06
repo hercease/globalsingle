@@ -1,19 +1,24 @@
-// Import Workbox from CDN (or use npm module if bundling)
+// Import Workbox from CDN
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox-sw.js');
 
-// Set Workbox config
+// Debug mode (set to false in production)
 workbox.setConfig({
-  debug: true, // Set to true for development
+  debug: true,
   modulePathPrefix: 'https://storage.googleapis.com/workbox-cdn/releases/6.5.4/'
 });
 
-// Cache name
-const CACHE_NAME = 'globalsingle-cache-v2';
+// Define a versioned cache prefix
+const CACHE_VERSION = 'v2';
+const CACHE_PREFIX = 'globalsingle-cache';
+const CACHE_NAME = `${CACHE_PREFIX}-${CACHE_VERSION}`;
+
+// Apply cache naming conventions
 workbox.core.setCacheNameDetails({
-  prefix: CACHE_NAME,
+  prefix: CACHE_PREFIX,
+  suffix: CACHE_VERSION
 });
 
-// Precaching - Auto-generated if using Workbox build tools
+// Precache resources
 workbox.precaching.precacheAndRoute([
   { url: '/', revision: '3' },
   { url: '/manifest.json', revision: '3' },
@@ -38,7 +43,7 @@ workbox.precaching.precacheAndRoute([
   { url: '/offline', revision: '3' }
 ]);
 
-// Cache strategies
+// Cache strategy for static files
 workbox.routing.registerRoute(
   /\.(?:html|css|js|json)$/,
   new workbox.strategies.StaleWhileRevalidate({
@@ -46,12 +51,13 @@ workbox.routing.registerRoute(
     plugins: [
       new workbox.expiration.ExpirationPlugin({
         maxEntries: 100,
-        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
+        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
       }),
     ],
   })
 );
 
+// Cache strategy for assets
 workbox.routing.registerRoute(
   /\.(?:png|jpg|jpeg|svg|gif|webp|ico|woff2)$/,
   new workbox.strategies.CacheFirst({
@@ -59,41 +65,27 @@ workbox.routing.registerRoute(
     plugins: [
       new workbox.expiration.ExpirationPlugin({
         maxEntries: 200,
-        maxAgeSeconds: 60 * 24 * 60 * 60, // 60 Days
+        maxAgeSeconds: 60 * 24 * 60 * 60, // 60 days
       }),
     ],
   })
 );
 
-// Network-first for API calls
-/*workbox.routing.registerRoute(
-  new workbox.strategies.NetworkFirst({
-    cacheName: `${CACHE_NAME}-api`,
-    networkTimeoutSeconds: 3,
-    plugins: [
-      new workbox.expiration.ExpirationPlugin({
-        maxEntries: 50,
-        maxAgeSeconds: 5 * 60, // 5 minutes
-      }),
-    ],
-  })
-);*/
-
-// Offline page fallback
-workbox.routing.setCatchHandler(({event}) => {
+// Offline fallback
+workbox.routing.setCatchHandler(({ event }) => {
   if (event.request.headers.get('accept').includes('text/html')) {
     return caches.match('/offline');
   }
   return Response.error();
 });
 
-// Push notifications
+// Push notification handler
 self.addEventListener('push', (event) => {
   const payload = event.data?.json() || {
     title: 'New Message',
     body: 'You have a new message',
-    icon: 'public/assets/icons/android/android-lauchericon-192x192.png',
-    data: { url: '/' }
+    icon: 'public/assets/icons/android/android-launchericon-192-192.png',
+    data: { url: '/' },
   };
 
   event.waitUntil(
@@ -101,7 +93,7 @@ self.addEventListener('push', (event) => {
       body: payload.body,
       icon: payload.icon,
       vibrate: [200, 100, 200],
-      data: payload.data
+      data: payload.data,
     })
   );
 });
@@ -109,46 +101,36 @@ self.addEventListener('push', (event) => {
 // Notification click handler
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  
+
   const targetUrl = event.notification.data?.url || '/';
-  
+
   event.waitUntil(
-    clients.matchAll({type: 'window', includeUncontrolled: true})
-    .then(windowClients => {
-      const existingClient = windowClients.find(client => 
-        client.url === self.location.origin + targetUrl
-      );
-      
-      if (existingClient) {
-        return existingClient.focus();
-      } else {
-        return clients.openWindow(targetUrl);
-      }
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientsArr) => {
+      const matchingClient = clientsArr.find((client) => client.url === self.location.origin + targetUrl);
+      return matchingClient ? matchingClient.focus() : clients.openWindow(targetUrl);
     })
   );
 });
 
-// Skip waiting and claim clients
+// Listen for skip waiting message
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
 });
 
+// Clean up old caches and activate immediately
 self.addEventListener('activate', (event) => {
-  // Clean up old caches
   event.waitUntil(
-    caches.keys().then(cacheNames => {
+    caches.keys().then((cacheNames) => {
       return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheName !== CACHE_NAME) {
+        cacheNames.map((cacheName) => {
+          if (!cacheName.includes(CACHE_VERSION)) {
             return caches.delete(cacheName);
           }
         })
       );
     })
   );
-  
-  // Claim clients immediately
-  event.waitUntil(clients.claim());
+  event.waitUntil(self.clients.claim());
 });

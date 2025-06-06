@@ -103,8 +103,6 @@
   }
   
   // Service Worker Update Handling
-  
-  
   function showUpdatePrompt(wb) {
     const updateToast = document.createElement('div');
     updateToast.className = 'update-toast position-fixed bottom-0 end-0 m-3 p-3 bg-light rounded shadow';
@@ -265,6 +263,14 @@
     
     // Add any other initialization code here
   });
+
+  function checkForUpdates(registration) {
+    setInterval(() => {
+      registration.update().catch(err => {
+        console.log('Update check failed:', err);
+      });
+    }, 60 * 60 * 1000); // Check hourly
+  }
 
   // Add at the beginning of the DOMContentLoaded event:
 if ('serviceWorker' in navigator) {
