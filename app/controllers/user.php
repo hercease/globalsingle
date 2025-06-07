@@ -396,9 +396,7 @@
                 $countdownlines = $this->userModel->countDownlines($username, $userInfo['stage']);
                 $globalDownlines = $this->userModel->countGlobalDownlines($userInfo['reg_date'], $stageInfo['total_downlines']);
                 $globalDownlinespercentage = $this->userModel->calculatePercentage($globalDownlines, $stageInfo['total_downlines'], $decimalPlaces = 2);
-                $countdownlinespercentage = $this->userModel->calculatePercentage($countdownlines['total'], $stageInfo['downlines'], $decimalPlaces = 2);
-
-
+                $countdownlinespercentage = $this->userModel->calculatePercentage($countdownlines, $stageInfo['downlines'], $decimalPlaces = 2);
 
                 if((int)$globalDownlinespercentage < 100 && (int)$countdownlinespercentage < 100){
 
@@ -1440,7 +1438,7 @@
             }
             //error_log("I got here");
             if(isset($_SESSION['global_single_username'])){
-                
+
                 $username = $_SESSION['global_single_username']; 
 
                 // Get raw POST data
