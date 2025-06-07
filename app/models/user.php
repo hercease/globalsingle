@@ -989,7 +989,7 @@ error_log("Jetton Balance URL: " . $url); // Log for debugging
     }
 
     public function logTransaction($tranxId, $toAddress, $amount, $txId, $status) {
-        $stmt = $this->conn->prepare("INSERT INTO withdrawal_log (tranx_id, to_address, amount, tx_id, status) 
+        $stmt = $this->conn->prepare("INSERT INTO withdrawal_log (tranx_id, to_address, amount, tx_hash, status) 
                                VALUES (?, ?, ?, ?, ?)");
         $stmt->bind_param("issss", $tranxId, $toAddress, $amount, $txId, $status);
         $stmt->execute();
