@@ -429,15 +429,18 @@ app.post('/api/transfer-usdt', async (req, res) => {
 
     if (!ethers.isAddress(toAddress)) {
         return res.status(400).json({ error: "Invalid recipient address" });
+        console.log("Invalid recipient address");
     }
 
     if (isNaN(amount) || amount <= 0) {
         return res.status(400).json({ error: "Invalid amount" });
+        console.log("Invalid amount");
     }
 
     //check if private key is provided
     if (!privatekey || !ethers.isHexString(privatekey)) {
         return res.status(400).json({ error: "Invalid or missing private key" });
+        console.log("Invalid or missing private key");
     }
 
     try {
