@@ -521,6 +521,6 @@ const PORT = process.env.PORT || 3000;
 const bindAddress = process.env.NODE_ENV === 'production' ? '127.0.0.1' : 'localhost';
 
 app.listen(PORT, bindAddress, () => {
-    //console.log(`Server running in ${process.env.NODE_ENV} mode`);
-    //console.log(`Access: http://${bindAddress}:${PORT}`);
+    console.log(`Server running in ${process.env.NODE_ENV} mode`);
+    console.log(`Access: http://${bindAddress}:${PORT}`);
 });

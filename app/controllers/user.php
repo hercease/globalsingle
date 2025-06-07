@@ -1665,6 +1665,8 @@
 
         try {
 
+            $this->db->begin_transaction();
+
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
                 throw new Exception("Invalid request method");
             }
@@ -1736,9 +1738,13 @@
 
             $url = $this->userModel->getCurrentUrl() . '/transaction_history';
 
+            $this->db->commit();
+
             return json_encode(['status' => true, 'message' => "Congratulations, withdrawal was successful"]);
 
         } catch (Exception $e) {
+            
+            $this->db->rollback();
             return json_encode([
                 'status' => false,
                 'message' => $e->getMessage()
