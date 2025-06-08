@@ -427,6 +427,8 @@ app.post('/api/transfer-usdt', async (req, res) => {
 
     const { toAddress, amount, privatekey } = req.body;
 
+    console.log(req.body);
+
     if (!ethers.isAddress(toAddress)) {
       console.log("Invalid recipient address");
         return res.status(400).json({ error: "Invalid recipient address" });
