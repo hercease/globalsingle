@@ -301,7 +301,7 @@ html {
                 </div>
                 <!-- Feature 3 -->
                 <div class="col-md-12  text-center">
-                    <p>We believe, many has corrupted the online business industries, but with certain effective and discipline measures, GSL will work tirelessly in empowering individuals to achieve their personal growth.</p>
+                    <p>We believe, many have corrupted the online business industries, but with certain effective and discipline measures, GSL will work tirelessly in empowering individuals to achieve their personal growth.</p>
                 </div>
             </div>
         </div>
@@ -480,12 +480,12 @@ html {
             <div class="accordion-item border-0 mb-3 rounded overflow-hidden shadow-sm">
                 <h3 class="accordion-header" id="headingThree">
                 <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
-                    How can i buy Registration wallet?
+                    How can i buy Registration PIN?
                 </button>
                 </h3>
                 <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
                 <div class="accordion-body bg-white">
-                    You can buy registration wallet from our verified vendors only, Login to the App and Contact anyone. Moreover, we need 5,000 vendors across the Globe, Any member can apply to be a vendor once qualified.
+                    You can buy registration PIN from our verified vendors login to the APP and contact anyone. Moreover, we need 5,000 vendors across the Global, any member can apply to be a vendor once qualified.
                 </div>
                 </div>
             </div>
@@ -525,21 +525,8 @@ html {
                 </h3>
                 <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#faqAccordion">
                     <div class="accordion-body bg-white">
-                        GSl team hands are on deck to deliver the best, meanwhile, with the support of each member performaing his/her tasks, we can last for years. 
+                        15 Minutes
                     </div>
-                </div>
-            </div>
-
-            <div class="accordion-item border-0 mb-3 rounded overflow-hidden shadow-sm">
-                <h3 class="accordion-header" id="headingSeven">
-                <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven">
-                    How long does withdrawal take?
-                </button>
-                </h3>
-                <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#faqAccordion">
-                <div class="accordion-body bg-white">
-                    We offer automated-swift withdrawal system, our withdrawal delivers within 5 minutes 
-                </div>
                 </div>
             </div>
 
@@ -551,7 +538,7 @@ html {
                 </h3>
                 <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight" data-bs-parent="#faqAccordion">
                 <div class="accordion-body bg-white">
-                    No, we encourage you to assit your downlines and still claim your refferal bonus at the same time, together we earn more.
+                    Yes, but we encourage you to assist your team and still claim your referral bonus at the same time. Together we can earn more.    
                 </div>
                 </div>
             </div>
@@ -679,11 +666,11 @@ html {
 // Your PHP data converted to JavaScript
 const stages = [
   {stage: 1, downlines: 2, total_downlines: 15, compensation: 10, task_info: 'Personally recruit 2 downlines (15 total)'},
-  {stage: 2, downlines: 2, total_downlines: 85, compensation: 25, task_info: 'Personally recruit 2 downlines (85 total)'},
+  {stage: 2, downlines: 2, total_downlines: 85, compensation: 20, task_info: 'Personally recruit 2 downlines (85 total)'},
   {stage: 3, downlines: 4, total_downlines: 385, compensation: 50, task_info: 'Personally recruit 4 downlines (385 total)'},
-  {stage: 4, downlines: 6, total_downlines: 1585, compensation: 115, task_info: 'Personally recruit 6 downlines (1,585 total)'},
-  {stage: 5, downlines: 8, total_downlines: 7585, compensation: 250, task_info: 'Personally recruit 8 downlines (7,585 total)'},
-  {stage: 6, downlines: 8, total_downlines: 38585, compensation: 2000, task_info: 'Personally recruit 8 downlines (38,585 total)'},
+  {stage: 4, downlines: 5, total_downlines: 1585, compensation: 115, task_info: 'Personally recruit 5 downlines (1,585 total)'},
+  {stage: 5, downlines: 5, total_downlines: 7585, compensation: 250, task_info: 'Personally recruit 5 downlines (7,585 total)'},
+  {stage: 6, downlines: 10, total_downlines: 38585, compensation: 2000, task_info: 'Personally recruit 10 downlines (38,585 total)'},
   {stage: 7, downlines: 12, total_downlines: 235585, compensation: 8000, task_info: 'Personally recruit 12 downlines (235,585 total)'}
 ];
 
