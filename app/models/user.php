@@ -374,6 +374,7 @@ class usersModel {
         curl_setopt_array($ch, $options);
         
         $response = curl_exec($ch);
+        error_log(print_r($response, true));
         $error = curl_error($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
