@@ -1402,29 +1402,35 @@ error_log("Jetton Balance URL: " . $url); // Log for debugging
 
     }
 
-    public function confirmWithdrawalTransaction($amount,$id,$hash,$username,$address){
-
+    public function confirmWithdrawalTransaction($amount, $id, $hash, $username, $address) {
+        
         $this->conn->begin_transaction();
-
+    
         try {
-
-            // Update withdrawal status if needed
             $confirmed = "confirmed";
-            $stmt = $this->conn->prepare("UPDATE withdrawal_log SET status = ?, tx_hash = ? confirmed_at = NOW() WHERE id = ?");
-            $stmt->bind_param("sss", $confirmed,$hash,$id);
+            $stmt = $this->conn->prepare("UPDATE withdrawal_log SET status = ?, tx_hash = ?, confirmed_at = NOW() WHERE id = ?");
+            $stmt->bind_param("sss", $confirmed, $hash, $id);
             $stmt->execute();
             $stmt->close();
-
+    
+            // Commit the transaction
+            $this->conn->commit();
+    
+            // Send notification after DB commit
             $url = $this->getCurrentUrl() . '/transaction_history';
-
-            $this->pushnotification->sendNotification($username,'Fund Withdrawal',"Withdrawal of $" . number_format($amount,2) . " to $address was successful", $url);
-            
+            $this->pushnotification->sendNotification(
+                $username,
+                'Fund Withdrawal',
+                "Withdrawal of $" . number_format($amount, 2) . " to $address was successful",
+                $url
+            );
+    
         } catch (Exception $e) {
             $this->conn->rollback();
             throw new Exception("Transaction processing failed: " . $e->getMessage());
         }
-
     }
+    
 
     public function checkConfirmations($txBlockHeight) {
         try {
