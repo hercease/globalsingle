@@ -2256,6 +2256,150 @@
 
         }
 
+        public function userAccountupdates(){
+            try {
+
+                if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                    throw new Exception("Invalid request method");
+                }
+
+                $method = $_POST['method'];
+                $username = $_POST['username'];
+                $email = $_POST['email'];
+
+                if($method=='resend_activation'){
+
+                    $activation_link =  $this->userModel->getCurrentUrl() . '/confirmation?user='.$username;
+                    $year = date("Y");
+                    $logourl = $this->userModel->getCurrentUrl() . "/public/assets/images/logo_new.png";
+                    $message = <<<EMAIL
+                        <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+                        <html xmlns="http://www.w3.org/1999/xhtml">
+                        <head>
+                            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                            <title>Welcome to GlobalSingleLine</title>
+                            <style type="text/css">
+                                /* Client-specific resets */
+                                body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+                                table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+                                img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+                                
+                                /* Main styles */
+                                body {
+                                    font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+                                    background-color: #f5f7fa;
+                                    margin: 0 !important;
+                                    padding: 0 !important;
+                                }
+                                
+                                /* Fallback for Outlook */
+                                .header-fallback {
+                                    background-color:rgb(255, 255, 255) !important;
+                                }
+                            </style>
+                        </head>
+                        <body style="margin: 0; padding: 0;">
+                            <!--[if (gte mso 9)|(IE)]>
+                            <table width="600" align="center" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                            <td>
+                            <![endif]-->
+                            
+                            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
+                                <!-- Header -->
+                                <tr>
+                                    <td align="center" class="header-fallback" style="padding: 30px 0; background:rgb(245, 245, 245);">
+                                        <img src="{$logourl}" alt="GlobalSingleLine Logo" width="150" style="display: block;">
+                                    </td>
+                                </tr>
+                                
+                                <!-- Content -->
+                                <tr>
+                                    <td bgcolor="#ffffff" style="padding: 30px; font-size: 16px; line-height: 1.6; color: #4a5568;">
+                                        <h1 style="font-size: 24px; color: #2d3748; text-align: center; margin: 0 0 20px 0;">🎉 Welcome to GlobalSingleLine!</h1>
+                                        
+                                        <p style="margin: 0 0 16px 0;">Hi <strong style="color: #198754;">{$username}</strong>,</p>
+                                        
+                                        <p style="margin: 0 0 16px 0;">Congratulations on becoming a SINGLE-LEG-WORLDWIDE NETWORKER! You now have access to:</p>
+                                        
+                                        <ul style="margin: 0 0 16px 0; padding-left: 20px;">
+                                            <li style="margin-bottom: 8px;">Exceptional Fund Rewards.</li>
+                                            <li style="margin-bottom: 8px;">Global networking platform.</li>
+                                            <li style="margin-bottom: 8px;">International Trip And Awards.</li>
+                                            <li style="margin-bottom: 8px;">Special vendor benefits</li>
+                                            <li style="margin-bottom: 8px;">40% Discount On All Our Services.</li>
+                                        </ul>
+                                        
+                                        <p style="margin: 0 0 16px 0;">We're excited to partner with you in building sustainable network marketing through our services and self-generated funds.</p>
+                                
+                                        <p style="margin: 0 0 24px 0;">Your account is currently inactive. To unlock all platform features, please activate your account:</p>
+                                        
+                                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                            <tr>
+                                                <td align="center">
+                                                    <table border="0" cellpadding="0" cellspacing="0">
+                                                        <tr>
+                                                            <td align="center" bgcolor="#198754" style="border-radius: 6px;">
+                                                                <a href="{$activation_link}" style="display: inline-block; padding: 12px 24px; color: #ffffff; font-weight: 600; text-decoration: none;">🔓 Activate Account</a>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        
+                                        <p style="margin: 24px 0 0 0;">We wish you profitable experiences and pleasant business transactions throughout your journey with us.</p>
+                                        
+                                        <p style="margin: 16px 0 0 0;">Best regards,<br>
+                                        <strong>GSL TEAM.</strong><br>
+                                        Generating Success for Life...</p>
+                                    </td>
+                                </tr>
+                                
+                                <!-- Footer -->
+                                <tr>
+                                    <td bgcolor="#f5f7fa" style="padding: 20px; text-align: center; font-size: 14px; color: #718096; border-top: 1px solid #e2e8f0;">
+                                        © {$year} GlobalSingleLine. All rights reserved.
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <!--[if (gte mso 9)|(IE)]>
+                            </td>
+                            </tr>
+                            </table>
+                            <![endif]-->
+                        </body>
+                        </html>
+                    EMAIL;
+            
+                    if($this->userModel->sendmail($email,$username,$message,"Registration Confirmation")){
+
+                        return json_encode(["status" => true, "message" => "Email activation sent successfully"]);
+
+                    } else {
+
+                        return json_encode(["status" => true, "message" => "Email activation could not be sent at this time"]);
+
+                    }
+
+                } else {
+
+                    return json_encode(["status" => false, "message" => "This function is not available yet"]);
+
+                }
+
+
+            } catch (Exception $th) {
+
+                return json_encode([
+                    'status' => false,
+                    'message' => $th->getMessage()
+                ]);
+            }
+        }
+
         
         
 

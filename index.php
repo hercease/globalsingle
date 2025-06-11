@@ -326,6 +326,11 @@ switch ($url) {
             echo $Usercontroller->sendChatNotification();
         }
         break;
+    case '/updateuseraccount':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            echo $Usercontroller->userAccountupdates();
+        }
+        break;
     default:
     // Handle 404
     http_response_code(404);

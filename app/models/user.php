@@ -437,7 +437,7 @@ class usersModel {
 
         } elseif ($tabletype === 'all_users') {
 
-            $query = "SELECT id, username, email, reg_date, country, avatar, earning_wallet, stage FROM members"; // Adjust column names and table as needed
+            $query = "SELECT id, username, email, reg_date, country, avatar, earning_wallet, stage, account_access FROM members"; // Adjust column names and table as needed
             if (!empty($searchValue)) {
                 $searchQuery = " WHERE username LIKE ? OR email LIKE ?";
                 $params[] = "%$searchValue%";
@@ -582,6 +582,18 @@ class usersModel {
 
                 $avatar = !empty($row['avatar']) ? "<img src='".$rootUrl."/public/assets/images/user/".$row['avatar']."' class='rounded-circle' width='30' height='30'>" : "<img src='".$rootUrl."/public/assets/images/default-avatar.png' class='rounded-circle' width='50' height='50'>";
                 
+                $action = "<div class='btn-group'>
+
+                    <button class='btn btn-secondary btn-sm dropdown-toggle' type='button' data-bs-toggle='dropdown' aria-expanded='false'>Action</button><div class='dropdown-menu'>";
+
+                    $action .=  "<a data-id='".$row['id']."' data-method='delete_user' data-username='".$row['username']."' data-email='".$row['email']."' data-message='Are you sure you want to delete this user ?' class='dropdown-item user_update' href='#0'><i class='fas fa-trash'></i> Delete User</a>";
+
+                    if($row['account_access'] < 1){
+                        $action .=  "<a data-id='".$row['id']."' data-username='".$row['username']."' data-email='".$row['email']."' data-method='resend_activation' data-message='Are you sure you want to continue ?' class='dropdown-item user_update' href='#0'><i class='fas fa-check-circle'></i> Resend Email</a>";
+                    }
+                
+                $action .= "</div></div>";
+
                 $data[] = [
                     "id" => ++$i,
                     "username" => $avatar .' '. $row['username'],
@@ -590,7 +602,7 @@ class usersModel {
                     "stage" => $row['stage'],
                     "earning_wallet" => '$' . number_format($row['earning_wallet'],2),
                     "date" =>  $row['reg_date'],
-                    "action" =>  "<button data-id='".$row['id']."'  class='btn btn-danger btn-sm del_package'>Delete User</button>"
+                    "action" =>  $action
                 ];
 
             } elseif($tabletype === 'vendor_requests'){
@@ -1504,7 +1516,6 @@ error_log("Jetton Balance URL: " . $url); // Log for debugging
 
         }
     }
-
 
 
     
