@@ -119,18 +119,44 @@ self.addEventListener('message', (event) => {
   }
 });
 
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => cache.add("/offline"))
+  );
+});
+
+
+if (workbox) {
+  if (workbox.navigationPreload.isSupported()) {
+    workbox.navigationPreload.enable();
+  }
+
+  // Use StaleWhileRevalidate for all requests
+  workbox.routing.registerRoute(
+    new RegExp(".*"),
+    new workbox.strategies.StaleWhileRevalidate({
+      cacheName: CACHE_NAME,
+    })
+  );
+} else {
+  console.warn("Workbox failed to load.");
+}
+
 // Clean up old caches and activate immediately
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (!cacheName.includes(CACHE_VERSION)) {
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
+    Promise.all([
+      caches.keys().then((cacheNames) => {
+        return Promise.all(
+          cacheNames.map((cacheName) => {
+            if (!cacheName.includes(CACHE_VERSION)) {
+              return caches.delete(cacheName);
+            }
+          })
+        );
+      }),
+      self.clients.claim()
+    ])
   );
-  event.waitUntil(self.clients.claim());
 });
+

@@ -52,6 +52,13 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom CSS -->
+    <script>
+        window.env = {
+            NOTIFICATION_ACCESS: "<?php echo $userInfo['notification_access'] ?? 1; ?>",
+            VAPID_PUBLIC_KEY: "<?php echo VAPID_PUBLIC_KEY ?>",
+            ENDPOINT: "<?php echo $rootUrl ?>"
+        };
+    </script>
     <style>
         :root {
             --primary: #6f42c1; /* Purple (Bootstrap's "indigo") */
@@ -114,28 +121,28 @@
         }
 
           /* Custom styles for transparent overlay */
-          .owl-carousel .slide-item {
-  height: 350px;
-  background-size: cover;
-  background-position: center;
-  position: relative;
-}
+        .owl-carousel .slide-item {
+          height: 350px;
+          background-size: cover;
+          background-position: center;
+          position: relative;
+        }
 
-.slide-item .overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6); /* Dark transparent overlay */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  text-align: center;
-  color: #fff;
-  padding: 20px;
-}
+      .slide-item .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6); /* Dark transparent overlay */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        text-align: center;
+        color: #fff;
+        padding: 20px;
+      }
 
 .overlay h1 {
   font-size: 3rem;
@@ -203,7 +210,7 @@ html {
     scroll-behavior: smooth;
 }
 
-    </style>
+</style>
 </head>
 <body>
     <!-- Navbar -->
@@ -631,9 +638,12 @@ html {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- jQuery (required) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- Owl Carousel JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <!-- Owl Carousel JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script src="https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox-window.prod.mjs" type="module"></script>
+    <script src="sw.js"></script>
+    <script src="<?php echo $rootUrl ?>/public/assets/js/app.js"></script>
+    <script src="<?php echo $rootUrl ?>/public/assets/js/workboxreg.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const navbarHeight = document.querySelector('.navbar').offsetHeight;

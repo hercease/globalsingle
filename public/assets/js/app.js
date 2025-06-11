@@ -122,7 +122,7 @@
     });
   }
 
-  console.log('Push subscription successful:', window.env.NOTIFICATION_ACCESS);
+  //console.log('Push subscription successful:', window.env.NOTIFICATION_ACCESS);
   
   // Push Notification System
   class PushNotificationManager {
@@ -313,6 +313,13 @@ function showUpdatePrompt(registration) {
   
   document.getElementById('update-button').addEventListener('click', () => {
     registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+  });
+
+  // Listen for the new service worker to activate
+  registration.waiting.addEventListener('statechange', (e) => {
+    if (e.target.state === 'activated') {
+      window.location.reload();
+    }
   });
   
   document.getElementById('dismiss-button').addEventListener('click', () => {

@@ -1,11 +1,16 @@
 {
     "name": "Global Single Line",
     "short_name": "GSL",
-    "start_url": "/login",
+    "start_url": "login",
     "display": "standalone",
     "background_color": "#ffffff", 
     "theme_color": "#317EFB",
     "orientation": "portrait-primary",
+    "description": "Generating Success For Life",
+    "related_applications": [],
+    "prefer_related_applications": false,
+    "dir": "ltr",
+    "lang": "en",
     "icons": [
       {
         "src": "public/assets/icons/windows11/SmallTile.scale-100.png",
@@ -455,5 +460,6 @@
         "src": "public/assets/icons/ios/1024.png",
         "sizes": "1024x1024"
       }
-    ]
+    ],
+    "url": "https://globalsingleline.singles"
   }

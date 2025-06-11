@@ -1,3 +1,4 @@
+importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox-sw.js');
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       const wb = new workbox.Workbox('/sw.js');
