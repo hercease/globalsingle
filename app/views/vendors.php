@@ -692,9 +692,9 @@
         </div>
     </div>
 
-    <a href="support" class="support-icon">
-      <span><i class="fas fa-headset"></i></span> <!-- Or use an icon (e.g., Font Awesome) -->
-    </a>
+    <a href="https://t.me/+rkqEln_UiqphMDM0" class="support-icon">
+        <span><i class="fab fa-telegram"></i></span> <!-- Or use an icon (e.g., Font Awesome) -->
+      </a>
 
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="<?php echo $rootUrl ?>/public/assets/js/plugins/jquery.js"></script>
