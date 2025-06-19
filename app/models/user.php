@@ -523,8 +523,10 @@ class usersModel {
 
                 error_log(print_r($respData, true));
 
-                if ($respData && $respData['success']) {
+                if (isset($respData) && $respData['success']) {
                     $balances = $respData['balances'];
+                }else{
+                    $balances = [];
                 }
             }
 
