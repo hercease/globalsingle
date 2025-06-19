@@ -1728,7 +1728,7 @@
 
             $description = "Withdrawal of " . $input['amount'] . " to $address";
 
-           $date = date('Y-m-d H:i:s');
+            $date = date('Y-m-d H:i:s');
 
             $history_id = $this->userModel->InsertHistory($username, $input['amount'], $date, 'debit', $description);
 
