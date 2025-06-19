@@ -1704,7 +1704,7 @@
                 throw new Exception("No code found or it expired.");
             }
 
-            if((int)$amount + 1 > $userInfo['earning_wallet']){
+            if((int)$amount > $userInfo['earning_wallet']){
                 throw new Exception("Insufficient Wallet balance");
             }
 
@@ -1732,9 +1732,9 @@
 
             $history_id = $this->userModel->InsertHistory($username, $input['amount'], $date, 'debit', $description);
 
-            $this->userModel->logTransaction($history_id, $address, $input['amount'], '', 'pending'); // Replace '1' with your user id
+            $this->userModel->logTransaction($history_id, $address, $input['amount'] - 1, '', 'pending'); // Replace '1' with your user id
 
-            $this->userModel->deductWallet($input['amount'] + 1, $username);
+            $this->userModel->deductWallet($input['amount'], $username);
 
             $url = $this->userModel->getCurrentUrl() . '/transaction_history';
 
