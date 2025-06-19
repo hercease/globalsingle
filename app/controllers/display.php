@@ -651,7 +651,7 @@ class Display {
             // 4. Send funds using internal method
             $response = $this->userModel->transferWalletFunds('', $amount, $toAddress);
     
-            error_log("Transfer Response: " . print_r($response, true));
+            //error_log("Transfer Response: " . print_r($response, true));
     
             // 5. Check if successful
             if (isset($response['status']) && $response['status'] === true) {

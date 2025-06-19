@@ -1402,7 +1402,7 @@ error_log("Jetton Balance URL: " . $url); // Log for debugging
             return []; // handle error or empty result
         }
 
-        error_log(print_r($data, true));
+        //error_log(print_r($data, true));
 
         // Filter only incoming transfers
         $incoming = array_filter($data['result'], function($tx) use ($walletAddress) {
