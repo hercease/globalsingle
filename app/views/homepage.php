@@ -593,9 +593,7 @@ html {
                 <div class="col-md-3">
                     <h6>Connect</h6>
                     <div class="d-flex gap-3">
-                        <a href="#" class="text-dark"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="text-dark"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-dark"><i class="fab fa-youtube"></i></a>
+                        <a href="https://t.me/+rkqEln_UiqphMDM0" class="text-dark"><i class="fab fa-telegram"></i></a>
                     </div>
                 </div>
             </div>

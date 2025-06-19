@@ -18,6 +18,7 @@
     <!-- [Mobile Media Block end] -->
     <div class="ms-auto">
     <ul class="list-unstyled">
+        <li class="pc-h-item me-3"><a href="support"><i class="fas fa-headset fa-1x text-danger"></i></a></li>
         <li class="dropdown pc-h-item header-user-profile">
         <a class="pc-head-link dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" data-bs-auto-close="outside" aria-expanded="false">
             <img src="<?php echo $rootUrl ?>/public/assets/images/user/<?php echo $userInfo['avatar']; ?>" alt="user-image" class="user-avtar">
