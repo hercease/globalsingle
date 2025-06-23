@@ -532,7 +532,7 @@ html {
                 </h3>
                 <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#faqAccordion">
                     <div class="accordion-body bg-white">
-                        15 Minutes
+                        We Offer Automated-Swift Withdrawal System. Our Withdrawal Delivered Within maximum time of 15 Minutes.
                     </div>
                 </div>
             </div>
@@ -540,7 +540,7 @@ html {
             <div class="accordion-item border-0 mb-3 rounded overflow-hidden shadow-sm">
                 <h3 class="accordion-header" id="headingEight">
                 <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight">
-                    Can i refer more the withdrawal take?
+                    Can i refer more than my task?
                 </button>
                 </h3>
                 <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight" data-bs-parent="#faqAccordion">
