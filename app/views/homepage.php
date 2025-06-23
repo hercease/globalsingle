@@ -327,7 +327,7 @@ html {
                     <div class="card feature-card h-100 p-4">
                         <div class="card-body text-center">
                             <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
-                                <i style="color:#143d55" class="fas fa-code fa-2x text-primary"></i>
+                                <i style="color:#143d55" class="fas fa-code fa-2x"></i>
                             </div>
                             <h5>Software Development</h5>
                             <p class="text-muted">We provide custom software solutions for we and mobile applications for Private na dPublic Organisations. Our team create intuitive and scalable apps designed to grow with your business. Moreso, From "Planning" to "Launch" and "Management", We deliver efficient and relaible disgiatl products.</p>
