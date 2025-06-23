@@ -252,7 +252,7 @@ html {
                     <li class="nav-item"><a class="nav-link" href="#services">Our Services</a></li>
                     <li class="nav-item"><a class="nav-link" href="#faq">Faq</a></li>
                     <li class="nav-item ms-2">
-                        <a class="btn btn-primary rounded-2" href="register">Join Now <i class="fas fa-arrow-right ms-1"></i></a>
+                        <a style="background:#143d55" class="btn rounded-2 text-white" href="register">Join Now <i class="fas fa-arrow-right ms-1"></i></a>
                     </li>
                 </ul>
             </div>
@@ -327,7 +327,7 @@ html {
                     <div class="card feature-card h-100 p-4">
                         <div class="card-body text-center">
                             <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
-                                <i class="fas fa-code fa-2x text-primary"></i>
+                                <i style="color:#143d55" class="fas fa-code fa-2x text-primary"></i>
                             </div>
                             <h5>Software Development</h5>
                             <p class="text-muted">We provide custom software solutions for we and mobile applications for Private na dPublic Organisations. Our team create intuitive and scalable apps designed to grow with your business. Moreso, From "Planning" to "Launch" and "Management", We deliver efficient and relaible disgiatl products.</p>
@@ -339,7 +339,7 @@ html {
                     <div class="card feature-card h-100 p-4">
                         <div class="card-body text-center">
                             <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
-                                <i class="fas fa-solid fa-chart-line fa-2x text-primary"></i>
+                                <i style="color:#143d55" class="fas fa-solid fa-chart-line fa-2x"></i>
                             </div>
                             <h5>Online Business Trainings</h5>
                             <p class="text-muted">GSL Online business trainings provide flexible, accessible education for entrepreneurs and professionals, with Convenience, Cost-effectiveness and Self-paced learning. Nevertheless, Our Online Business Trainings cover topics like: Leadership & Management, Entrepreneurship, FOREX/Crypto Trading, WEB & Graphic Designs.</p>
@@ -351,7 +351,7 @@ html {
                     <div class="card feature-card h-100 p-4">
                         <div class="card-body text-center">
                             <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
-                                <i class="fas fa-users fa-2x text-primary"></i>
+                                <i style="color:#143d55" class="fas fa-users fa-2x"></i>
                             </div>
                             <h5>Single Leg MLM Platform</h5>
                             <p class="text-muted">GSL company provide a Single Leg Multi-Level Marketing(MLM) system with a compensation structure where participants earn commissions primarily from Onme TEAM Network, This model can offer a more straightforward approach to the Multi-Level Marketing Industry, Meanwhile, GSL Single Leg Structure focuses on One Global Team, Multiple Levels, Series of Passive Income Opportunities, Simplified strcuture, Individual recruitment task performance and Cirlce out bonus on each stages respectively. emphasaizing personal growths and global team-work advancements.</p>
@@ -363,7 +363,7 @@ html {
                     <div class="card feature-card h-100 p-4">
                         <div class="card-body text-center">
                             <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
-                                <i class="fas fa-solid fa-coins fa-2x text-primary"></i>
+                                <i style="color:#143d55" class="fas fa-solid fa-coins fa-2x"></i>
                             </div>
                             <h5>Crypto Exchange Markets</h5>
                             <p class="text-muted">GSL Crypto Exchnage is a digital platform where individuals can Buy, Sell, Store, and Trade cryptocurrencies like BTC, BNB, ETH, SOL, TON, and others. Meanwhile, We would launch our Native Utility Token(GSL) on SOLANA Blockchain next year to mark the company's a year anniversay celebration. In addition, Our Vendors would become automatic Merchants by giving license to sell Cryptocurrencies on our P2P Trading in October 2025.</p>
@@ -374,7 +374,7 @@ html {
                     <div class="card feature-card h-100 p-4">
                         <div class="card-body text-center">
                             <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
-                                <i class="fas fa-users fa-2x text-primary"></i>
+                                <i style="color:#143d55" class="fas fa-users fa-2x"></i>
                             </div>
                             <h5>Chat Platform</h5>
                             <p class="text-muted">Our Company provides a chat platform which serves as a digital tool that enables real-time communication between individuals or groups through text, voice, or video. GSL Chat platform facilitates quick and efficiet communication between Members, Vendors and Customer support. Moreover, GSL Chat Rooms For: Employment (Online Jobs, Hybrid jobs & Offline Jobs), Business (E-commerce & Services), Entertainment ( Movie, Music & Lifestyles), Relationships (PefecthMatch & LoveQuotes), Sports(Football & Other Sports). However, All thes above interesting groups would be available after Official Launching</p>
@@ -388,10 +388,10 @@ html {
     <!-- Compensation Plan Highlights -->
     <section id="compensation" class="py-5 bg-white">
          <div class="container">
-    <div class="text-center mb-5">
-      <h2 class="fw-bold">Compensation Plan Growth Path</h2>
-      <p class="text-muted">See how your earnings scale with each achievement stage</p>
-    </div>
+          <div class="text-center mb-5">
+            <h2 class="fw-bold">Compensation Plan Growth Path</h2>
+            <p class="text-muted">See how your earnings scale with each achievement stage</p>
+          </div>
 
     <!-- Stage Progress Visualization -->
     <div class="row g-4">
@@ -399,7 +399,7 @@ html {
       <div class="col-lg-4">
         <div class="pt-3" style="top: 20px;">
           <div class="card shadow-sm border-0 mb-4">
-            <div class="card-header bg-primary text-white">
+            <div style="background:#143d55" class="card-header text-white">
               <h5 class="mb-0">Selected Stage Details</h5>
             </div>
             <div class="card-body" id="stageDetails">
@@ -555,7 +555,7 @@ html {
             <!-- CTA Below FAQ -->
             <div class="text-center mt-5">
                 <p class="mb-3">Still have questions?</p>
-                <a href="support" class="btn btn-primary px-4">
+                <a href="support" style="background:#143d55" class="btn px-4 text-white">
                     <i class="fas fa-envelope me-2"></i> Contact Support
                 </a>
             </div>
@@ -564,7 +564,7 @@ html {
     </div>
     </section>
     <!-- CTA Section -->
-    <section class="py-5 bg-primary text-white">
+    <section style="background:#143d55" class="py-5 text-white">
         <div class="container text-center">
             <h2 class="fw-bold mb-4">Ready to Transform Your Income?</h2>
             <p class="lead mb-5">Click the button below to get started today.</p>
@@ -704,7 +704,7 @@ document.addEventListener('DOMContentLoaded', function() {
       datasets: [{
         label: 'Monthly Earnings ($)',
         data: stages.map(s => s.compensation),
-        backgroundColor: '#3b82f6',
+        backgroundColor: '#143d55',
         borderColor: '#1e40af',
         borderWidth: 1
       }]
