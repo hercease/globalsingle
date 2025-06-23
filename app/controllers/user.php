@@ -1681,6 +1681,9 @@
                 }
             }
 
+            $timezone = $this->userModel->sanitizeInput($_POST['timezone'] ?? '');
+            date_default_timezone_set($timezone ?? 'Africa/Lagos');
+
             // Sanitize and validate input
             $amount = $input['amount'];
             $address = $input['address'];

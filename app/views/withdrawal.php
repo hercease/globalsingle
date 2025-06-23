@@ -438,6 +438,7 @@ body {
         });
     });
 
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   $("form[name='wallet_withdrawal']").validate({
             // Make sure the form is submitted to the destination defined
@@ -445,6 +446,7 @@ body {
                 submitHandler: function(form){
                     
                     var data = $("form[name='wallet_withdrawal']").serialize();
+                    data += '&timezone=' + encodeURIComponent(timezone);
                     
                     iziToast.question({
                         timeout: 20000,
