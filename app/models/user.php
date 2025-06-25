@@ -871,17 +871,17 @@ error_log("Jetton Balance URL: " . $url); // Log for debugging
         try {
             
             $mail->isSMTP();
-            $mail->SMTPDebug = 2;                     
-            $mail->Host       = "smtp-relay.brevo.com";      
+            //$mail->SMTPDebug = 2;                     
+            $mail->Host       = BREVO_HOST;      
             $mail->SMTPAuth   = true;
             $mail->SMTPKeepAlive = true; //SMTP connection will not close after each email sent, reduces SMTP overhead	
-            $mail->Username   = "907ab7002@smtp-brevo.com";    
-            $mail->Password   = "TcIy8FK7VwY0H4hZ";             
+            $mail->Username   = BREVO_USERNAME;    
+            $mail->Password   = BREVO_PASSWORD;             
             $mail->SMTPSecure = 'tls';   
             $mail->Port       = 587;               
     
             //Recipients
-            $mail->setFrom("noreply@globalsingleline.singles", 'GlobalSingleLine'); // Sender's email and name
+            $mail->setFrom(BREVO_FROM_EMAIL, 'GlobalSingleLine'); // Sender's email and name
             $mail->addAddress("$email", "$name"); 
             
             $mail->isHTML(true); 
