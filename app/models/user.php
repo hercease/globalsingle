@@ -15,7 +15,7 @@ class usersModel {
     private $encryption;
     private $pushnotification;
     private $rootUrl;
-     private $bscwallet;
+    private $bscwallet;
 
     public function __construct($db) {
 
@@ -858,6 +858,46 @@ error_log("Jetton Balance URL: " . $url); // Log for debugging
         $stmt->bind_param("ss", $password, $email);
         $stmt->execute();
         return $stmt->insert_id;
+    }
+
+    public function sendcampaignmail($email,$name,$body,$subject,$id){
+
+        require_once 'PHPMailer/src/Exception.php';
+        require_once 'PHPMailer/src/PHPMailer.php';
+        require_once 'PHPMailer/src/SMTP.php';
+
+        $mail = new PHPMailer(true);
+        
+        try {
+            
+            $mail->isSMTP();
+            $mail->SMTPDebug = 2;                     
+            $mail->Host       = "smtp-relay.brevo.com";      
+            $mail->SMTPAuth   = true;
+            $mail->SMTPKeepAlive = true; //SMTP connection will not close after each email sent, reduces SMTP overhead	
+            $mail->Username   = "907ab7002@smtp-brevo.com";    
+            $mail->Password   = "TcIy8FK7VwY0H4hZ";             
+            $mail->SMTPSecure = 'tls';   
+            $mail->Port       = 587;               
+    
+            //Recipients
+            $mail->setFrom("noreply@globalsingleline.singles", 'GlobalSingleLine'); // Sender's email and name
+            $mail->addAddress("$email", "$name"); 
+            
+            $mail->isHTML(true); 
+            $mail->Subject = $subject;
+            $mail->Body = $body;
+    
+            $mail->send();
+            $mail->clearAddresses();
+            
+            $stmt = $this->conn->prepare("UPDATE campaign SET is_sent = 1 WHERE id = ?");
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+            
+        } catch (Exception $e){
+            return "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+        }
     }
 
     public function sendmail($email,$name,$body,$subject){

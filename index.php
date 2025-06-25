@@ -179,6 +179,11 @@ switch ($url) {
             $DisplayController->showChatSupport($rootUrl);
         }
         break;
+    case '/sendcampaign':
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $DisplayController->sendCampaign($rootUrl);
+        }
+        break;
         
     case '/':
     case '/homepage':

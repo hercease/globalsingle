@@ -896,4 +896,68 @@ class Display {
         include('app/views/offline.php');
     }
 
+    public function sendCampaign($rootUrl){
+        
+        $html = <<<EMAIL
+        <!DOCTYPE html>
+        <html lang='en'>
+        <head>
+        <meta charset='UTF-8' />
+        <title>GlobalSingleLine Invitation</title>
+        </head>
+        <body style='margin:0; padding:0; background-color:#f9f9f9; font-family:Arial, sans-serif; color:#333;'>
+        <div style='max-width:600px; margin:20px auto; background-color:#ffffff; border:1px solid #ddd; padding:30px; border-radius:8px;'>
+
+            <h1 style='font-size:24px; color:#1a73e8; margin-bottom:20px;'>Discover a New Way to Earn with Crypto</h1>
+            
+            <p style='font-size:16px; line-height:1.5; margin-bottom:15px;'>Hello,</p>
+
+            <p style='font-size:16px; line-height:1.5; margin-bottom:15px;'>
+                We are excited to invite you to <strong>GlobalSingleLine</strong>, a unique crypto-powered income platform designed to help everyday people start earning smartly and sustainably.
+            </p>
+
+            <p style='font-size:16px; line-height:1.5; margin-bottom:15px;'>
+                Here's what makes GlobalSingleLine stand out:
+            </p>
+
+            <ul style='padding-left:20px; margin-bottom:20px;'>
+                <li style='font-size:16px; margin-bottom:10px;'> Transparent and fair reward system</li>
+                <li style='font-size:16px; margin-bottom:10px;'> Crypto-based earnings with no hidden fees</li>
+                <li style='font-size:16px; margin-bottom:10px;'> Quick sign-up with a one-time $10 fee</li>
+                <li style='font-size:16px; margin-bottom:10px;'> Trusted by users around the world</li>
+            </ul>
+
+            <p style='font-size:16px; line-height:1.5; margin-bottom:25px;'>
+                Start with a one-time $10 registration and earn as your network expands.
+            </p>
+
+            <p style='font-size:16px; line-height:1.5; margin-bottom:25px;'>
+                For more enquiries, click the button below to join our telegram group:
+            </p>
+
+            <a href='https://t.me/+rkqEln_UiqphMDM0' style='display:inline-block; background-color:#1a73e8; color:#ffffff; text-decoration:none; padding:12px 20px; border-radius:4px; font-size:16px;'>
+                Join GlobalSingleLine
+            </a>
+
+        </div>
+        </body>
+        </html>
+        EMAIL;
+
+
+            $result = $this->db->query("SELECT * FROM campaign WHERE is_sent = 0 LIMIT 1");
+
+            while ($row = $result->fetch_assoc()) {
+
+                $email = $row['email'];
+                $name = $row['email'];
+                $subject = "The Growth Circle";
+                $id = $row['id'];
+
+                echo $this->userModel->sendcampaignmail($email,$name,$html,$subject,$id);
+
+            }
+
+    }
+
 }
