@@ -571,6 +571,10 @@
           </div>
         <?php } ?>
 
+        <div class="col-md-12 col-xl-4 mb-3 mx-auto text-center">
+            <img src="/public/assets/images/gsl_promo.jpg" class="img-fluid mx-auto" />
+        </div>
+
 
           <div class="col-12">
                 <div class="card referral-card dashboard-card">
