@@ -896,6 +896,9 @@ error_log("Jetton Balance URL: " . $url); // Log for debugging
             $stmt->execute();
             
         } catch (Exception $e){
+            $stmt = $this->conn->prepare("UPDATE campaign SET is_sent = 0, retry_count = retry_count + 1 WHERE id = ?");
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
             return "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
         }
     }

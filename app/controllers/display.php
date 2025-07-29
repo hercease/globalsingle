@@ -945,7 +945,7 @@ class Display {
         EMAIL;
 
 
-            $result = $this->db->query("SELECT * FROM campaign WHERE is_sent = 0 LIMIT 10");
+            $result = $this->db->query("SELECT * FROM campaign WHERE is_sent = 0 AND retry_count < 3 LIMIT 10");
 
             while ($row = $result->fetch_assoc()) {
 
