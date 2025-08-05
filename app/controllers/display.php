@@ -294,7 +294,7 @@ class Display {
 
             if(isset($_SESSION['guest_id'])){
 
-                $guest_id = $_SESSION['global_single_username'];
+                $guest_id = $_SESSION['guest_id'];
 
             } else {
 
