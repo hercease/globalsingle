@@ -621,9 +621,13 @@
  <!-- [ Sidebar Menu ] start -->
 <!-- [ Sidebar Menu ] end --> <!-- [ Header Topbar ] start -->
 <!-- [ Sidebar Menu ] start -->
-    <?php include("includes/sidebar.php"); ?>
-    <!-- [ Sidebar Menu ] end --> <!-- [ Header Topbar ] start -->
-    <?php include("includes/header.php"); ?>
+    <?php if(!empty($userInfo)){ ?>
+
+        <?php include("includes/sidebar.php"); ?>
+        <!-- [ Sidebar Menu ] end --> <!-- [ Header Topbar ] start -->
+        <?php include("includes/header.php"); ?>
+
+    <?php } ?>
 
     <div class="pc-container">
         <div class="pc-content">
