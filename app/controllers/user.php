@@ -1341,7 +1341,7 @@
         
             $search = isset($_GET['search']) ? $_GET['search'] : '';
             $sort = isset($_GET['sort']) && $_GET['sort'] === 'rating' ? 'rating DESC' : 'username ASC';
-            $username = $_SESSION['global_single_username'];
+            $username = $_SESSION['global_single_username'] ?? "";
             $one = 1;
         
             $query = "SELECT m.id, m.username, m.avatar, COALESCE(AVG(r.rating), 0) as rating, COUNT(r.id) as rating_count

@@ -324,6 +324,7 @@
             <div class="form-group mb-3">
               <label class="form-label">Registration Pin</label>
               <input type="text" required name="registration_pin" class="form-control" placeholder="Registration Pin">
+              <small>Don't have a registration pin ? <a href="vendors">Click here</a></small>
             </div>
             <p class="mt-4 text-sm text-muted">By Signing up, you agree to our <a href="#" class="text-primary"> Terms of Service </a> and <a href="#" class="text-primary"> Privacy Policy</a></p>
             <div class="d-grid mt-3">
